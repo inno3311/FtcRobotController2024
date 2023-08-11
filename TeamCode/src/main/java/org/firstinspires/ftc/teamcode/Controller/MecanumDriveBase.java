@@ -48,6 +48,7 @@ public class MecanumDriveBase
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
     }
 
     /**
@@ -64,6 +65,14 @@ public class MecanumDriveBase
         rb.setMode(runMode);
     }
 
+    //make the robot stop
+    public void brake()
+    {
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
 
     /**
      * Standard controls from a gamepad
@@ -85,10 +94,12 @@ public class MecanumDriveBase
      * @param drive forward / backward (-1 to 1)
      * @param turn how much to turn left or right (heading) (-1 to 1)
      * @param strafe strafe (left or right = -1 to 1)
-     * @param speedFactor scale factor that is applied to all motor powers (0 to 1)
+     * @param power scale factor that is applied to all motor powers (0 to 1)
      */
-      public void driveMotors(double drive, double turn, double strafe, double speedFactor)
+//                   Positive       Forward       Right       right            Speed
+      public void driveMotors(double drive, double turn, double strafe, double power)
       {
+          drive *= -1;
           leftPowerFront  = (drive + turn + strafe);
           rightPowerFront = (drive - turn - strafe);
           leftPowerBack   = (drive + turn - strafe);
@@ -99,10 +110,10 @@ public class MecanumDriveBase
                                        rightPowerFront, rightPowerBack);
           maxAbsVal = Math.max(1.0, maxAbsVal);
 
-          lf.setPower(leftPowerFront/maxAbsVal * speedFactor);
-          rf.setPower(rightPowerFront/maxAbsVal * speedFactor);
-          lb.setPower(leftPowerBack/maxAbsVal * speedFactor);
-          rb.setPower(rightPowerBack/maxAbsVal * speedFactor);
+          lf.setPower(leftPowerFront/maxAbsVal * power);
+          rf.setPower(rightPowerFront/maxAbsVal * power);
+          lb.setPower(leftPowerBack/maxAbsVal * power);
+          rb.setPower(rightPowerBack/maxAbsVal * power);
       }
 
     /**
