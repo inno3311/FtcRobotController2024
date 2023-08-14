@@ -26,7 +26,7 @@ public class NoCrashMaster extends OpMode
     @Override
     public void loop()
     {
-        if (distanceSensorLeft.getDistance(DistanceUnit.INCH) <= 24)
+        if (distanceSensorRight.getDistance(DistanceUnit.INCH) <= 24)
         {
             mecanumDriveBase.brake();
             mecanumDriveBase.driveMotors(0.3,1,0,1);
