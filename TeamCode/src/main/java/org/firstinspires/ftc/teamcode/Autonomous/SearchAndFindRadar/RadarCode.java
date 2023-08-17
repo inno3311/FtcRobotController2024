@@ -18,11 +18,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.util.CameraInitSingleton;
-import org.firstinspires.ftc.teamcode.util.ConeDetection;
-import org.firstinspires.ftc.teamcode.util.MecanumDriveBase;
-import org.firstinspires.ftc.teamcode.util.PIDController;
-import org.firstinspires.ftc.teamcode.util.TeamDetection;
+import org.firstinspires.ftc.teamcode.Controller.MecanumDriveBase;
+//import org.firstinspires.ftc.teamcode.util.CameraInitSingleton;
+//import org.firstinspires.ftc.teamcode.util.ConeDetection;
+//import org.firstinspires.ftc.teamcode.util.MecanumDriveBase;
+//import org.firstinspires.ftc.teamcode.util.PIDController;
+//import org.firstinspires.ftc.teamcode.util.TeamDetection;
 
 import java.util.Locale;
 
@@ -58,7 +59,7 @@ public class RadarCode extends LinearOpMode
     double RightFrontPos;
     double LeftBackPos;
 
-    PIDController pidRotate, pidDrive, pidStrafe;
+//    PIDController pidRotate, pidDrive, pidStrafe;
 
     // called when init button is  pressed.
 
@@ -74,9 +75,9 @@ public class RadarCode extends LinearOpMode
         // Set PID proportional value to start reducing power at about 50 degrees of rotation.
         // P by itself may stall before turn completed so we add a bit of I (integral) which
         // causes the PID controller to gently increase power if the turn is not completed.
-        pidRotate = new PIDController(.003, .00003, 0);
+//        pidRotate = new PIDController(.003, .00003, 0);
 
-        initAngle = getHeading();
+//        initAngle = getHeading();
 
         telemetry.addData("Hit start", "");
         telemetry.update();
@@ -135,7 +136,7 @@ public class RadarCode extends LinearOpMode
 
 //        testScrew();
 
-        driveTest();
+//        driveTest();
 
         initAngle = getCompassHeading();
 
@@ -145,7 +146,6 @@ public class RadarCode extends LinearOpMode
 //        zone = coneDetection.detector(telemetry);
         RobotLog.ii("Auto", "Waiting for start..");
 
-        telemetry.addData("Screw Pos: ", screw.getCurrentPosition());
         telemetry.update();
 
         // Wait until we're told to go
