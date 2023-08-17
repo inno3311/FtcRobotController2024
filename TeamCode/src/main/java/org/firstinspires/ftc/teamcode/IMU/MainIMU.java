@@ -50,26 +50,21 @@ public class MainIMU
         imu.initialize(parameters);
 
         // Set up our telemetry dashboard
-        composeTelemetry();
+        composeTelemetry(telemetry);
+    }
 
-        // Wait until we're told to go
-        waitForStart();
-
-        // Start the logging of measured acceleration
+    public void runImu(Telemetry telemetry)
+    {
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-        // Loop and update the dashboard
-        while (opModeIsActive())
-        {
-            telemetry.update();
-        }
+        telemetry.update();
     }
 
     //----------------------------------------------------------------------------------------------
     // Telemetry Configuration
     //----------------------------------------------------------------------------------------------
 
-    void composeTelemetry() {
+    private void composeTelemetry(Telemetry telemetry) {
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
