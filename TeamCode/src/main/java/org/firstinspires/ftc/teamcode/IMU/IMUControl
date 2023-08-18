@@ -10,7 +10,7 @@
 // Use PID controller to manage motor power during 90 degree turn to reduce
 // overshoot.
 
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.IMU;
 
 import static com.qualcomm.hardware.bosch.BNO055IMU.SensorMode.IMU;
 
@@ -29,28 +29,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.util.localizers.StateServer;
 
-@Autonomous(name="SamTest", group="Exercises")
+@Autonomous(name="IMUControl", group="IMU")
 @Disabled
 public class IMUConrol extends LinearOpMode
 {
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
 
     private MecanumDriveBase mecanumDriveBase;
-    private TeamDetection teamDetection;
-    private ConeDetection coneDetection;
-    private StateServer stateServer;
-
-    private DcMotor screw;
-    private DcMotor uBar;
-    private DcMotor intake;
-
-    private DistanceSensor distanceSensor;
-    private TouchSensor highSensor;
-    private TouchSensor lowSensor;
-
-    private int screwLevel;
-    private int zone;
-    private boolean blueSide;
 
     private int leftFrontPos;
     private int rightFrontPos;
@@ -66,21 +51,9 @@ public class IMUConrol extends LinearOpMode
 
     private void initialize()
     {
-//        teamDetection = new TeamDetection(hardwareMap);
         mecanumDriveBase = new MecanumDriveBase(hardwareMap);
 
         distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
-
-        screw = hardwareMap.get(DcMotor.class, "screw");
-        uBar = hardwareMap.get(DcMotor.class, "uBar");
-        intake = hardwareMap.get(DcMotor.class, "intake");
-
-        highSensor = hardwareMap.get(TouchSensor.class, "highSensor");
-        lowSensor = hardwareMap.get(TouchSensor.class, "lowSensor");
-
-        screw.setDirection(DcMotor.Direction.FORWARD);
-        uBar.setDirection(DcMotor.Direction.REVERSE);
-        intake.setDirection(DcMotor.Direction.FORWARD);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
