@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.IMU;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -29,7 +28,7 @@ public class MainIMU
     Orientation angles;
     Acceleration gravity;
 
-    public void IMUController(Telemetry telemetry, HardwareMap hardwareMap)
+    public MainIMU(Telemetry telemetry, HardwareMap hardwareMap)
     {
 
         // Set up the parameters with which we will use our IMU. Note that integration
@@ -59,6 +58,21 @@ public class MainIMU
 
         telemetry.update();
     }
+
+    public double getHeading(Telemetry telemetry)
+    {
+        runImu(telemetry);
+        return angles.firstAngle;
+    }
+
+    public double getAngleTurn(Telemetry telemetry)
+    {
+        runImu(telemetry);
+        telemetry.addData("return angles.firstAngle += 90;", angles.firstAngle += 90);
+        telemetry.update();
+        return angles.firstAngle;
+    }
+
 
     //----------------------------------------------------------------------------------------------
     // Telemetry Configuration
@@ -130,6 +144,7 @@ public class MainIMU
     String formatAngle(AngleUnit angleUnit, double angle) {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
     }
+
 
     String formatDegrees(double degrees){
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
