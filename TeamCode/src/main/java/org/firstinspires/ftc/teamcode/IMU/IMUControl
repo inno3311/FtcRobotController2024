@@ -29,9 +29,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.util.localizers.StateServer;
 
-@Autonomous(name="IMUControl", group="IMU")
-@Disabled
-public class IMUConrol extends LinearOpMode
+public class IMUConrol
 {
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
 
@@ -49,10 +47,8 @@ public class IMUConrol extends LinearOpMode
 
     BNO055IMU.Parameters myIMUparameters;
 
-    private void initialize()
+    public IMUConrol()
     {
-        mecanumDriveBase = new MecanumDriveBase(hardwareMap);
-
         distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -96,7 +92,7 @@ public class IMUConrol extends LinearOpMode
         telemetry.update();
     }
 
-    // called when init button is  pressed.
+/*    // called when init button is  pressed.
     @Override
     public void runOpMode() throws InterruptedException
     {
@@ -117,11 +113,11 @@ public class IMUConrol extends LinearOpMode
         pidDrive.setInputRange(-90, 90);
         pidDrive.enable();
 
-/*        //TODO: Same settings as drive????
-        pidStrafe.setSetpoint(0);
-        pidStrafe.setOutputRange(-power, power);
-        pidStrafe.setInputRange(-90, 90);
-        pidStrafe.enable(); */
+//       //TODO: Same settings as drive????
+//        pidStrafe.setSetpoint(0);
+//        pidStrafe.setOutputRange(-power, power);
+//        pidStrafe.setInputRange(-90, 90);
+//        pidStrafe.enable();
 
         //Drive forward 18 inches
         while (opModeIsActive())
@@ -130,7 +126,7 @@ public class IMUConrol extends LinearOpMode
             rotate(180, 0.3);
             sleep(1500);
         }
-    }
+    }*/
 
     //Set target then multiply by one with negative if you want to go backwards no negative input
     private void driveStraight(double target, int forward, double speed)
@@ -187,7 +183,8 @@ public class IMUConrol extends LinearOpMode
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 359 degrees.
      * @param degrees Degrees to turn, + is left - is right
-     */    private double rotate(int degrees, double power)
+     */    
+    private double rotate(int degrees, double power)
     {
         // restart imu angle tracking.
         resetAngle();
@@ -219,12 +216,13 @@ public class IMUConrol extends LinearOpMode
         if (degrees < 0)
         {
             // On right turn we have to get off zero first.
-            while (opModeIsActive() && getAngle() == 0)
+            while (getAngle() == 0)
             {
                 mecanumDriveBase.driveMotors(0, power, 0, 1);
 
                 sleep(100);
             }
+
 
             do
             {
@@ -240,7 +238,8 @@ public class IMUConrol extends LinearOpMode
                 }
 
             }
-            while (opModeIsActive() && !pidRotate.onTarget());
+            while (!pidRotate.onTarget()){}
+
         }
         else
         {
@@ -251,8 +250,10 @@ public class IMUConrol extends LinearOpMode
                 //leftMotor.setPower(-power);
                 //rightMotor.setPower(power);
             }
-            while (opModeIsActive() && !pidRotate.onTarget());
+            while (opModeIsActive() && !pidRotate.onTarget()){}
+
         }
+
         mecanumDriveBase.driveMotors(0, 0, 0, 0);
 
         rotation = getAngle();
