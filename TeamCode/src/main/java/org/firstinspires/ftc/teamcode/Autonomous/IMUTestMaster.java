@@ -1,24 +1,26 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import org.firstinspires.ftc.teamcode.IMU.MainIMU;
+import org.firstinspires.ftc.teamcode.IMU.IMUControl;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "IMUTest", group = "IMU")
-public class Autonomous extends LinearOpMode
+public class IMUTestMaster extends LinearOpMode
 {
-    MainIMU mainIMU;
+    IMUControl imuControl;
 
     @Override
     public void runOpMode() throws InterruptedException
     {
-        mainIMU = new MainIMU(telemetry, hardwareMap);
+        imuControl = new IMUControl(hardwareMap, telemetry);
 
         waitForStart();
 
         while (opModeIsActive())
         {
-            telemetry.addData("Heading", mainIMU.getHeading(telemetry));
-            telemetry.update();
+            imuControl.rotate(90,1);
+
+            sleep(1000);
+
         }
     }
 }

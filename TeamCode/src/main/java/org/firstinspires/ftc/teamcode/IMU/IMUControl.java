@@ -19,8 +19,6 @@ public class IMUControl
 
     private MecanumDriveBase mecanumDriveBase;
 
-    private DistanceSensor distanceSensor;
-
     private int leftFrontPos;
     private int rightFrontPos;
     private int leftBackPos;
@@ -32,12 +30,10 @@ public class IMUControl
 
     BNO055IMU.Parameters myIMUparameters;
 
-    private void IMUControl(HardwareMap hardwareMap, Telemetry telemetry)
+    public IMUControl(HardwareMap hardwareMap, Telemetry telemetry)
     {
 //        teamDetection = new TeamDetection(hardwareMap);
         mecanumDriveBase = new MecanumDriveBase(hardwareMap);
-
-        distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
@@ -87,35 +83,35 @@ public class IMUControl
     }
 
     // called when init button is  pressed.
-    public void Run(HardwareMap hardwareMap, Telemetry telemetry) throws InterruptedException
-    {
-        IMUControl(hardwareMap, telemetry);
-
-        // wait for start button
-
-        telemetry.addData("Mode", "running");
-        telemetry.update();
-
-        sleep(1000);
-
-        //TODO: Do we do this just once?  Can the same settings be used for strafe?
-        // Set up parameters for driving in a straight line.
-        pidDrive.setSetpoint(0);
-        pidDrive.setOutputRange(-power, power);
-        pidDrive.setInputRange(-90, 90);
-        pidDrive.enable();
-
-/*        //TODO: Same settings as drive????
-        pidStrafe.setSetpoint(0);
-        pidStrafe.setOutputRange(-power, power);
-        pidStrafe.setInputRange(-90, 90);
-        pidStrafe.enable(); */
-
-        //Drive forward 18 inches
-        driveStraight(18 * ticksPerInch, 1, 0.1, telemetry);
-        rotate(180, 0.3);
-        sleep(1500);
-    }
+//    public void Run(HardwareMap hardwareMap, Telemetry telemetry) throws InterruptedException
+//    {
+//        IMUControl(hardwareMap, telemetry);
+//
+//        // wait for start button
+//
+//        telemetry.addData("Mode", "running");
+//        telemetry.update();
+//
+//        sleep(1000);
+//
+//        //TODO: Do we do this just once?  Can the same settings be used for strafe?
+//        // Set up parameters for driving in a straight line.
+//        pidDrive.setSetpoint(0);
+//        pidDrive.setOutputRange(-power, power);
+//        pidDrive.setInputRange(-90, 90);
+//        pidDrive.enable();
+//
+///*        //TODO: Same settings as drive????
+//        pidStrafe.setSetpoint(0);
+//        pidStrafe.setOutputRange(-power, power);
+//        pidStrafe.setInputRange(-90, 90);
+//        pidStrafe.enable(); */
+//
+//        //Drive forward 18 inches
+//        driveStraight(18 * ticksPerInch, 1, 0.1, telemetry);
+//        rotate(180, 0.3);
+//        sleep(1500);
+//    }
 
     //Set target then multiply by one with negative if you want to go backwards no negative input
     private void driveStraight(double target, int forward, double speed, Telemetry telemetry)
@@ -171,10 +167,11 @@ public class IMUControl
 
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 359 degrees.
-     * @param degrees Degrees to turn, + is left - is right
+     * @param degrees Degrees to turn, - is left + is right
      */
-    private double rotate(int degrees, double power)
+    public double rotate(int degrees, double power)
     {
+        degrees *= -1;
         // restart imu angle tracking.
         resetAngle();
 
@@ -193,7 +190,7 @@ public class IMUControl
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
         pidRotate.setInputRange(0, degrees);
-        pidRotate.setOutputRange(0, power);
+        pidRotate.setOutputRange(0.5, power);
         pidRotate.setTolerance(1);
         pidRotate.enable();
 
@@ -223,14 +220,6 @@ public class IMUControl
             {
                 power = pidRotate.performPID(getAngle()); // power will be - on right turn.
                 mecanumDriveBase.driveMotors(0, power, 0, 1);
-
-                double distance = checkDistance(5.0, 10.0);
-                if (distance != -1)
-                {
-                    //WE SEE SOMETHING IN THE GIVEN RANGE.  STOP NOW!!!!!!
-                    //    pidRotate.setSetpoint(pidRotate.getSetpoint());
-                    //need to make this case enter only once
-                }
 
             }
             while (!pidRotate.onTarget());
@@ -338,31 +327,6 @@ public class IMUControl
         lastAngles = angles;
 
         return globalAngle;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //* SENSOR CODE   */
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Check to see if the sensor detects an object within the range provided.
-     * @param innerBound minimum range detection.
-     * @param outerBound maximum range of detection.
-     */
-    private double checkDistance(double innerBound, double outerBound)
-    {
-        double distance = distanceSensor.getDistance(DistanceUnit.CM);
-
-        if (distance < outerBound && distance > innerBound)
-        {
-            //Will return the detected distance
-        }
-        else
-        {
-            distance = -1;
-        }
-
-        return distance;
     }
 
 }
