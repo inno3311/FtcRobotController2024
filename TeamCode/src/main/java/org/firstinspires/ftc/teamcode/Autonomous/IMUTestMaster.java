@@ -17,10 +17,9 @@ public class IMUTestMaster extends LinearOpMode
 
         while (opModeIsActive())
         {
-            imuControl.rotate(90,1);
-
+            //Rotate the robot 90 degrees
+            imuControl.rotate(90, 1);
             sleep(1000);
-
         }
     }
 }

@@ -13,6 +13,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Controller.MecanumDriveBase;
 
+
+/** removed distance sensor part of code now for rotate mainly - Sam**/
 public class IMUControl
 {
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
