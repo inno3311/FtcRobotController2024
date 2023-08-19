@@ -1,11 +1,13 @@
-package org.firstinspires.ftc.teamcode.Controller;
+package org.firstinspires.ftc.teamcode.Outreach;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class MecanumDriveBase
+public class MechanicalDriveOutreach
 {
     private static final DcMotor.RunMode runMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 
@@ -20,21 +22,22 @@ public class MecanumDriveBase
     public double speedFactor     = 0;
 
     /**
-     * Constructor for MecanumDriveBase from the hardware map
+     * Constructor for MechanicalDriveBase from the hardware map
      *
      * @param hardwareMap the hardware map
      */
-    public MecanumDriveBase(HardwareMap hardwareMap)
+
+    public MechanicalDriveOutreach(HardwareMap hardwareMap)
     {
         rb = hardwareMap.get(DcMotor.class, "rb");
         rf = hardwareMap.get(DcMotor.class, "rf");
         lb = hardwareMap.get(DcMotor.class, "lb");
         lf = hardwareMap.get(DcMotor.class, "lf");
 
-        lf.setDirection(DcMotor.Direction.FORWARD);
-        rf.setDirection(DcMotor.Direction.REVERSE);
-        lb.setDirection(DcMotor.Direction.FORWARD);
-        rb.setDirection(DcMotor.Direction.REVERSE);
+        lf.setDirection(DcMotor.Direction.REVERSE);
+        rf.setDirection(DcMotor.Direction.FORWARD);
+        lb.setDirection(DcMotor.Direction.REVERSE);
+        rb.setDirection(DcMotor.Direction.FORWARD);
 
         // reset encoders
         setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -56,7 +59,8 @@ public class MecanumDriveBase
      *
      * @param runMode The runMode to set all motors to.
      */
-    private void setMotorMode(DcMotor.RunMode runMode) {
+    private void setMotorMode(DcMotor.RunMode runMode)
+    {
         lf.setMode(runMode);
         rf.setMode(runMode);
         lb.setMode(runMode);
@@ -69,14 +73,14 @@ public class MecanumDriveBase
      *
      * @param gamepad - the gamepad you want to control the drive base
      */
-    public void gamepadController(Gamepad gamepad) {
-
-          double drive = -gamepad.left_stick_y;
-          double turn = gamepad.right_stick_x;
-          double strafe = gamepad.left_stick_x;
-          speedFactor = 1 - (0.6 * gamepad.right_trigger);
-          driveMotors(drive, turn, strafe, speedFactor);
-      }
+    public void gamepadController(Gamepad gamepad)
+    {
+        double drive = -gamepad.left_stick_y;
+        double turn = gamepad.right_stick_x;
+        double strafe = gamepad.left_stick_x;
+        speedFactor = 0.3;
+        driveMotors(drive, turn, strafe, speedFactor);
+    }
 
     /**
      * Drive the motors according to drive, turn, strafe inputs.
@@ -86,32 +90,33 @@ public class MecanumDriveBase
      * @param strafe strafe (left or right = -1 to 1)
      * @param speedFactor scale factor that is applied to all motor powers (0 to 1)
      */
-      public void driveMotors(double drive,double turn,double strafe,double speedFactor)
-      {
-          leftPowerFront  = (drive + turn + strafe);
-          rightPowerFront = (drive - turn - strafe);
-          leftPowerBack   = (drive + turn - strafe);
-          rightPowerBack  = (drive - turn + strafe);
+    public void driveMotors(double drive, double turn, double strafe, double speedFactor)
+    {
+        leftPowerFront  = (drive + turn + strafe);
+        rightPowerFront = (drive - turn - strafe);
+        leftPowerBack   = (drive + turn - strafe);
+        rightPowerBack  = (drive - turn + strafe);
 
-          // This code is awful.
-          double maxAbsVal = maxAbsVal(leftPowerFront, leftPowerBack,
-                                       rightPowerFront, rightPowerBack);
-          maxAbsVal = Math.max(1.0, maxAbsVal);
+        // This code is awful.
+        double maxAbsVal = maxAbsVal(leftPowerFront, leftPowerBack,
+                rightPowerFront, rightPowerBack);
+        maxAbsVal = Math.max(1.0, maxAbsVal);
 
-          lf.setPower(leftPowerFront/maxAbsVal * speedFactor);
-          rf.setPower(rightPowerFront/maxAbsVal * speedFactor);
-          lb.setPower(leftPowerBack/maxAbsVal * speedFactor);
-          rb.setPower(rightPowerBack/maxAbsVal * speedFactor);
-      }
+        lf.setPower(leftPowerFront/maxAbsVal * speedFactor);
+        rf.setPower(rightPowerFront/maxAbsVal * speedFactor);
+        lb.setPower(leftPowerBack/maxAbsVal * speedFactor);
+        rb.setPower(rightPowerBack/maxAbsVal * speedFactor);
+    }
 
     /**
      * Returns the absolute maximum power on any drive motor.
      *
      * @return max abs power [0,1]
      */
-    public double maxMotorPower(){
-          return maxAbsVal(lf.getPower(), rf.getPower(), lb.getPower(), rb.getPower());
-      }
+    public double maxMotorPower()
+    {
+        return maxAbsVal(lf.getPower(), rf.getPower(), lb.getPower(), rb.getPower());
+    }
 
     /**
      * maxAbsVal returns the maximum absolute value among an arbitrary number of arguments.
@@ -119,23 +124,44 @@ public class MecanumDriveBase
      * @param values an arbitrary number of values.
      * @return the maximum absolute value among the numbers.
      */
-      public static double maxAbsVal(double ... values){
-          double mav = Double.NEGATIVE_INFINITY;
-          for (double val: values) {
-              mav = Math.max(mav, Math.abs(val));
-          }
-          return mav;
-      }
+    public static double maxAbsVal(double ... values)
+    {
+        double mav = Double.NEGATIVE_INFINITY;
+        for (double val: values) {
+            mav = Math.max(mav, Math.abs(val));
+        }
+        return mav;
+    }
 
     /**
      * report drivebase telemetry
      *
      * @param telemetry the telemetry object we're reporting to.
      */
-      public void driveBaseTelemetry(Telemetry telemetry)
-      {
+    public void driveBaseTelemetry(Telemetry telemetry)
+    {
         telemetry.addData("Motors", "lf(%.2f), rf(%.2f), lb(%.2f), rb(%.2f)", leftPowerFront, rightPowerFront, leftPowerBack, rightPowerBack);
         telemetry.addData("Speed control", speedFactor);
-      }
+    }
+
+    public void stop()
+    {
+        lf.setPower(0);
+        rf.setPower(0);
+        lb.setPower(0);
+        rb.setPower(0);
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    public void inch()
+    {
+        lf.setPower(0.2);
+        rf.setPower(0.2);
+        lb.setPower(0.2);
+        rb.setPower(0.2);
+    }
 }
 
