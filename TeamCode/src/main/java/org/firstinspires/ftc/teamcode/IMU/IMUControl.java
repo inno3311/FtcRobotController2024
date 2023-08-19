@@ -1,39 +1,25 @@
-// Simple autonomous program that drives bot forward until end of period
-// or touch sensor is hit. If touched, backs up a bit and turns 90 degrees
-// right and keeps going. Demonstrates obstacle avoidance and use of the
-// REV Hub's built in IMU in place of a gyro. Also uses gamepad1 buttons to
-// simulate touch sensor press and supports left as well as right turn.
-//
-// Also uses PID controller to drive in a straight line when not
-// avoiding an obstacle.
-//
-// Use PID controller to manage motor power during 90 degree turn to reduce
-// overshoot.
-
 package org.firstinspires.ftc.teamcode.IMU;
 
 import static com.qualcomm.hardware.bosch.BNO055IMU.SensorMode.IMU;
-
+import static java.lang.Thread.sleep;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.TouchSensor;
-
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.util.localizers.StateServer;
+import org.firstinspires.ftc.teamcode.Controller.MecanumDriveBase;
 
-public class IMUConrol
+public class IMUControl
 {
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
 
     private MecanumDriveBase mecanumDriveBase;
+
+    private DistanceSensor distanceSensor;
 
     private int leftFrontPos;
     private int rightFrontPos;
@@ -42,13 +28,15 @@ public class IMUConrol
     BNO055IMU               imu;
     Orientation             lastAngles = new Orientation();
     double                  globalAngle, power = .30, correction, strafeCorrection,  rotation;
-    boolean                 aButton, bButton, touched;
     PIDController           pidRotate, pidDrive, pidStrafe;
 
     BNO055IMU.Parameters myIMUparameters;
 
-    public IMUConrol()
+    private void IMUControl(HardwareMap hardwareMap, Telemetry telemetry)
     {
+//        teamDetection = new TeamDetection(hardwareMap);
+        mecanumDriveBase = new MecanumDriveBase(hardwareMap);
+
         distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -81,10 +69,16 @@ public class IMUConrol
         telemetry.update();
 
         // make sure the imu gyro is calibrated before continuing.
-        while (!isStopRequested() && !imu.isGyroCalibrated())
+        while (!imu.isGyroCalibrated())
         {
-            sleep(50);
-            idle();
+            try
+            {
+                sleep(50);
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
         }
 
         telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
@@ -92,14 +86,12 @@ public class IMUConrol
         telemetry.update();
     }
 
-/*    // called when init button is  pressed.
-    @Override
-    public void runOpMode() throws InterruptedException
+    // called when init button is  pressed.
+    public void Run(HardwareMap hardwareMap, Telemetry telemetry) throws InterruptedException
     {
-        initialize();
+        IMUControl(hardwareMap, telemetry);
 
         // wait for start button
-        waitForStart();
 
         telemetry.addData("Mode", "running");
         telemetry.update();
@@ -113,23 +105,20 @@ public class IMUConrol
         pidDrive.setInputRange(-90, 90);
         pidDrive.enable();
 
-//       //TODO: Same settings as drive????
-//        pidStrafe.setSetpoint(0);
-//        pidStrafe.setOutputRange(-power, power);
-//        pidStrafe.setInputRange(-90, 90);
-//        pidStrafe.enable();
+/*        //TODO: Same settings as drive????
+        pidStrafe.setSetpoint(0);
+        pidStrafe.setOutputRange(-power, power);
+        pidStrafe.setInputRange(-90, 90);
+        pidStrafe.enable(); */
 
         //Drive forward 18 inches
-        while (opModeIsActive())
-        {
-            driveStraight(18 * ticksPerInch, 1, 0.1);
-            rotate(180, 0.3);
-            sleep(1500);
-        }
-    }*/
+        driveStraight(18 * ticksPerInch, 1, 0.1, telemetry);
+        rotate(180, 0.3);
+        sleep(1500);
+    }
 
     //Set target then multiply by one with negative if you want to go backwards no negative input
-    private void driveStraight(double target, int forward, double speed)
+    private void driveStraight(double target, int forward, double speed, Telemetry telemetry)
     {
         speed *= forward;
 
@@ -183,7 +172,7 @@ public class IMUConrol
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 359 degrees.
      * @param degrees Degrees to turn, + is left - is right
-     */    
+     */
     private double rotate(int degrees, double power)
     {
         // restart imu angle tracking.
@@ -220,9 +209,15 @@ public class IMUConrol
             {
                 mecanumDriveBase.driveMotors(0, power, 0, 1);
 
-                sleep(100);
+                try
+                {
+                    sleep(100);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
             }
-
 
             do
             {
@@ -238,7 +233,7 @@ public class IMUConrol
                 }
 
             }
-            while (!pidRotate.onTarget()){}
+            while (!pidRotate.onTarget());
 
         }
         else
@@ -250,8 +245,7 @@ public class IMUConrol
                 //leftMotor.setPower(-power);
                 //rightMotor.setPower(power);
             }
-            while (opModeIsActive() && !pidRotate.onTarget()){}
-
+            while (!pidRotate.onTarget());
         }
 
         mecanumDriveBase.driveMotors(0, 0, 0, 0);
@@ -259,7 +253,14 @@ public class IMUConrol
         rotation = getAngle();
 
         // wait for rotation to stop.
-        sleep(500);
+        try
+        {
+            sleep(500);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
 
         // reset angle tracking on new heading.
         resetAngle();
@@ -269,7 +270,7 @@ public class IMUConrol
     }
 
     //Set target then multiply by one with negative if you want to go left currently set right no negative input
-    private void strafe(double target, int right, double speed)
+    private void strafe(double target, int right, double speed, Telemetry telemetry)
     {
         speed *= right;
         if (right == 1)
@@ -308,7 +309,7 @@ public class IMUConrol
      */
     private void resetAngle()
     {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;
     }
 
