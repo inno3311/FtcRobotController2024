@@ -105,7 +105,8 @@ public class SensorBNO055IMU extends LinearOpMode
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
         // Loop and update the dashboard
-        while (opModeIsActive()) {
+        while (opModeIsActive())
+        {
             telemetry.update();
         }
     }
