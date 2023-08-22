@@ -1,15 +1,12 @@
 package org.firstinspires.ftc.teamcode.Controller;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class MechanicalDriveBase
 {
-    private static final DcMotor.RunMode runMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
-
     public DcMotor lf;
     public DcMotor lb;
     public DcMotor rb;
@@ -19,6 +16,8 @@ public class MechanicalDriveBase
     public double rightPowerBack  = 0;
     public double leftPowerBack   = 0;
     public double speedFactor     = 0;
+
+    final double  COUNTS_PER_INCH = (8192 * 1) / (2 * 3.1415); // 1,303.835747254496
 
     /**
      * Constructor for MechanicalDriveBase from the hardware map
@@ -38,11 +37,11 @@ public class MechanicalDriveBase
         rb.setDirection(DcMotor.Direction.REVERSE);
 
         // reset encoders
-        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        resetRunMode();
 
 
         // Run Without Encoders
-        setMotorMode(this.runMode);
+        resetRunMode();
 
         // Brake when power set to Zero
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -54,14 +53,13 @@ public class MechanicalDriveBase
     /**
      * We tend to set all the motor modes at once, so break it out using "extract Method" under the
      * refactor menu
-     *
-     * @param runMode The runMode to set all motors to.
      */
-    private void setMotorMode(DcMotor.RunMode runMode) {
-        lf.setMode(runMode);
-        rf.setMode(runMode);
-        lb.setMode(runMode);
-        rb.setMode(runMode);
+    private void resetRunMode()
+    {
+        lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
 //hi
@@ -85,9 +83,9 @@ public class MechanicalDriveBase
      * @param drive forward / backward (-1 to 1)
      * @param turn how much to turn left or right (heading) (-1 to 1)
      * @param strafe strafe (left or right = -1 to 1)
-     * @param speedFactor scale factor that is applied to all motor powers (0 to 1)
+     * @param speed scale factor that is applied to all motor powers (0 to 1)
      */
-      public void driveMotors(double drive,double turn,double strafe,double speedFactor)
+      public void driveMotors(double drive, double turn, double strafe, double speed)
       {
           leftPowerFront  = (drive + turn + strafe);
           rightPowerFront = (drive - turn - strafe);
@@ -99,10 +97,10 @@ public class MechanicalDriveBase
                                        rightPowerFront, rightPowerBack);
           maxAbsVal = Math.max(1.0, maxAbsVal);
 
-          lf.setPower(leftPowerFront/maxAbsVal * speedFactor);
-          rf.setPower(rightPowerFront/maxAbsVal * speedFactor);
-          lb.setPower(leftPowerBack/maxAbsVal * speedFactor);
-          rb.setPower(rightPowerBack/maxAbsVal * speedFactor);
+          lf.setPower(leftPowerFront/maxAbsVal * speed);
+          rf.setPower(rightPowerFront/maxAbsVal * speed);
+          lb.setPower(leftPowerBack/maxAbsVal * speed);
+          rb.setPower(rightPowerBack/maxAbsVal * speed);
       }
 
     /**
@@ -133,10 +131,85 @@ public class MechanicalDriveBase
      *
      * @param telemetry the telemetry object we're reporting to.
      */
-      public void driveBaseTelemetry(Telemetry telemetry)
-      {
+    public void driveBaseTelemetry(Telemetry telemetry)
+    {
         telemetry.addData("Motors", "lf(%.2f), rf(%.2f), lb(%.2f), rb(%.2f)", leftPowerFront, rightPowerFront, leftPowerBack, rightPowerBack);
         telemetry.addData("Speed control", speedFactor);
+    }
+
+      /**======================================== Autonomous Code ===============================================**/
+      //LF encoder for left side
+      //RF encoder for right side
+      //LB for turning and strafing
+      //Bore encoders ticks per rotation 8192
+
+      /*
+        static final double  COUNTS_PER_INCH =
+          (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+          (WHEEL_DIAMETER_INCHES * 3.1415);
+          For our drive base 1,303.835747254496 drives an inch
+      */
+
+      //                               How far do you want   which way do you   How fast do
+      //                               to drive in inches     want to drive    you want to go
+      //                                  positives only     true is forward   positive only
+      public void driveForwardWithEncoders(double distance, boolean direction, double speed)
+      {
+            setToEncoders();
+
+            if (direction)
+            {
+                distance += Math.abs(lf.getCurrentPosition());
+                driveMotors(1,0,0, speed);
+                while (Math.abs(lf.getCurrentPosition()) < distance) {}
+                driveMotors(0,0,0,0);
+            }
+            else
+            {
+                distance -= Math.abs(lf.getCurrentPosition());
+                driveMotors(-1,0,0, speed);
+                while (Math.abs(lf.getCurrentPosition()) > distance) {}
+                driveMotors(0,0,0,0);
+            }
+
+            resetRunMode();
       }
+
+    //                               How far do you want  which way do you  How fast do
+    //                               to drive in inches    want to drive   you want to go
+    //                                  positives only     true is right    positive only
+    public void strafeWithEncoders(double distance, boolean direction, double speed)
+    {
+        setToEncoders();
+
+        if (direction)
+        {
+            distance += Math.abs(lb.getCurrentPosition());
+            driveMotors(0,1,0, speed);
+            while (Math.abs(lf.getCurrentPosition()) < distance)
+            {
+
+            }
+            driveMotors(0,0,0,0);
+        }
+        else
+        {
+            distance -= Math.abs(lb.getCurrentPosition());
+            driveMotors(0,-1,0, speed);
+            while (Math.abs(lf.getCurrentPosition()) > distance) {}
+            driveMotors(0,0,0,0);
+        }
+
+        resetRunMode();
+    }
+
+      private void setToEncoders()
+      {
+          lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+          rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+          lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+          rb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+      }
+
 }
 
