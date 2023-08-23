@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.IMU.IMUControl;
+import java.util.Base64;
 
 public class MechanicalDriveBase
 {
@@ -150,9 +151,9 @@ public class MechanicalDriveBase
           For our drive base 1,303.835747254496 drives an inch
       */
 
-      //                               How far do you want   which way do you   How fast do
-      //                               to drive in inches     want to drive    you want to go
-      //                                  positives only     true is forward   positive only
+      //                                 How far do you want which way do you  How fast do
+      //                                 to drive in inches   want to drive   you want to go
+      //                                   positives only   true is forward   positive only
       public void driveForwardWithEncoders(double distance, boolean direction, double speed)
       {
             if (direction)
