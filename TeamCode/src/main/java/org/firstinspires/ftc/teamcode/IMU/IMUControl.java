@@ -9,9 +9,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.Controller.MecanumDriveBase;
+import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 
 
 /** removed distance sensor part of code now for rotate mainly - Sam**/
@@ -19,7 +18,7 @@ public class IMUControl
 {
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
 
-    private MecanumDriveBase mecanumDriveBase;
+    private MechanicalDriveBase mechanicalDriveBase;
 
     private int leftFrontPos;
     private int rightFrontPos;
@@ -35,7 +34,7 @@ public class IMUControl
     public IMUControl(HardwareMap hardwareMap, Telemetry telemetry)
     {
 //        teamDetection = new TeamDetection(hardwareMap);
-        mecanumDriveBase = new MecanumDriveBase(hardwareMap);
+        mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
@@ -121,49 +120,49 @@ public class IMUControl
         speed *= forward;
 
         //Fetch the odometry pod wheel location.
-        leftFrontPos = mecanumDriveBase.lf.getCurrentPosition();
+        leftFrontPos = mechanicalDriveBase.lf.getCurrentPosition();
         if (forward == 1)
         {
             //Add the target distance to the current location
             leftFrontPos += target;
 
             //Drive from current position to target position
-            while (mecanumDriveBase.lf.getCurrentPosition() <= leftFrontPos)
+            while (mechanicalDriveBase.lf.getCurrentPosition() <= leftFrontPos)
             {
                 // Use PID with imu input to drive in a straight line.
                 correction = pidDrive.performPID(getAngle());
 //                correction *= 0.100;
                 //Pass the correction value into the turn param.  No idea what kind of range will
                 //be on this value.  Should be small value like 0.1 or less I would hope.
-                mecanumDriveBase.driveMotors(speed, correction, 0, 1);
+                mechanicalDriveBase.driveMotors(speed, correction, 0, 1);
 
                 telemetry.addData("1 imu heading", lastAngles.firstAngle);
                 telemetry.addData("2 global heading", globalAngle);
                 telemetry.addData("3 correction", correction);
                 telemetry.addData("4 turn rotation", rotation);
-                telemetry.addData("5 lf pos", mecanumDriveBase.lf.getCurrentPosition());
+                telemetry.addData("5 lf pos", mechanicalDriveBase.lf.getCurrentPosition());
                 telemetry.update();
             }
         }
         else
         {
             leftFrontPos -= target;
-            while (mecanumDriveBase.lf.getCurrentPosition() >= leftFrontPos)
+            while (mechanicalDriveBase.lf.getCurrentPosition() >= leftFrontPos)
             {
                 // Use PID with imu input to drive in a straight line.
                 correction = pidDrive.performPID(getAngle());
 
-                mecanumDriveBase.driveMotors(speed, correction, 0, 1);
+                mechanicalDriveBase.driveMotors(speed, correction, 0, 1);
 
                 telemetry.addData("1 imu heading", lastAngles.firstAngle);
                 telemetry.addData("2 global heading", globalAngle);
                 telemetry.addData("3 correction", correction);
                 telemetry.addData("4 turn rotation", rotation);
-                telemetry.addData("5 lf pos", mecanumDriveBase.lf.getCurrentPosition());
+                telemetry.addData("5 lf pos", mechanicalDriveBase.lf.getCurrentPosition());
                 telemetry.update();
             }
         }
-        mecanumDriveBase.driveMotors(0, 0, 0, 0);
+        mechanicalDriveBase.driveMotors(0, 0, 0, 0);
 //        encoderLogging();
     }
 
@@ -206,7 +205,7 @@ public class IMUControl
             // On right turn we have to get off zero first.
             while (getAngle() == 0)
             {
-                mecanumDriveBase.driveMotors(0, power, 0, 1);
+                mechanicalDriveBase.driveMotors(0, power, 0, 1);
 
                 try
                 {
@@ -221,7 +220,7 @@ public class IMUControl
             do
             {
                 power = pidRotate.performPID(getAngle()); // power will be - on right turn.
-                mecanumDriveBase.driveMotors(0, power, 0, 1);
+                mechanicalDriveBase.driveMotors(0, power, 0, 1);
 
             }
             while (!pidRotate.onTarget());
@@ -239,7 +238,7 @@ public class IMUControl
             while (!pidRotate.onTarget());
         }
 
-        mecanumDriveBase.driveMotors(0, 0, 0, 0);
+        mechanicalDriveBase.driveMotors(0, 0, 0, 0);
 
         rotation = getAngle();
 
@@ -267,30 +266,30 @@ public class IMUControl
         if (right == 1)
         {
             rightFrontPos -= target;
-            while (mecanumDriveBase.rf.getCurrentPosition() >= rightFrontPos)
+            while (mechanicalDriveBase.rf.getCurrentPosition() >= rightFrontPos)
             {
                 // Use PID with imu input to drive in a straight line.
                 strafeCorrection = pidStrafe.performPID(getAngle());
 
-                mecanumDriveBase.driveMotors(0, strafeCorrection, speed, 1);
-                telemetry.addData("", mecanumDriveBase.rf.getCurrentPosition());
+                mechanicalDriveBase.driveMotors(0, strafeCorrection, speed, 1);
+                telemetry.addData("", mechanicalDriveBase.rf.getCurrentPosition());
                 telemetry.update();
             }
         }
         else
         {
             rightFrontPos += target;
-            while (mecanumDriveBase.rf.getCurrentPosition() <= rightFrontPos)
+            while (mechanicalDriveBase.rf.getCurrentPosition() <= rightFrontPos)
             {
                 // Use PID with imu input to drive in a straight line.
                 strafeCorrection = pidStrafe.performPID(getAngle());
 
-                mecanumDriveBase.driveMotors(0, strafeCorrection, speed, 1);
-                telemetry.addData("", mecanumDriveBase.rf.getCurrentPosition());
+                mechanicalDriveBase.driveMotors(0, strafeCorrection, speed, 1);
+                telemetry.addData("", mechanicalDriveBase.rf.getCurrentPosition());
                 telemetry.update();
             }
         }
-        mecanumDriveBase.driveMotors(0, 0, 0, 0);
+        mechanicalDriveBase.driveMotors(0, 0, 0, 0);
 //        encoderLogging();
     }
 
@@ -308,7 +307,7 @@ public class IMUControl
      * Get current cumulative angle rotation from last reset.
      * @return Angle in degrees. + = left, - = right from zero point.
      */
-    private double getAngle()
+    public double getAngle()
     {
         // We experimentally determined the Z axis is the axis we want to use for heading angle.
         // We have to process the angle because the imu works in euler angles so the Z axis is
