@@ -13,11 +13,11 @@ public class MechanicalDriveBase
     public DcMotor lb;
     public DcMotor rb;
     public DcMotor rf;
-    public double leftPowerFront  = 0;
+    public double leftPowerFront = 0;
     public double rightPowerFront = 0;
-    public double rightPowerBack  = 0;
-    public double leftPowerBack   = 0;
-    public double speedFactor     = 0;
+    public double rightPowerBack = 0;
+    public double leftPowerBack = 0;
+    public double speedFactor = 0;
 
     /**
      * Constructor for MechanicalDriveBase from the hardware map
@@ -26,10 +26,10 @@ public class MechanicalDriveBase
      */
     public MechanicalDriveBase(HardwareMap hardwareMap)
     {
+        lf = hardwareMap.get(DcMotor.class, "lf");
+        lb = hardwareMap.get(DcMotor.class, "lb");
         rb = hardwareMap.get(DcMotor.class, "rb");
         rf = hardwareMap.get(DcMotor.class, "rf");
-        lb = hardwareMap.get(DcMotor.class, "lb");
-        lf = hardwareMap.get(DcMotor.class, "lf");
 
         lf.setDirection(DcMotor.Direction.FORWARD);
         rf.setDirection(DcMotor.Direction.REVERSE);
@@ -48,6 +48,7 @@ public class MechanicalDriveBase
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
     }
 
     /**
@@ -56,27 +57,36 @@ public class MechanicalDriveBase
      *
      * @param runMode The runMode to set all motors to.
      */
-    private void setMotorMode(DcMotor.RunMode runMode) {
+    private void setMotorMode(DcMotor.RunMode runMode)
+    {
         lf.setMode(runMode);
         rf.setMode(runMode);
         lb.setMode(runMode);
         rb.setMode(runMode);
     }
 
+    //make the robot stop
+    public void brake()
+    {
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
 
     /**
      * Standard controls from a gamepad
      *
      * @param gamepad - the gamepad you want to control the drive base
      */
-    public void gamepadController(Gamepad gamepad) {
-
+    public void gamepadController(Gamepad gamepad)
+    {
           double drive = -gamepad.left_stick_y;
           double turn = gamepad.right_stick_x;
           double strafe = gamepad.left_stick_x;
           speedFactor = 1 - (0.6 * gamepad.right_trigger);
           driveMotors(drive, turn, strafe, speedFactor);
-      }
+    }
 
     /**
      * Drive the motors according to drive, turn, strafe inputs.
@@ -84,10 +94,13 @@ public class MechanicalDriveBase
      * @param drive forward / backward (-1 to 1)
      * @param turn how much to turn left or right (heading) (-1 to 1)
      * @param strafe strafe (left or right = -1 to 1)
-     * @param speedFactor scale factor that is applied to all motor powers (0 to 1)
+     * @param power scale factor that is applied to all motor powers (0 to 1)
      */
-      public void driveMotors(double drive, double turn, double strafe, double speedFactor)
+
+//                   Positive       Forward       Right       right            Speed
+      public void driveMotors(double drive, double turn, double strafe, double power)
       {
+          drive *= -1;
           leftPowerFront  = (drive + turn + strafe);
           rightPowerFront = (drive - turn - strafe);
           leftPowerBack   = (drive + turn - strafe);
@@ -98,19 +111,10 @@ public class MechanicalDriveBase
                                        rightPowerFront, rightPowerBack);
           maxAbsVal = Math.max(1.0, maxAbsVal);
 
-          lf.setPower(leftPowerFront/maxAbsVal * speedFactor);
-          rf.setPower(rightPowerFront/maxAbsVal * speedFactor);
-          lb.setPower(leftPowerBack/maxAbsVal * speedFactor);
-          rb.setPower(rightPowerBack/maxAbsVal * speedFactor);
-      }
-
-    /**
-     * Returns the absolute maximum power on any drive motor.
-     *
-     * @return max abs power [0,1]
-     */
-    public double maxMotorPower(){
-          return maxAbsVal(lf.getPower(), rf.getPower(), lb.getPower(), rb.getPower());
+          lf.setPower(leftPowerFront/maxAbsVal * power);
+          rf.setPower(rightPowerFront/maxAbsVal * power);
+          lb.setPower(leftPowerBack/maxAbsVal * power);
+          rb.setPower(rightPowerBack/maxAbsVal * power);
       }
 
     /**
@@ -136,6 +140,7 @@ public class MechanicalDriveBase
       {
         telemetry.addData("Motors", "lf(%.2f), rf(%.2f), lb(%.2f), rb(%.2f)", leftPowerFront, rightPowerFront, leftPowerBack, rightPowerBack);
         telemetry.addData("Speed control", speedFactor);
+        telemetry.update();
       }
 }
 
