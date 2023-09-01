@@ -20,6 +20,7 @@ public class LinearOpModeMez extends LinearOpMode
     public void runOpMode() throws InterruptedException
     {
 
+
         try
         {
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
@@ -39,7 +40,7 @@ public class LinearOpModeMez extends LinearOpMode
         start();
 
         //Drive forward 72 inches
-        driver.forward(24*3,1,0.3);
+        driver.strafe(24 * 3,1,0.3);
 
 
         while (opModeIsActive())

@@ -5,9 +5,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
@@ -18,12 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.Controller.MecanumDriveBase;
-//import org.firstinspires.ftc.teamcode.util.CameraInitSingleton;
-//import org.firstinspires.ftc.teamcode.util.ConeDetection;
-//import org.firstinspires.ftc.teamcode.util.MecanumDriveBase;
-//import org.firstinspires.ftc.teamcode.util.PIDController;
-//import org.firstinspires.ftc.teamcode.util.TeamDetection;
+import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 
 import java.util.Locale;
 
@@ -31,9 +24,9 @@ import java.util.Locale;
 @Disabled
 public class RadarCode extends LinearOpMode
 {
-    private MecanumDriveBase mecanumDriveBase;
+    private MechanicalDriveBase mechanicalDriveBase;
     private ElapsedTime elapsedTime;
-  
+
     private DistanceSensor distanceSensorRight;
     private DistanceSensor distanceSensorLeft;
     private DistanceSensor distanceSensorCenter;
@@ -67,7 +60,7 @@ public class RadarCode extends LinearOpMode
     {
         initImu();
 
-        mecanumDriveBase = new MecanumDriveBase(hardwareMap);
+        mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
         elapsedTime = new ElapsedTime();
 
         distanceSensorCenter = hardwareMap.get(DistanceSensor.class, "distanceSensorCenter");
@@ -210,7 +203,7 @@ public class RadarCode extends LinearOpMode
         else return; //angle is 0
 
         // set power to rotate.
-        mecanumDriveBase.driveMotors(0, powerRate, 0, 1);
+        mechanicalDriveBase.driveMotors(0, powerRate, 0, 1);
 
 
         // rotate until turn is completed.
@@ -225,7 +218,7 @@ public class RadarCode extends LinearOpMode
             {
                 if (opModeIsActive() && Math.abs(getAngle()) > Math.abs(degrees))
                 {
-                    mecanumDriveBase.driveMotors(0, 0, 0, 0);
+                    mechanicalDriveBase.driveMotors(0, 0, 0, 0);
 //                    telemetry.addData("Stop", "");
 //                    telemetry.update();
                     break;
@@ -257,7 +250,7 @@ public class RadarCode extends LinearOpMode
                     {
                         //telemetry.addData("lost pole", "");
                         //telemetry.update();
-                        mecanumDriveBase.driveMotors(0, 0, 0, 0);
+                        mechanicalDriveBase.driveMotors(0, 0, 0, 0);
                         sleep(100);
                         secondPole = getAngle();
                         telemetry.addData("Angle #2:", secondPole + "DIS:" + distance);
@@ -270,7 +263,7 @@ public class RadarCode extends LinearOpMode
         }
 
         // turn the motors off.
-        mecanumDriveBase.driveMotors(0, 0, 0, 0);
+        mechanicalDriveBase.driveMotors(0, 0, 0, 0);
 
         // wait for rotation to stop.
         sleep(300);

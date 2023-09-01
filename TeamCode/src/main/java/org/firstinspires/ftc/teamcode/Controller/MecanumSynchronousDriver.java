@@ -142,4 +142,72 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
         this.driveMotors(0, 0, 0, 0);
 //        encoderLogging();
     }
+
+    /**
+     * Drives the bot right or backward in a straight line.
+     * @param target distance in inches to travel.
+     * @param right indicates directipn of travel.  -1 is right 1 is backwards?
+     * @param speed double value indicating the speed from 0 to 1.
+     */
+    public void strafe(double target, int right, double speed)
+    {
+
+        // Set up parameters for turn correction.
+        pidDrive.setSetpoint(0);
+        pidDrive.setOutputRange(0, .19);
+        pidDrive.setInputRange(-5000, 5000);
+        pidDrive.enable();
+
+        // Set up parameters for strafe correction.
+        pidStrafe.setSetpoint(0);
+        pidStrafe.setOutputRange(0, .15);
+        pidStrafe.setInputRange(-5000, 5000);
+        pidStrafe.enable();
+
+        speed *= right;
+        int rightFrontPos = this.rb.getCurrentPosition();
+        if (right == 1)
+        {
+            rightFrontPos += target * ticksPerInch;
+            while ((Math.abs(this.rb.getCurrentPosition()) <= rightFrontPos) && mOpMode.opModeIsActive())
+            {
+                //if the number is positive the bot is slipping right
+                //if the number is negative the bot is slipping left
+                //lf and rf are added because rf is reverse of lf direction.
+                int wheelDifference = this.lf.getCurrentPosition() + this.rf.getCurrentPosition();
+
+                // if the number is positive the bot strafed left
+                // if the number is negative the bot strafed right
+                int strafeDifference = this.rb.getCurrentPosition();
+
+                // Use PID with imu input to drive in a straight line.
+                // pos is right turn, neg is left turn
+                double forwardCorrection = pidDrive.performPID(wheelDifference);
+                mOpMode.telemetry.addData("correction ", "correction: " + forwardCorrection + " wheelDif: " + wheelDifference);
+
+                double strafeCorrection = pidStrafe.performPID(strafeDifference);
+                mOpMode.telemetry.addData("strafeCorrection ", "correction: " + strafeCorrection + " strafeDifference: " + strafeDifference);
+
+                this.driveMotors(lf.getCurrentPosition() / 10000, forwardCorrection, speed, 1); // run with PID
+
+                //         logger.log("left Encoder = %d, Right Encoder = %d ", this.lf.getCurrentPosition(), this.rf.getCurrentPosition());
+                mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
+                mOpMode.telemetry.update();
+            }
+        }
+        else  //TODO: would like to not have a else here and have to repeat the above code or have to call a subjuction..
+        {
+            rightFrontPos -= target;
+            while (this.lf.getCurrentPosition() >= rightFrontPos)
+            {
+                this.driveMotors(speed, 0, 0, 1);
+
+                //logger.log("left Encoder = %d, Right Encoder = %d ", this.lf.getCurrentPosition(), this.rf.getCurrentPosition());
+                //mOpMode.telemetry.addData("NOOOOOOO", this.lf.getCurrentPosition());
+                //mOpMode.telemetry.update();
+            }
+        }
+        this.driveMotors(0, 0, 0, 0);
+//        encoderLogging();
+    }
 }

@@ -18,6 +18,7 @@ public class OpModeMez extends OpMode
 {
     private int counter = 0;
 
+
     protected VuforiaNav mVufoiraNav;
 
     @Override
@@ -35,6 +36,8 @@ public class OpModeMez extends OpMode
     @Override
     public void loop()
     {
+
+
 
 //        try
 //        {
