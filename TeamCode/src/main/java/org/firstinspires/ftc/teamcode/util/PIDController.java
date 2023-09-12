@@ -1,4 +1,5 @@
-package org.firstinspires.ftc.teamcode.IMU;
+package org.firstinspires.ftc.teamcode.util;
+
 
 // PID controller courtesy of Peter Tischler, with modifications.
 
@@ -198,28 +199,26 @@ public class PIDController
     }
 
     /**
-     * Set the setPoint for the PIDController
-     * @param setPoint the desired setPoint
+     * Set the setpoint for the PIDController
+     * @param setpoint the desired setpoint
      */
-    public void setSetpoint(double setPoint)
+    public void setSetpoint(double setpoint)
     {
-        int sign = 1;
+        int     sign = 1;
 
         if (m_maximumInput > m_minimumInput)
         {
-            if (setPoint < 0) sign = -1;
+            if (setpoint < 0) sign = -1;
 
-            if (Math.abs(setPoint) > m_maximumInput)
+            if (Math.abs(setpoint) > m_maximumInput)
                 m_setpoint = m_maximumInput * sign;
-            else if (Math.abs(setPoint) < m_minimumInput)
+            else if (Math.abs(setpoint) < m_minimumInput)
                 m_setpoint = m_minimumInput * sign;
             else
-                m_setpoint = setPoint;
+                m_setpoint = setpoint;
         }
         else
-        {
-            m_setpoint = setPoint;
-        }
+            m_setpoint = setpoint;
     }
 
     /**

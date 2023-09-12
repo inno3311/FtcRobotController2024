@@ -3,14 +3,19 @@ package org.firstinspires.ftc.teamcode.IMU;
 import static com.qualcomm.hardware.bosch.BNO055IMU.SensorMode.IMU;
 import static java.lang.Thread.sleep;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
+import org.firstinspires.ftc.teamcode.util.PIDController;
+import java.util.Locale;
+
 
 
 /** removed distance sensor part of code now for rotate mainly - Sam**/
@@ -27,7 +32,9 @@ public class IMUControl
     BNO055IMU               imu;
     Orientation             lastAngles = new Orientation();
     double                  globalAngle, power = .30, correction, strafeCorrection,  rotation;
-    PIDController           pidRotate, pidDrive, pidStrafe;
+    PIDController pidRotate, pidDrive, pidStrafe;
+    Orientation angles;
+    Acceleration gravity;
 
     BNO055IMU.Parameters myIMUparameters;
 
@@ -37,7 +44,6 @@ public class IMUControl
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-
         parameters.mode                = IMU;
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -62,6 +68,7 @@ public class IMUControl
 
         pidStrafe = new PIDController(.05, 0, 0);
 
+        composeTelemetry(telemetry);
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
 
@@ -81,6 +88,77 @@ public class IMUControl
         telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
         telemetry.addData("Mode", "waiting for start");
         telemetry.update();
+    }
+
+    void composeTelemetry(Telemetry telemetry) {
+
+        // At the beginning of each telemetry update, grab a bunch of data
+        // from the IMU that we will then display in separate lines.
+        telemetry.addAction(new Runnable() { @Override public void run()
+        {
+            // Acquiring the angles is relatively expensive; we don't want
+            // to do that in each of the three items that need that info, as that's
+            // three times the necessary expense.
+            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            gravity  = imu.getGravity();
+        }
+        });
+
+        telemetry.addLine()
+                .addData("status", new Func<String>() {
+                    @Override public String value() {
+                        return imu.getSystemStatus().toShortString();
+                    }
+                })
+                .addData("calib", new Func<String>() {
+                    @Override public String value() {
+                        return imu.getCalibrationStatus().toString();
+                    }
+                });
+
+        telemetry.addLine()
+                .addData("heading", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.firstAngle);
+                    }
+                })
+                .addData("roll", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.secondAngle);
+                    }
+                })
+                .addData("pitch", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.thirdAngle);
+                    }
+                });
+
+        telemetry.addLine()
+                .addData("grvty", new Func<String>() {
+                    @Override public String value() {
+                        return gravity.toString();
+                    }
+                })
+                .addData("mag", new Func<String>() {
+                    @Override public String value() {
+                        return String.format(Locale.getDefault(), "%.3f",
+                                Math.sqrt(gravity.xAccel*gravity.xAccel
+                                        + gravity.yAccel*gravity.yAccel
+                                        + gravity.zAccel*gravity.zAccel));
+                    }
+                });
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Formatting
+    //----------------------------------------------------------------------------------------------
+
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
     // called when init button is  pressed.
@@ -297,7 +375,7 @@ public class IMUControl
     /**
      * Resets the cumulative angle tracking to zero.
      */
-    private void resetAngle()
+    public void resetAngle()
     {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;

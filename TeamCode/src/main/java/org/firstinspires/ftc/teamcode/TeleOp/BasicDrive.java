@@ -7,12 +7,12 @@ import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Basic drive", group = "drive")
 public class BasicDrive extends OpMode
 {
-    MechanicalDriveBase mecanumDriveBase;
+    MechanicalDriveBase mechanicalDriveBase;
 
     @Override
     public void init()
     {
-        mecanumDriveBase = new MechanicalDriveBase(hardwareMap);
+        mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
         telemetry.addData("Initialized", " Press start");
         telemetry.update();
     }
@@ -20,7 +20,7 @@ public class BasicDrive extends OpMode
     @Override
     public void loop()
     {
-        mecanumDriveBase.gamepadController(gamepad1);
-        mecanumDriveBase.driveBaseTelemetry(telemetry);
+        mechanicalDriveBase.gamepadController(gamepad1);
+        mechanicalDriveBase.driveBaseTelemetry(telemetry);
     }
 }

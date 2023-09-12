@@ -13,6 +13,7 @@ public class MechanicalDriveBase
     public DcMotor lb;
     public DcMotor rb;
     public DcMotor rf;
+  
     public double leftPowerFront  = 0;
     public double rightPowerFront = 0;
     public double rightPowerBack  = 0;
@@ -30,10 +31,10 @@ public class MechanicalDriveBase
      */
     public MechanicalDriveBase(HardwareMap hardwareMap)
     {
+        lf = hardwareMap.get(DcMotor.class, "lf");
+        lb = hardwareMap.get(DcMotor.class, "lb");
         rb = hardwareMap.get(DcMotor.class, "rb");
         rf = hardwareMap.get(DcMotor.class, "rf");
-        lb = hardwareMap.get(DcMotor.class, "lb");
-        lf = hardwareMap.get(DcMotor.class, "lf");
 
         lf.setDirection(DcMotor.Direction.FORWARD);
         rf.setDirection(DcMotor.Direction.REVERSE);
@@ -42,6 +43,9 @@ public class MechanicalDriveBase
 
         // Run Without Encoders
         resetRunMode();
+      
+        // reset encoders
+        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Brake when power set to Zero
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -62,20 +66,27 @@ public class MechanicalDriveBase
         rb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-//hi
+    //make the robot stop
+    public void brake()
+    {
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
     /**
      * Standard controls from a gamepad
      *
      * @param gamepad - the gamepad you want to control the drive base
      */
-    public void gamepadController(Gamepad gamepad) {
-
+    public void gamepadController(Gamepad gamepad)
+    {
           double drive = -gamepad.left_stick_y;
           double turn = gamepad.right_stick_x;
           double strafe = gamepad.left_stick_x;
           speedFactor = 1 - (0.6 * gamepad.right_trigger);
           driveMotors(drive, turn, strafe, speedFactor);
-      }
+    }
 
     /**
      * Drive the motors according to drive, turn, strafe inputs.
@@ -95,12 +106,8 @@ public class MechanicalDriveBase
           // This code is awful.
           double maxAbsVal = maxAbsVal(leftPowerFront, leftPowerBack,
                                        rightPowerFront, rightPowerBack);
+        
           maxAbsVal = Math.max(1.0, maxAbsVal);
-
-          lf.setPower(leftPowerFront/maxAbsVal * speed);
-          rf.setPower(rightPowerFront/maxAbsVal * speed);
-          lb.setPower(leftPowerBack/maxAbsVal * speed);
-          rb.setPower(rightPowerBack/maxAbsVal * speed);
       }
 
     /**
@@ -111,7 +118,7 @@ public class MechanicalDriveBase
     public double maxMotorPower()
     {
           return maxAbsVal(lf.getPower(), rf.getPower(), lb.getPower(), rb.getPower());
-      }
+    }
 
     /**
      * maxAbsVal returns the maximum absolute value among an arbitrary number of arguments.

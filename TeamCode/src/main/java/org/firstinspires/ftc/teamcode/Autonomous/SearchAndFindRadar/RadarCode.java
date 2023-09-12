@@ -16,8 +16,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
-
-
 import java.util.Locale;
 
 @Autonomous(name="RadarCode", group="Exercises")
@@ -26,7 +24,7 @@ public class RadarCode extends LinearOpMode
 {
     private MechanicalDriveBase mechanicalDriveBase;
     private ElapsedTime elapsedTime;
-  
+
     private DistanceSensor distanceSensorRight;
     private DistanceSensor distanceSensorLeft;
     private DistanceSensor distanceSensorCenter;
