@@ -30,7 +30,6 @@ public class NoCrashMaster extends OpMode
         //Distance sensors detect something the robot will stop and turn
         if (distanceSensorLeft.getDistance(DistanceUnit.INCH) <= 24 && distanceSensorRight.getDistance(DistanceUnit.INCH) <= 24)
         {
-            mechanicalDriveBase.brake();
             //Call IMU rotate to turn 90 degrees
             imuControl.rotate(90,1);
         }
