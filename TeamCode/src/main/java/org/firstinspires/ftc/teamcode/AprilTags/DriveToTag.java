@@ -20,18 +20,18 @@ public class DriveToTag
 {
     // Adjust these numbers to suit your robot.
     final double DESIRED_DISTANCE = 9.0; //  this is how close the camera should get to the target (inches)
-    final double STRAFE_DIF = -6.0;
+    final double STRAFE_DIF = -3.0;
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
     //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-    final double SPEED_GAIN  =  0.01  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+    final double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
     final double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
     final double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
 
     final double MAX_AUTO_SPEED = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_STRAFE= 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_TURN  = 0.4;   //  Clip the turn speed to this max value (adjust for your robot)
+    final double MAX_AUTO_STRAFE = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
+    final double MAX_AUTO_TURN = 0.4;   //  Clip the turn speed to this max value (adjust for your robot)
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private static  int desiredTagID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
@@ -104,12 +104,6 @@ public class DriveToTag
 
         // Apply desired axes motions to the drivetrain.
         mechanicalDriveBase.driveMotors(drive, turn, strafe, 1);
-//        while (mechanicalDriveBase.lf.isBusy() || mechanicalDriveBase.rf.isBusy() || mechanicalDriveBase.lb.isBusy() || mechanicalDriveBase.rb.isBusy())
-//        {
-//            mechanicalDriveBase.driveMotors(drive, turn, strafe, 1);
-//            telemetry.addData("Driving", "");
-//            telemetry.update();
-//        }
     }
 
     /**
@@ -133,44 +127,4 @@ public class DriveToTag
         }
     }
 
-    /*
-     Manually set the camera gain and exposure.
-     This can only be called AFTER calling initAprilTag(), and only works for Webcams;
-    */
-//    private void setManualExposure(int exposureMS, int gain, Telemetry telemetry)
-//    {
-//        // Wait for the camera to be open, then use the controls
-//
-//        if (visionPortal == null) {
-//            return;
-//        }
-//
-//        // Make sure camera is streaming before we try to set the exposure controls
-//        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)
-//        {
-//            telemetry.addData("Camera", "Waiting");
-//            telemetry.update();
-//            while ((visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING))
-//            {
-//                try {sleep(20);} catch (InterruptedException e) {e.printStackTrace();}
-//            }
-//            telemetry.addData("Camera", "Ready");
-//            telemetry.update();
-//        }
-//
-//        // Set camera controls unless we are stopping.
-//        ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-//        if (exposureControl.getMode() != ExposureControl.Mode.Manual)
-//        {
-//            exposureControl.setMode(ExposureControl.Mode.Manual);
-//            try {sleep(50);} catch (InterruptedException e) {e.printStackTrace();}
-//        }
-//        exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-//        try {sleep(20);} catch (InterruptedException e) {e.printStackTrace();}
-//
-//        GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-//        gainControl.setGain(gain);
-//
-//        try {sleep(20);} catch (InterruptedException e) {e.printStackTrace();}
-//    }
 }
