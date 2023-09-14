@@ -45,7 +45,7 @@ public class MechanicalDriveBase
         resetRunMode();
       
         // reset encoders
-        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        resetRunMode();
 
         // Brake when power set to Zero
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -108,6 +108,11 @@ public class MechanicalDriveBase
                                        rightPowerFront, rightPowerBack);
         
           maxAbsVal = Math.max(1.0, maxAbsVal);
+
+          lf.setPower(leftPowerFront/maxAbsVal * speedFactor);
+          rf.setPower(rightPowerFront/maxAbsVal * speedFactor);
+          lb.setPower(leftPowerBack/maxAbsVal * speedFactor);
+          rb.setPower(rightPowerBack/maxAbsVal * speedFactor);
       }
 
     /**
