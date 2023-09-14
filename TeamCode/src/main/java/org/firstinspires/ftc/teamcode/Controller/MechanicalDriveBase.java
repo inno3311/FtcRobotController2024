@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.IMU.IMUControl;
-import java.util.Base64;
 
 public class MechanicalDriveBase
 {
@@ -18,7 +17,7 @@ public class MechanicalDriveBase
     public double rightPowerFront = 0;
     public double rightPowerBack  = 0;
     public double leftPowerBack   = 0;
-    public double speedFactor     = 0;
+    public double speed = 0;
 
     final double  COUNTS_PER_INCH = (8192 * 1) / (2 * 3.1415); // 1,303.835747254496
     private double heading = 0;
@@ -84,8 +83,8 @@ public class MechanicalDriveBase
           double drive = -gamepad.left_stick_y;
           double turn = gamepad.right_stick_x;
           double strafe = gamepad.left_stick_x;
-          speedFactor = 1 - (0.6 * gamepad.right_trigger);
-          driveMotors(drive, turn, strafe, speedFactor);
+          speed = 1 - (0.6 * gamepad.right_trigger);
+          driveMotors(drive, turn, strafe, speed);
     }
 
     /**
@@ -109,10 +108,11 @@ public class MechanicalDriveBase
         
           maxAbsVal = Math.max(1.0, maxAbsVal);
 
-          lf.setPower(leftPowerFront/maxAbsVal * speedFactor);
-          rf.setPower(rightPowerFront/maxAbsVal * speedFactor);
-          lb.setPower(leftPowerBack/maxAbsVal * speedFactor);
-          rb.setPower(rightPowerBack/maxAbsVal * speedFactor);
+          lf.setPower(leftPowerFront/maxAbsVal * speed);
+          rf.setPower(rightPowerFront/maxAbsVal * speed);
+          lb.setPower(leftPowerBack/maxAbsVal * speed);
+          rb.setPower(rightPowerBack/maxAbsVal * speed);
+
       }
 
     /**
@@ -147,7 +147,7 @@ public class MechanicalDriveBase
     public void driveBaseTelemetry(Telemetry telemetry)
     {
         telemetry.addData("Motors", "lf(%.2f), rf(%.2f), lb(%.2f), rb(%.2f)", leftPowerFront, rightPowerFront, leftPowerBack, rightPowerBack);
-        telemetry.addData("Speed control", speedFactor);
+        telemetry.addData("Speed control", speed);
     }
 
       /**======================================== Autonomous Code ===============================================**/

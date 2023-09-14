@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.AprilTags;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 
 @Autonomous(name = "AprilTag", group = "AprilTag")
@@ -18,29 +17,34 @@ public class AprilTagOpMode extends LinearOpMode
     {
         target = 6;
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
-        detectAprilTag = new DetectAprilTag(hardwareMap);
-//        driveToTag = new DriveToTag(hardwareMap, telemetry, mechanicalDriveBase);
+//        detectAprilTag = new DetectAprilTag(hardwareMap);
+        driveToTag = new DriveToTag(hardwareMap, telemetry, mechanicalDriveBase);
 
         waitForStart();
         start();
 
         while (opModeIsActive())
         {
-            detectAprilTag.detectTags(telemetry);
-            telemetry.addData("get One", detectAprilTag.getDetectionID());
-            telemetry.addData("get Two", detectAprilTag.getDetectionID());
-            telemetry.addData("get Three", detectAprilTag.getDetectionID());
-            if (detectAprilTag.getDetectionID() == target)
-            {
-                break;
-            }
-
-//            driveToTag.findTag(telemetry,1);
+//            detectAprilTag.detectTags(telemetry);
+//            telemetry.addData("get One", detectAprilTag.getDetectionID());
+            driveToTag.findTag(telemetry,1);
         }
 
         stop();
         detectAprilTag.closeAprilTags();
     }
+
+//    class ThreadDetector extends Thread
+//    {
+//        public ThreadDetector()
+//        {
+//            while (opModeIsActive())
+//            {
+//                detectAprilTag.detectTags(telemetry);
+//                telemetry.addData("Thread get", detectAprilTag.getDetectionID());
+//            }
+//        }
+//    }
 
     class ThreadDetector extends Thread
     {
@@ -48,13 +52,7 @@ public class AprilTagOpMode extends LinearOpMode
         {
             while (opModeIsActive())
             {
-                detectAprilTag.detectTags(telemetry);
-                telemetry.addData("Thread get", detectAprilTag.getDetectionID());
-                if (detectAprilTag.getDetectionID() == target)
-                {
-                    break;
-                }
-
+                mechanicalDriveBase.driveBaseTelemetry(telemetry);
             }
         }
     }
