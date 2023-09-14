@@ -82,16 +82,30 @@ public class DetectAprilTag
 
     public int getDetectionID()
     {
+        int num = -1;
+        List<AprilTagDetection> detection = aprilTag.getDetections();
+        AprilTagDetection id = detection.get(0);
+        num = id.id;
+        return num;
+    }
+
+    public int getDetectionIDTwo()
+    {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         for (AprilTagDetection detection : currentDetections)
         {
             if (detection.metadata != null)
             {
                 return detection.id;
-
             }
         }
         return -1;
+    }
+
+    public List<AprilTagDetection> getDetectionIDThree()
+    {
+        List<AprilTagDetection> detection = aprilTag.getDetections();
+        return detection;
     }
 
     private void initAprilTag(HardwareMap hardwareMap)

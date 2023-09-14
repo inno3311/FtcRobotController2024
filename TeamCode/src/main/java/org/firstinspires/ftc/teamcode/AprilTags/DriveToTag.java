@@ -49,12 +49,13 @@ public class DriveToTag
         }
     }
 
-    public void executeToTag(Telemetry telemetry, int target)
+    public void findTag(Telemetry telemetry, int target)
     {
-        boolean targetFound     = false;    // Set to true when an AprilTag target is detected
-        double  drive           = 0;        // Desired forward power/speed (-1 to +1)
-        double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
-        double  turn            = 0;        // Desired turning power/speed (-1 to +1)
+        boolean targetFound = false;    // Set to true when an AprilTag target is detected
+        double  drive = 0;        // Desired forward power/speed (-1 to +1)
+        double  strafe = 0;        // Desired strafe power/speed (-1 to +1)
+        double  turn = 0;        // Desired turning power/speed (-1 to +1)
+        //The aprilTag you want to find
         desiredTagID = target;
 
         targetFound = false;
@@ -80,7 +81,6 @@ public class DriveToTag
         // Tell the driver what we see, and what to do.
         if (targetFound)
         {
-            telemetry.addData(">","HOLD Left-Bumper to Drive to Target\n");
             telemetry.addData("Target", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
             telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
             telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);

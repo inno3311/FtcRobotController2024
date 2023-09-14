@@ -16,24 +16,55 @@ public class AprilTagOpMode extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        target = 1;
+        target = 6;
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
         detectAprilTag = new DetectAprilTag(hardwareMap);
 //        driveToTag = new DriveToTag(hardwareMap, telemetry, mechanicalDriveBase);
 
         waitForStart();
+        start();
 
         while (opModeIsActive())
         {
             detectAprilTag.detectTags(telemetry);
+            telemetry.addData("get One", detectAprilTag.getDetectionID());
+            telemetry.addData("get Two", detectAprilTag.getDetectionID());
+            telemetry.addData("get Three", detectAprilTag.getDetectionID());
             if (detectAprilTag.getDetectionID() == target)
             {
-//                break;
+                break;
             }
 
-//            driveToTag.executeToTag(telemetry,1);
+//            driveToTag.findTag(telemetry,1);
         }
 
+        stop();
         detectAprilTag.closeAprilTags();
     }
+
+    class ThreadDetector extends Thread
+    {
+        public ThreadDetector()
+        {
+            while (opModeIsActive())
+            {
+                detectAprilTag.detectTags(telemetry);
+                telemetry.addData("Thread get", detectAprilTag.getDetectionID());
+                if (detectAprilTag.getDetectionID() == target)
+                {
+                    break;
+                }
+
+            }
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
