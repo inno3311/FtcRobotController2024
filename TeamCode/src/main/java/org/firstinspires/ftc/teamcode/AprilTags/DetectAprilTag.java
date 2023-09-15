@@ -31,7 +31,7 @@ public class DetectAprilTag
 
     public DetectAprilTag(HardwareMap hardwareMap)
     {
-        initAprilTag(hardwareMap);
+//        initAprilTag(hardwareMap);
     }
 
     // Needs called at the end of OpMode

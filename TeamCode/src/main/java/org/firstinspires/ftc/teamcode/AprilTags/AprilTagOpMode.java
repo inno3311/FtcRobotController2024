@@ -17,7 +17,7 @@ public class AprilTagOpMode extends LinearOpMode
     {
         target = 6;
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
-//        detectAprilTag = new DetectAprilTag(hardwareMap);
+        detectAprilTag = new DetectAprilTag(hardwareMap);
         driveToTag = new DriveToTag(hardwareMap, telemetry, mechanicalDriveBase);
 
         waitForStart();
@@ -34,25 +34,14 @@ public class AprilTagOpMode extends LinearOpMode
         detectAprilTag.closeAprilTags();
     }
 
-//    class ThreadDetector extends Thread
-//    {
-//        public ThreadDetector()
-//        {
-//            while (opModeIsActive())
-//            {
-//                detectAprilTag.detectTags(telemetry);
-//                telemetry.addData("Thread get", detectAprilTag.getDetectionID());
-//            }
-//        }
-//    }
-
     class ThreadDetector extends Thread
     {
         public ThreadDetector()
         {
             while (opModeIsActive())
             {
-                mechanicalDriveBase.driveBaseTelemetry(telemetry);
+                detectAprilTag.detectTags(telemetry);
+                telemetry.addData("Thread get", detectAprilTag.getDetectionID());
             }
         }
     }
