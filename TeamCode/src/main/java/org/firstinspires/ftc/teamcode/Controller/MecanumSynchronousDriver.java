@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Controller;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.IMU.IMUControl;
@@ -24,7 +25,8 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
    private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
 //                    Circumference of the robot when turning == encoder dist from center (radius) * 2 * pi
 //                                        ^^^
-   private final double ticksPerDegree = (ticksPerInch * 64.09) / 360; // 16,000
+//   private final double ticksPerDegree = (ticksPerInch * 64.09) / 360; // 16,000
+   private final double ticksPerDegree = (ticksPerInch * 56.0) / 360; // 16,000
    /**
     * Logging method used to write data to file.
     * NOTE: This seems to cause the dev to have to hard reset the bot after each run, making us of
@@ -110,11 +112,18 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
 
         speed *= forward;
         int leftFrontPos = this.lf.getCurrentPosition();
-        if (forward == 1)
+//        if (forward == 1)
         {
-            leftFrontPos += target * ticksPerInch;
-            while ((this.lf.getCurrentPosition() <= leftFrontPos) &&mOpMode.opModeIsActive())
+            if (forward == 1)
+               leftFrontPos += target * ticksPerInch;
+            else
+               leftFrontPos -= target * ticksPerInch;
+
+            while (mOpMode.opModeIsActive())
             {
+               int currPosTicks = this.lf.getCurrentPosition();
+
+
                //if the number is positive the bot is slipping right
                //if the number is negative the bot is slipping left
                //lf and rf are added because rf is reverse of lf direction.
@@ -135,26 +144,42 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
 
                //this.driveMotors(speed, 0, 0, 1); //run with no PID
                correction = correction * (speed * 0.33);
-               this.driveMotors(-speed, correction, -strafeCorrection, 1); // run with PID
+               this.driveMotors(speed, correction * forward, -strafeCorrection, 1); // run with PID
 
-                logger.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction);
+                //logger.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction);
                mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
                mOpMode.telemetry.update();
-            }
-        }
-        else  //TODO: would like to not have a else here and have to repeat the above code or have to call a subjuction..
-        {
-            leftFrontPos -= target;
-            while (this.lf.getCurrentPosition() >= leftFrontPos)
-            {
-                this.driveMotors(speed, 0, 0, 1);
 
-                //logger.log("left Encoder = %d, Right Encoder = %d ", this.lf.getCurrentPosition(), this.rf.getCurrentPosition());
-                //mOpMode.telemetry.addData("NOOOOOOO", this.lf.getCurrentPosition());
-                //mOpMode.telemetry.update();
+               if (forward == 1)
+               {
+                  if (currPosTicks > leftFrontPos)
+                     break;
+               }
+               else
+               {
+                  if (currPosTicks < leftFrontPos)
+                     break;
+               }
             }
         }
+//        else  //TODO: would like to not have a else here and have to repeat the above code or have to call a subjuction..
+//        {
+//            leftFrontPos -= target;
+//            while (this.lf.getCurrentPosition() >= leftFrontPos)
+//            {
+//                this.driveMotors(speed, 0, 0, 1);
+//
+//                //logger.log("left Encoder = %d, Right Encoder = %d ", this.lf.getCurrentPosition(), this.rf.getCurrentPosition());
+//                //mOpMode.telemetry.addData("NOOOOOOO", this.lf.getCurrentPosition());
+//                //mOpMode.telemetry.update();
+//            }
+//        }
         this.driveMotors(0, 0, 0, 0);
+
+       this.resetEncoders();
+       this.resetRunMode();
+
+       //driver.rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        encoderLogging();
     }
 
@@ -286,7 +311,7 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
                 correction = correction * (speed * 0.33);
                 this.driveMotors(0, speed, 0, 1); // run with PID
 
-                logger.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction);
+                //logger.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction);
                 mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
                 mOpMode.telemetry.update();
             }
@@ -301,9 +326,14 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
                 //logger.log("left Encoder = %d, Right Encoder = %d ", this.lf.getCurrentPosition(), this.rf.getCurrentPosition());
                 //mOpMode.telemetry.addData("NOOOOOOO", this.lf.getCurrentPosition());
                 //mOpMode.telemetry.update();
+
+               mOpMode.telemetry.addData("90 = ", (ticksPerDegree * 90) + "\n current position = " +  rb.getCurrentPosition());
+               mOpMode.telemetry.update();
             }
         }
         this.driveMotors(0, 0, 0, 0);
+        this.resetEncoders();
+        this.resetRunMode();
 //        encoderLogging();
     }
 }

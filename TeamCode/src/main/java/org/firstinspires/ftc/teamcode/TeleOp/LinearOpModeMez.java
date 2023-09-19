@@ -31,28 +31,94 @@ public class LinearOpModeMez extends LinearOpMode
             e.printStackTrace();
         }
 
-        driver.rf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        driver.lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        driver.rb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        driver.lb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
 
         waitForStart();
         start();
 
+        aroundyTest();
+
+        //rotateTest();
+
+
         //Drive forward 72 inches
 //        driver.strafe(24 * 3,1,0.3, new IMUControl(hardwareMap, telemetry));
 //        driver.forward(24 * 4, 1, 0.4);
-        driver.turn(90, 1, 0.4);
-        sleep(10000);
-        driver.turn(90, -1, 0.4);
+
+//        driver.forward(12 * 4,1,0.6);
+//        sleep(1000);
+//        driver.forward(12 * 4,-1,0.6);
+//        sleep(1000);
+//        driver.turn(180, -1, .5);
+
+
+//        driver.forward(12 * 2,1,0.3);
+//        sleep(1000);
+//        driver.turn(90, -1, .3);
+//        sleep(1000);
+//        driver.forward(12 * 1.8,1,.3);
+//        sleep(1000);
+//        driver.turn(90, 1, 1);
+//        sleep(1000);
+//        driver.forward(12 * 2,1,.3);
+//        sleep(1000);
+//        driver.turn(90, 1, 0.4);
+//        sleep(1000);
+//        driver.forward(12 * 1.8,1,0.3);
+//        sleep(1000);
+//        driver.turn(100, 1, 0.4);
+//        sleep(1000);
+//        driver.forward(12 * 4,1,0.3);
+//        sleep(1000);
+//        driver.forward(12 * 4,-1,0.3);
 
         while (opModeIsActive())
         {
 //            telemetry.addData("encoder", "left: " + driver.lf.getCurrentPosition() + " right: " + driver.rf.getCurrentPosition());
 //            telemetry.update();
-            telemetry.addData("90 = ", (ticksPerDegree * 90) + "\n current position = " +  driver.rb.getCurrentPosition());
-            telemetry.update();
+//            telemetry.addData("90 = ", (ticksPerDegree * 90) + "\n current position = " +  driver.rb.getCurrentPosition());
+//            telemetry.update();
         }
     }
+
+
+    public void rotateTest()
+    {
+//        sleep(1000);
+//        driver.turn(360, -1, .5);
+
+        sleep(3000);
+        driver.turn(90, 1, .5);
+
+        sleep(3000);
+        driver.turn(90, -1, .5);
+
+//        sleep(3000);
+//        driver.turn(180, -1, .5);
+
+    }
+
+    public void aroundyTest()
+    {
+        driver.forward(12 * 4,1,0.8);
+        sleep(100);
+        driver.turn(90, -1, .5);
+        sleep(100);
+        driver.forward(12 * 1.5,1,0.8);
+        sleep(100);
+        driver.turn(90, -1, .5);
+        sleep(100);
+        driver.forward(12 * 4,1,0.8);
+        sleep(100);
+        driver.turn(90, -1, .5);
+        sleep(100);
+        driver.forward(12 * 1.5,1,0.8);
+        sleep(100);
+        driver.turn(90, -1, .5);
+    }
+
+
 }
+
+
