@@ -80,6 +80,64 @@ public class DetectAprilTag
 
     }   // end method telemetryAprilTag()
 
+    public double getX()
+    {
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        AprilTagDetection detection = currentDetections.get(0);
+        return detection.ftcPose.x;
+    }
+
+    public double getY()
+    {
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        AprilTagDetection detection = currentDetections.get(0);
+        return detection.ftcPose.x;
+    }
+
+    // Shouldn't need Z
+
+    public double getPitch()
+    {
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        AprilTagDetection detection = currentDetections.get(0);
+        return detection.ftcPose.pitch;
+    }
+
+    public double getRoll()
+    {
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        AprilTagDetection detection = currentDetections.get(0);
+        return detection.ftcPose.roll;
+    }
+
+    public double getYaw()
+    {
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        AprilTagDetection detection = currentDetections.get(0);
+        return detection.ftcPose.yaw;
+    }
+
+    public double getBearing()
+    {
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        AprilTagDetection detection = currentDetections.get(0);
+        return detection.ftcPose.bearing;
+    }
+
+    public double getRange()
+    {
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        AprilTagDetection detection = currentDetections.get(0);
+        return detection.ftcPose.range;
+    }
+
+    public double getElevation()
+    {
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        AprilTagDetection detection = currentDetections.get(0);
+        return detection.ftcPose.elevation;
+    }
+
     public int getDetectionID()
     {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
