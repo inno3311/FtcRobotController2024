@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.AprilTags;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 @Autonomous(name = "AprilTag", group = "AprilTag")
 public class AprilTagOpMode extends LinearOpMode
@@ -18,23 +19,19 @@ public class AprilTagOpMode extends LinearOpMode
         target = 6;
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
         detectAprilTag = new DetectAprilTag(hardwareMap);
-//        driveToTag = new DriveToTag(hardwareMap, telemetry, mechanicalDriveBase);
+        driveToTag = new DriveToTag(mechanicalDriveBase, hardwareMap);
 
         waitForStart();
         start();
 
         while (opModeIsActive())
         {
-            detectAprilTag.detectTags(telemetry);
 //            detectAprilTag.detectTags(telemetry);
 //            telemetry.addData("get One", detectAprilTag.getDetectionID());
-//            driveToTag.findTag(telemetry,1);
+            driveToTag.findTag(12,5, 5, telemetry);
         }
 
         stop();
-        detectAprilTag.closeAprilTags();
-
-
     }
 
     class ThreadDetector extends Thread

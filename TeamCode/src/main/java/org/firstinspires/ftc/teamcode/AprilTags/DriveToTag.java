@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.AprilTags;
 
+import static java.lang.Thread.holdsLock;
 import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -7,20 +8,17 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class DriveToTag
 {
     // Adjust these numbers to suit your robot.
-    final double DESIRED_DISTANCE = 9.0; //  this is how close the camera should get to the target (inches)
-    final double STRAFE_DIF = 0;
+    double desiredDistance = 0; //  this is how close the camera should get to the target (inches)
+    double strafeDif = 0;
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
@@ -40,14 +38,16 @@ public class DriveToTag
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     private MechanicalDriveBase mechanicalDriveBase;
 
-    public DriveToTag(HardwareMap hardwareMap, Telemetry telemetry, MechanicalDriveBase mechanicalDriveBase)
+    public DriveToTag(MechanicalDriveBase mechanicalDriveBase, HardwareMap hardwareMap)
     {
         this.mechanicalDriveBase = mechanicalDriveBase;
         initAprilTag(hardwareMap);
     }
 
-    public void findTag(Telemetry telemetry, int target)
+    public void findTag(double range, double yaw, int target, Telemetry telemetry)
     {
+        desiredDistance = range;
+        strafeDif = yaw;
         boolean targetFound = false;    // Set to true when an AprilTag target is detected
         double  drive = 0;        // Desired forward power/speed (-1 to +1)
         double  strafe = 0;        // Desired strafe power/speed (-1 to +1)
@@ -88,9 +88,9 @@ public class DriveToTag
         if (targetFound)
         {
             // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-            double  rangeError = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-            double  headingError = -desiredTag.ftcPose.bearing;
-            double  yawError = (desiredTag.ftcPose.yaw - STRAFE_DIF);
+            double  rangeError = (desiredTag.ftcPose.range - desiredDistance);
+            double  headingError = desiredTag.ftcPose.bearing;
+            double  yawError = (desiredTag.ftcPose.yaw - strafeDif);
 
             // Use the speed and turn "gains" to calculate how we want the robot to move.
             drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
