@@ -59,7 +59,20 @@ public class BlueStageLeftLinearOpMode extends LinearOpMode
         //out what route that will be.
 
         //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is
-        driver.forward(24,1,0.5);
+        driver.forward(25,1,0.6);
+
+        sleep(500);
+
+        driver.forward(5,-1,0.6);
+
+        sleep(500);
+
+        driver.turn(90, -1, .4);
+
+        sleep(500);
+
+        driver.forward(31, 1, 0.6);
+
 
 
     }

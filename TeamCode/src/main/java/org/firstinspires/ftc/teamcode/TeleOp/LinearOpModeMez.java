@@ -85,35 +85,53 @@ public class LinearOpModeMez extends LinearOpMode
 
     public void rotateTest()
     {
-//        sleep(1000);
-//        driver.turn(360, -1, .5);
-
-        sleep(3000);
-        driver.turn(90, 1, .5);
-
-        sleep(3000);
-        driver.turn(90, -1, .5);
-
+        double rotateSpeed = 0.4;
 //        sleep(3000);
-//        driver.turn(180, -1, .5);
+//        driver.turn(30, 1, rotateSpeed);
+//        sleep(3000);
+//        driver.turn(30, 1, rotateSpeed);
+//        sleep(3000);
+//        driver.turn(30, 1, rotateSpeed);
 
+        sleep(2000);
+        driver.turn(360, -1, rotateSpeed);
+
+
+//        sleep(2000);
+//        driver.turn(90, -1, rotateSpeed);
+//        sleep(2000);
+//        driver.turn(90, -1, rotateSpeed);
+//        sleep(2000);
+//        driver.turn(90, -1, rotateSpeed);
+//        sleep(2000);
+//        driver.turn(90, -1, rotateSpeed);
+
+        sleep(3000);
+//        driver.turn(90, -1, rotateSpeed);
+
+        sleep(3000);
+//        driver.turn(180, -1, rotateSpeed);
+
+        sleep(3000);
+//        driver.turn(360, 1, rotateSpeed);
     }
 
     public void aroundyTest()
     {
-        driver.forward(12 * 4,1,0.8);
+        double speed = 0.7;
+        driver.forward(12 * 4,1,speed);
         sleep(100);
         driver.turn(90, -1, .5);
         sleep(100);
-        driver.forward(12 * 1.5,1,0.8);
+        driver.forward(12 * 1.5,1,speed);
         sleep(100);
         driver.turn(90, -1, .5);
         sleep(100);
-        driver.forward(12 * 4,1,0.8);
+        driver.forward(12 * 4,1,speed);
         sleep(100);
         driver.turn(90, -1, .5);
         sleep(100);
-        driver.forward(12 * 1.5,1,0.8);
+        driver.forward(12 * 1.5,1,speed);
         sleep(100);
         driver.turn(90, -1, .5);
     }

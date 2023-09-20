@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
 
 import java.io.IOException;
 
-@Autonomous(name = "Blue Stage Left", group = "Group3311")
+@Autonomous(name = "Blue Stage Right", group = "Group3311")
 public class BlueStageRightLinearOpMode extends LinearOpMode
 {
 
@@ -59,8 +59,27 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         //out what route that will be.
 
         //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is
-        driver.forward(24,1,0.5);
+       driver.forward(25,1,0.6);
 
+       driver.forward(23,-1,0.6);
+
+       driver.turn(90, -1, 0.4);
+
+    //   driver.forward(30, 1, 0.6);
+
+      // driver.turn(90, 1, 0.4);
+
+       //driver.turn(90, -1, 0.4);
+
+       driver.forward(80, 1, 0.9);
+
+       driver.turn(90, 1, 0.4);
+
+       driver.forward(15, 1, 0.6);
+
+       driver.turn(90, -1, 0.4);
+
+       driver.forward(5, 1, 0.6);
 
     }
 
