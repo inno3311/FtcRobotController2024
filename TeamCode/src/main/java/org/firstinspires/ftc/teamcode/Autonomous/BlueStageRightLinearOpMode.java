@@ -53,37 +53,22 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
      */
     public void planAlpha()
     {
-        //So to start you off, you are going to want to push the pixel to the second line.  So, a
-        //forward command is in order.  You will need to measure the distance.  From there you will
-        //probably need to back up a bit before rotating to your end goal.  I will let you figure
-        //out what route that will be.
-
-        //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is
-       driver.forward(25,1,0.6);
-
-       driver.forward(23,-1,0.6);
-
+        
+       //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is), then go backward
+       driver.forward(25, 1, 0.6);
+       driver.forward(23, -1, 0.6);
+       //Turn left through the truss  
        driver.turn(90, -1, 0.4);
-
-    //   driver.forward(30, 1, 0.6);
-
-      // driver.turn(90, 1, 0.4);
-
-       //driver.turn(90, -1, 0.4);
-
        driver.forward(80, 1, 0.9);
-
+       //Turn right  
        driver.turn(90, 1, 0.4);
-
        driver.forward(15, 1, 0.6);
-
+       //Turn left and go to backdrop 
        driver.turn(90, -1, 0.4);
-
        driver.forward(5, 1, 0.6);
 
     }
-
-
+ 
     /**
      * There is always a plan B.  ;)
      */
