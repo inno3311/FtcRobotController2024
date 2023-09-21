@@ -48,8 +48,9 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 @TeleOp(name = "Concept: AprilTag Easy", group = "Concept")
-@Disabled
-public class ConceptAprilTagEasy extends LinearOpMode {
+//@Disabled
+public class ConceptAprilTagEasy extends LinearOpMode
+{
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
@@ -64,7 +65,8 @@ public class ConceptAprilTagEasy extends LinearOpMode {
     private VisionPortal visionPortal;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode()
+    {
 
         initAprilTag();
 
@@ -74,8 +76,10 @@ public class ConceptAprilTagEasy extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        if (opModeIsActive()) {
-            while (opModeIsActive()) {
+        if (opModeIsActive())
+        {
+            while (opModeIsActive())
+            {
 
                 telemetryAprilTag();
 
@@ -83,9 +87,12 @@ public class ConceptAprilTagEasy extends LinearOpMode {
                 telemetry.update();
 
                 // Save CPU resources; can resume streaming when needed.
-                if (gamepad1.dpad_down) {
+                if (gamepad1.dpad_down)
+                {
                     visionPortal.stopStreaming();
-                } else if (gamepad1.dpad_up) {
+                }
+                else if (gamepad1.dpad_up)
+                {
                     visionPortal.resumeStreaming();
                 }
 
@@ -102,18 +109,22 @@ public class ConceptAprilTagEasy extends LinearOpMode {
     /**
      * Initialize the AprilTag processor.
      */
-    private void initAprilTag() {
+    private void initAprilTag()
+    {
 
         // Create the AprilTag processor the easy way.
         aprilTag = AprilTagProcessor.easyCreateWithDefaults();
 
         // Create the vision portal the easy way.
-        if (USE_WEBCAM) {
+        if (USE_WEBCAM)
+        {
             visionPortal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap.get(WebcamName.class, "Webcam 1"), aprilTag);
-        } else {
+                    hardwareMap.get(WebcamName.class, "Webcam 1"), aprilTag);
+        }
+        else
+        {
             visionPortal = VisionPortal.easyCreateWithDefaults(
-                BuiltinCameraDirection.BACK, aprilTag);
+                    BuiltinCameraDirection.BACK, aprilTag);
         }
 
     }   // end method initAprilTag()
@@ -121,19 +132,24 @@ public class ConceptAprilTagEasy extends LinearOpMode {
     /**
      * Add telemetry about AprilTag detections.
      */
-    private void telemetryAprilTag() {
+    private void telemetryAprilTag()
+    {
 
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telemetry.addData("# AprilTags Detected", currentDetections.size());
 
         // Step through the list of detections and display info for each one.
-        for (AprilTagDetection detection : currentDetections) {
-            if (detection.metadata != null) {
+        for (AprilTagDetection detection : currentDetections)
+        {
+            if (detection.metadata != null)
+            {
                 telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
                 telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
                 telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
                 telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
-            } else {
+            }
+            else
+            {
                 telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
                 telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
             }
