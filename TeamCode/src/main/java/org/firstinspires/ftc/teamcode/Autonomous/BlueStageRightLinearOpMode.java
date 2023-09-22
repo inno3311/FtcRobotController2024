@@ -74,8 +74,46 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
      */
     public void planBeta()
     {
+        //EXAMPLE CODE (NOT TESTED AND WILL BE CHANGED IN THE FUTURE)
+        //ROBOT IS SUPPOSED TO PLACE THE PIXEL, TURN, THEN EVENTUALLY GO THROUGH THE RIGHT PART OF THE TRUSS AND INTO THE BACKDROP
 
+        //Place the pixel
+        driver.forward(25, 1, 0.6);
+        //Try to get out of the way of the pixel
+        driver.turn(90, 1, 0.4);
+        driver.forward(9, 1, 0.3);
+        //Turn left (current destination is through the right of the truss)
+        driver.turn(90, -1, 0.4);
+        //Drive forward (current destination is through the right of the truss)
+        driver.forward(21, 1, 0.7);
+        //Turn left (through the right of the truss) and into the backdrop
+        driver.turn(90, -1, 0.4);
+        driver.forward(50, 1, 0.8);
 
+    }
+
+    public void planGamma(){//Because there were 22 minutes left in the meeting and I wanted something to do (:
+
+        //ENTIRE METHOD LIKELY TO BE DELETED
+
+        //Place the pixel
+        driver.forward(25, 1, 0.6);
+        //Try to get out of the way of the pixel
+        driver.turn(90, 1, 0.4);
+        driver.forward(9, 1, 0.3);
+        //Turn left (current destination is through the middle of the truss)
+        driver.turn(90, -1, 0.4);
+        //Drive forward (current destination is through the middle of the truss)
+        driver.forward(11, 1, 0.7);
+        //Turn left through the truss
+        driver.turn(90, -1, 0.4);
+        driver.forward(40, 1, 0.7);
+        //Turn to the left backdrop
+        driver.turn(90, -1, 0.4);
+        driver.forward(20, 1, 0.6);
+        //Into the backdrop
+        driver.turn(90, 1, 0.4);
+        driver.forward(6, 1, 0.5);
 
     }
 
