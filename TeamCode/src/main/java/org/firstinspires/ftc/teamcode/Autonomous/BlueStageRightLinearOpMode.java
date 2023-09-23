@@ -32,8 +32,8 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         waitForStart();
         start();
 
-        //Change this to pixelIsLeft for left, pixelIsRight for right, or delete completely for middle
-       pixelIsLeft = true;
+        //Change this to pixelIsLeft = true for left, pixelIsRight = true for right, or delete completely for middle 
+        pixelIsLeft = true;
 
         //Your code goes in this function.   You can make other plans as well.  (two shells are
         //provided.
@@ -94,15 +94,14 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         //Turn left through the truss
         driver.turn(90, -1, 0.4);
         sleep(3000);
-
+        
         //Go to the other side
         driver.forward(80, 1, 0.9);
         sleep(3000);
         //Turn right
         driver.turn(90, 1, 0.4);
         sleep(3000);
-
-
+        
         //Turn left and go to backdrop
         driver.turn(90, -1, 0.4);
         driver.forward(15, 1, 0.6);
