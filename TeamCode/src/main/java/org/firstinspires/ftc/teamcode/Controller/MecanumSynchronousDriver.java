@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.Controller;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.IMU.IMUControl;
+//import org.firstinspires.ftc.teamcode.IMU.IMUControl;
 import org.firstinspires.ftc.teamcode.util.Logging;
 import org.firstinspires.ftc.teamcode.util.PIDController;
+import org.firstinspires.ftc.teamcode.util.ImuHardware;
 
 import java.io.IOException;
 
@@ -50,6 +53,9 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
    PIDController pidStrafe;
 
 
+   PIDController pidRotateImu;
+
+   double rotation;
 
     /**
      * Constructor for MechanicalDriveBase from the hardware map
@@ -66,6 +72,9 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
        mOpMode = opMode;
        opMode.telemetry.update();
 
+//       imuControl = new IMUControl(this.mOpMode.hardwareMap, this.mOpMode.telemetry);
+
+
        //The input can be a large value, therefore the values of Kp needs to be small to compensate.
        //
        // Set PID proportional value to produce non-zero correction value when robot veers off
@@ -74,7 +83,11 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
 
        pidStrafe = new PIDController(0.00001, 0, 0);
 
-        // .05
+       // Set PID proportional value to start reducing power at about 50 degrees of rotation.
+       // P by itself may stall before turn completed so we add a bit of I (integral) which
+       // causes the PID controller to gently increase power if the turn is not completed.
+       pidRotateImu = new PIDController(.003, .00003, 0);
+       //pidRotateImu = new PIDController(.001, .0001, 0);
     }
 
    /**
@@ -336,4 +349,86 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
         this.resetRunMode();
 //        encoderLogging();
     }
+
+
+   /**
+    * Rotate left or right the number of degrees. Does not support turning more than 359 degrees.
+    * @param degrees Degrees to turn, + is left - is right
+    */
+   public void rotate(int degrees, double power, ImuHardware imuControl) throws InterruptedException
+   {
+
+      mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
+      mOpMode.telemetry.update();
+
+      // restart imu angle tracking.
+      imuControl.resetAngle();
+
+//      sleep(3000);
+
+      // if degrees > 359 we cap at 359 with same sign as original degrees.
+      if (Math.abs(degrees) > 359) degrees = (int) Math.copySign(359, degrees);
+
+      // start pid controller. PID controller will monitor the turn angle with respect to the
+      // target angle and reduce power as we approach the target angle. This is to prevent the
+      // robots momentum from overshooting the turn after we turn off the power. The PID controller
+      // reports onTarget() = true when the difference between turn angle and target angle is within
+      // 1% of target (tolerance) which is about 1 degree. This helps prevent overshoot. Overshoot is
+      // dependant on the motor and gearing configuration, starting power, weight of the robot and the
+      // on target tolerance. If the controller overshoots, it will reverse the sign of the output
+      // turning the robot back toward the setpoint value.
+
+      pidRotateImu.reset();
+      pidRotateImu.setSetpoint(degrees);
+      pidRotateImu.setInputRange(0, degrees);
+      pidRotateImu.setOutputRange(0, power);
+      pidRotateImu.setTolerance(.2);
+      pidRotateImu.enable();
+
+      // getAngle() returns + when rotating counter clockwise (left) and - when rotating
+      // clockwise (right).
+
+      // rotate until turn is completed.
+
+      if (degrees < 0)
+      {
+         // On right turn we have to get off zero first.
+         while (mOpMode.opModeIsActive() && imuControl.getAngle() == 0)
+         {
+            this.driveMotors(0, power, 0, 0.1);
+            sleep(100);
+
+         }
+
+         do
+         {
+            power = pidRotateImu.performPID(imuControl.getAngle()); // power will be - on right turn.
+            this.driveMotors(0, power, 0, 1);
+
+            mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
+            mOpMode.telemetry.update();
+         } while (mOpMode.opModeIsActive() && !pidRotateImu.onTarget());
+      }
+      else    // left turn.
+         do
+         {
+            power = pidRotateImu.performPID(imuControl.getAngle()); // power will be + on left turn.
+            this.driveMotors(0, -power, 0, 1);
+         } while (mOpMode.opModeIsActive() && !pidRotateImu.onTarget());
+
+      // turn the motors off.
+      this.driveMotors(0, 0, 0, 1);
+
+      rotation = imuControl.getAngle();
+
+      mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
+      mOpMode.telemetry.update();
+
+      // wait for rotation to stop.
+      sleep(500);
+
+      // reset angle tracking on new heading.
+      imuControl.resetAngle();
+   }
+
 }

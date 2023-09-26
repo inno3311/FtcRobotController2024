@@ -41,7 +41,7 @@ public class IMUControl
     public IMUControl(HardwareMap hardwareMap, Telemetry telemetry)
     {
 //        teamDetection = new TeamDetection(hardwareMap);
-        mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
+//        mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.mode                = IMU;
@@ -59,7 +59,7 @@ public class IMUControl
         // Set PID proportional value to start reducing power at about 50 degrees of rotation.
         // P by itself may stall before turn completed so we add a bit of I (integral) which
         // causes the PID controller to gently increase power if the turn is not completed.
-        pidRotate = new PIDController(.003, .00003, 0);
+        pidRotate = new PIDController(.003, .0000/*3*/, 0);
 
         // Set PID pro
         // portional value to produce non-zero correction value when robot veers off
@@ -84,6 +84,8 @@ public class IMUControl
                 e.printStackTrace();
             }
         }
+
+//        resetAngle();
 
         telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
         telemetry.addData("Mode", "waiting for start");

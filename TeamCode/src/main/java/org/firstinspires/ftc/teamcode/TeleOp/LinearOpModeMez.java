@@ -6,17 +6,25 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
 import org.firstinspires.ftc.teamcode.IMU.IMUControl;
+import org.firstinspires.ftc.teamcode.util.ImuHardware;
+import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 
 import java.io.IOException;
 
-@Autonomous(name = "Auto straight test", group = "Mez")
+@Autonomous(name = "Mez test", group = "Mez")
 public class LinearOpModeMez extends LinearOpMode
 {
 
     /** Drive control */
     MecanumSynchronousDriver driver;
+//    IMUControl imuControl;
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
+
+    ImuHardware imuControl;
+
+    WebCamHardware webcam;
+
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -25,6 +33,8 @@ public class LinearOpModeMez extends LinearOpMode
         try
         {
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
+            webcam = new WebCamHardware(this);
+            imuControl = new ImuHardware(this);
         }
         catch (IOException e)
         {
@@ -32,12 +42,16 @@ public class LinearOpModeMez extends LinearOpMode
         }
 
 
-
+        webcam.initTfod();
 
         waitForStart();
         start();
 
-        aroundyTest();
+
+
+
+
+//        aroundyTest();
 
         //rotateTest();
 
@@ -73,8 +87,16 @@ public class LinearOpModeMez extends LinearOpMode
 //        sleep(1000);
 //        driver.forward(12 * 4,-1,0.3);
 
+        imuControl.resetAngle();
+
         while (opModeIsActive())
         {
+//            driver.rotate(1, 1, imuControl);
+            driver.rotate(90,1, imuControl);
+//            driver.rotate(90,1, imuControl);
+
+            sleep(2000);
+//            webcam.telemetryTfod();
 //            telemetry.addData("encoder", "left: " + driver.lf.getCurrentPosition() + " right: " + driver.rf.getCurrentPosition());
 //            telemetry.update();
 //            telemetry.addData("90 = ", (ticksPerDegree * 90) + "\n current position = " +  driver.rb.getCurrentPosition());
