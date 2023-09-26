@@ -15,7 +15,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     MecanumSynchronousDriver driver;
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
-    private boolean pixelIsLeft, pixelIsRight;
+    private boolean pixelInMiddle, pixelIsLeft, pixelIsRight;
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -37,13 +37,18 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
         //Your code goes in this function.   You can make other plans as well.  (two shells are
         //provided.
+        if(pixelInMiddle){
+            //Put planAlpha(); here
+            planAlpha();
+        }
         if(pixelIsLeft){
-            //Put either pixelLeft(); or pixelLeftBeta(); here
-           pixelLeftBeta();
+            //Put pixelLeft(); here
+            pixelLeft();
         } else if (pixelIsRight){
             pixelRight();
-        } else planAlpha();
-        //planBeta();
+        } else planBeta(false, true, false); //(I know putting all three instances as parameters isn't
+        //best practice, but [for now at least] I wanted to put all the beta instances in the same place)
+        //Only one parameter can be set to true.
 
         //Sample Test Programs
         //aroundyTest();
@@ -107,7 +112,6 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         driver.turn(90, -1, 0.4);
         driver.forward(5, 1, 0.5);
 
-
     }
 
     public void pixelLeft(){
@@ -140,39 +144,89 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         driver.forward(15, 1, 0.7);
     }
 
-    public void pixelLeftBeta(){
 
-        //Go forward just enough to turn
-        driver.forward(7, 1, 0.6);
-        driver.turn(30, -1, 0.4);
-        //Push pixel into place
-        driver.forward(12, 1, 0.6);
-        //Go backward after placing pixel
-        driver.forward(19, -1, 0.6);
-        //Adjust
-        driver.turn(25, 1, 0.4);
-
-        //Drive forward (meant to go through the middle of the truss)
-        driver.forward(50, 1, 0.7);
-        sleep(2000);
-        //Go through the middle of the truss
-        driver.turn(60, -1, 0.4);
-        driver.forward(46, 1, 0.7);
-        sleep(3000);
-        //Turn left (position into backdrop)
-        driver.turn(80, -1, 0.4);
-        driver.forward(70, 1, 0.7);
-
-        //Face right
-        driver.turn(60, 1, 0.4);
-
-    }
 
     /**
      * There is always a plan B.  ;)
      */
-    public void planBeta()
+    public void planBeta(boolean beta, boolean leftBeta, boolean rightBeta)
     {
+
+        if(beta){
+            //BETA INSTANCE IF PIXEL IS IN THE MIDDLE
+            //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is), then go backward
+            driver.forward(25, 1, 0.6);
+            driver.forward(23, -1, 0.6);
+            //Turn right (out of the way of the pixel)
+            driver.turn(90, 1, 0.4);
+            driver.forward(8, 1, 0.9);
+            //Turn left
+            driver.turn(90, -1, 0.4);
+            driver.forward(25, 1, 0.6);
+            //Turn left and go to backdrop
+            driver.turn(90, -1, 0.4);
+            driver.forward(40, 1, 0.6);
+            driver.turn(90, -1, 0.4);
+            driver.forward(15, 1, 0.8);
+
+        }
+
+        if(leftBeta){
+            //Go forward just enough to turn
+            driver.forward(7, 1, 0.6);
+            driver.turn(30, -1, 0.4);
+            //Push pixel into place
+            driver.forward(12, 1, 0.6);
+            //Go backward after placing pixel
+            driver.forward(19, -1, 0.6);
+            //Adjust
+            driver.turn(25, 1, 0.4);
+
+            //Drive forward (meant to go through the middle of the truss)
+            driver.forward(50, 1, 0.7);
+            sleep(2000);
+            //Go through the middle of the truss
+            driver.turn(60, -1, 0.4);
+            driver.forward(46, 1, 0.7);
+            sleep(3000);
+            //Turn left (position into backdrop)
+            driver.turn(80, -1, 0.4);
+            driver.forward(70, 1, 0.7);
+
+            //Face right
+            driver.turn(60, 1, 0.4);
+
+        }
+
+        if(rightBeta){
+            //Go forward just enough to turn
+            driver.forward(2, 1, 0.6);
+            driver.turn(30, 1, 0.4);
+            //Push pixel into place
+            driver.forward(12, 1, 0.6);
+            //Go backward after placing pixel (for space only)
+            driver.forward(3, -1, 0.6);
+            sleep(3000);
+
+            //Get out of the way of the pixel
+            driver.turn(30, -1, 0.4);
+            //Go to the middle
+            driver.forward(17, 1, 0.8);
+            sleep(3000);
+
+            //Go to the other side
+            driver.turn(90, -1, 0.4);
+            sleep(3000);
+            //Through the truss
+            driver.forward(20, 1, 0.7);
+            sleep(3000);
+
+            //Turn left and go to backdrop
+            driver.turn(90, -1, 0.4);
+            driver.forward(15, 1, 0.6);
+
+
+        }
 
 
     }
