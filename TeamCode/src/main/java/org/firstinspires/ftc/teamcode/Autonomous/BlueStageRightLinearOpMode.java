@@ -152,6 +152,13 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     public void planBeta(boolean beta, boolean leftBeta, boolean rightBeta)
     {
 
+        /*THESE ARE PLAN BETA INSTANCES FOR ALL THREE INSTANCES. SET beta TO true FOR THE PLAN BETA
+          FOR THE MIDDLE INSTANCE (PIXEL IN MIDDLE). SET leftBeta TO true FOR THE PLAN BETA
+          LEFT INSTANCE. SET rightBeta TO true FOR THE PLAN  BETA RIGHT INSTANCE.
+
+          ONLY ONE INSTANCE CAN BE TRUE (This goes without saying, but I said it anyway (: )
+
+         */
         if(beta){
             //BETA INSTANCE IF PIXEL IS IN THE MIDDLE
             //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is), then go backward
