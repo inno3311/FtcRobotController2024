@@ -15,17 +15,24 @@ public class AprilTagOpMode extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        target = 6;
+        target = 2;
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
         aprilTagMaster = new AprilTagMaster(mechanicalDriveBase, hardwareMap);
 
-        waitForStart();
         start();
+        waitForStart();
+
 
         while (opModeIsActive())
         {
-            aprilTagMaster.detectTags(telemetry);
-            aprilTagMaster.findTag(12,5, 5, telemetry);
+            if (aprilTagMaster.aprilTagDetected())
+            {
+                aprilTagMaster.findTag(12, 5, 2, telemetry);
+                while (aprilTagMaster.foundTag()) {aprilTagMaster.findTag(12, 5, 2, telemetry);}
+                telemetry.addData("Target reached", "");
+                telemetry.update();
+                break;
+            }
         }
 
         stop();

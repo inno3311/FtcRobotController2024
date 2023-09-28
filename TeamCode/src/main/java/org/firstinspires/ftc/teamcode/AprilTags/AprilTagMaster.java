@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.AprilTags;
 
+import static java.lang.Thread.getDefaultUncaughtExceptionHandler;
 import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -22,7 +23,7 @@ public class AprilTagMaster
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
     //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-    final double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+    final double SPEED_GAIN  =  0.03  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
     final double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
     final double TURN_GAIN   =  0.02  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
 
@@ -37,6 +38,10 @@ public class AprilTagMaster
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     private MechanicalDriveBase mechanicalDriveBase;
+    private double rangeError = 0 ;
+    private double headingError = 0;
+    private double yawError = 0;
+
 
     public AprilTagMaster(MechanicalDriveBase mechanicalDriveBase, HardwareMap hardwareMap)
     {
@@ -86,31 +91,40 @@ public class AprilTagMaster
         if (targetFound)
         {
             telemetry.addData("Target", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-            telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-            telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-            telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
+            telemetry.addData("Range", "%5.1f inches", desiredTag.ftcPose.range);
+            telemetry.addData("Bearing", "%3.0f degrees", desiredTag.ftcPose.bearing);
+            telemetry.addData("Yaw", "%3.0f degrees", desiredTag.ftcPose.yaw);
         }
 
         // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
         if (targetFound)
         {
             // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-            double  rangeError = (desiredTag.ftcPose.range - desiredDistance);
-            double  headingError = desiredTag.ftcPose.bearing;
-            double  yawError = (desiredTag.ftcPose.yaw - strafeDif);
+            rangeError = (desiredTag.ftcPose.range - desiredDistance);
+            headingError = desiredTag.ftcPose.bearing;
+            yawError = (desiredTag.ftcPose.yaw - strafeDif);
 
             // Use the speed and turn "gains" to calculate how we want the robot to move.
-            drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-            turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
+            drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+            turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
             strafe = Range.clip(yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
-            telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+            telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
         }
 
         telemetry.update();
 
         // Apply desired axes motions to the drivetrain.
-        mechanicalDriveBase.driveMotors(drive, turn, strafe, 1);
+        mechanicalDriveBase.driveMotors(drive, -turn, strafe, 1);
+    }
+
+    public boolean foundTag()
+    {
+        if (desiredTag.ftcPose.range < rangeError - 1 && 0 > Math.abs(headingError) - 1 && 0 > Math.abs(yawError) - 1)
+        {
+            return false;
+        }
+        return true;
     }
 
     private void telemetryAprilTag(Telemetry telemetry)
@@ -212,6 +226,19 @@ public class AprilTagMaster
             }
         }
         return -1;
+    }
+
+    public boolean aprilTagDetected()
+    {
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        for (AprilTagDetection detection : currentDetections)
+        {
+            if (detection.metadata != null)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void closeAprilTags()
