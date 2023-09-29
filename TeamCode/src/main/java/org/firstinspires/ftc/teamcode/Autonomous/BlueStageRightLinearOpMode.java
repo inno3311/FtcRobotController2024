@@ -17,9 +17,37 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
     private boolean pixelInMiddle, pixelIsLeft, pixelIsRight;
 
+ /* enum zone
+    {
+        center,
+        left,
+        right
+    }
+    if stuff right here to determine which zone it goes to
+    {
+        zone current = zone.x; x = center, right, or left
+    }
+     switch(current)
+     {
+     case center:
+        planAlpha();
+        break;
+     case right:
+        pixelRight();
+        break;
+     case left:
+        pixelLeft();
+        break;
+    default:
+        planBeta(false,true,false);
+        break;
+    }*/
+
+
     @Override
     public void runOpMode() throws InterruptedException
     {
+
         try
         {
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
@@ -32,7 +60,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         waitForStart();
         start();
 
-        //Change this to pixelIsLeft = true for left, pixelIsRight = true for right, or delete completely for middle 
+        //Change this to pixelIsLeft = true for left, pixelIsRight = true for right, or pixelInMiddle for middle
         pixelIsLeft = true;
 
         //Your code goes in this function.   You can make other plans as well.  (two shells are
@@ -54,7 +82,6 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         //aroundyTest();
         //rotateTest();
 
-
         while (opModeIsActive())
         {
 
@@ -67,7 +94,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
      */
     public void planAlpha()
     {
-        
+
        //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is), then go backward
        driver.forward(25, 1, 0.6);
        driver.forward(23, -1, 0.6);
@@ -143,8 +170,6 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         driver.turn(30, 1, 0.4);
         driver.forward(15, 1, 0.7);
     }
-
-
 
     /**
      * There is always a plan B.  ;)
@@ -232,12 +257,9 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
             driver.turn(90, -1, 0.4);
             driver.forward(15, 1, 0.6);
 
-
         }
 
-
     }
-
 
     /**
      * This test rotates in place. Each step has a 3 second pause.
