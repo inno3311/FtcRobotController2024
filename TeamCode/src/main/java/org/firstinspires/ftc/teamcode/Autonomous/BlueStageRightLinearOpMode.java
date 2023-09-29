@@ -23,7 +23,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         left,
         right
     }
-    if stuff right here to determine which zone it goes to
+    if (stuff right here to determine which zone it goes to)
     {
         zone current = zone.x; x = center, right, or left
     }
