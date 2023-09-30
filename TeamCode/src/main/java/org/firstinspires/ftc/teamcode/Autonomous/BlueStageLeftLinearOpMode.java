@@ -107,18 +107,25 @@ public class BlueStageLeftLinearOpMode extends LinearOpMode
         //out what route that will be.
 
         //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is
-        driver.forward(25,1,0.6);
 
+        // Drive 25 inches forward
+       driver.forward(25,1,0.6);
+
+       // Sleeps for 500 milisecond to make sure the robot is not turning
         sleep(500);
+
+        // Dives backard 5 inches
 
         driver.forward(5,-1,0.6);
 
         sleep(500);
 
+        // Turns 90 degrees left
         driver.turn(90, -1, .4);
 
         sleep(500);
 
+        // After turning 90 degree drivebase drives 31 inches
         driver.forward(31, 1, 0.6);
 
 
