@@ -42,21 +42,16 @@ public class BlueStageLeftLinearOpMode extends LinearOpMode
                 planAlpha();
                 break;
             case right:
-                right;
+                right();
                 break;
             case left:
-                left;
+                left();
                 break;
             default:
                 planBeta();
                 break;
         }
-         public void right(){
-            driver.forward(23,1,0.6);
-            driver.turn(30,1,0.6);
-            driver.forward(2,1,0);
-            driver.forward0,0
-        }
+
 
 
         try
@@ -101,6 +96,26 @@ public class BlueStageLeftLinearOpMode extends LinearOpMode
 
         }
     }
+    private void left(){
+
+    }
+//    private void right() {
+//    }
+
+    public void right()
+    {
+
+        driver.forward(24,1,0.6);
+        sleep(500);
+        driver.turn(30,1,0.4);
+        sleep(500);
+        driver.forward(2,1,0.6);
+        sleep(500);
+        driver.forward(2,-1,0.6);
+
+    }
+
+
 
     /**
      * Plan Alpha.  You will design different routes based on what intel the other team provides.
