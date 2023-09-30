@@ -15,6 +15,39 @@ public class BlueStageLeftLinearOpMode extends LinearOpMode
     MecanumSynchronousDriver driver;
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
+    enum zone
+    {
+        center,
+        left,
+        right
+    }
+    private zone current = null;
+
+    /* enum zone
+    {
+        center,
+        left,
+        right
+    }
+    if (stuff right here to determine which zone it goes to)
+    {
+        zone current = zone.x; x = center, right, or left
+    }
+     switch(current)
+     {
+     case center:
+        planAlpha();
+        break;
+     case right:
+        pixelRight();
+        break;
+     case left:
+        pixelLeft();
+        break;
+    default:
+        planBeta(false,true,false);
+        break;
+    }*/
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -30,6 +63,21 @@ public class BlueStageLeftLinearOpMode extends LinearOpMode
 
         waitForStart();
         start();
+
+//        int day = 1;
+//        switch (day)
+//        {
+//            case 1:
+//                System.out.println("It's sunday");
+//                break;
+//            case 2:
+//                System.out.println("It's Monday");
+//                break;
+//            default:
+//                System.out.println("There is a problem there are only 7 days in a week numbers is not in range");
+//                break;
+//        }
+
 
         //Your code goes in this function.   You can make other plans as well.  (two shells are
         //provided.
