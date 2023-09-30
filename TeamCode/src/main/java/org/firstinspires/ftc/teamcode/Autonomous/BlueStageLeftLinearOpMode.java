@@ -10,6 +10,9 @@ import java.io.IOException;
 @Autonomous(name = "Blue Stage Left", group = "Group3311")
 public class BlueStageLeftLinearOpMode extends LinearOpMode
 {
+    private boolean pixelInMiddle, pixelIsLeft, pixelIsRight;
+
+
 
     /** Drive control */
     MecanumSynchronousDriver driver;
@@ -17,41 +20,45 @@ public class BlueStageLeftLinearOpMode extends LinearOpMode
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
     enum zone
     {
-        center,
+        middle,
         left,
         right
     }
     private zone current = null;
 
-    /* enum zone
+     //private enum zone
     {
-        center,
-        left,
-        right
+       // center,
+        //left,
+       // right
     }
-    if (stuff right here to determine which zone it goes to)
-    {
-        zone current = zone.x; x = center, right, or left
-    }
-     switch(current)
-     {
-     case center:
-        planAlpha();
-        break;
-     case right:
-        pixelRight();
-        break;
-     case left:
-        pixelLeft();
-        break;
-    default:
-        planBeta(false,true,false);
-        break;
-    }*/
+
+
 
     @Override
-    public void runOpMode() throws InterruptedException
-    {
+    public void runOpMode() throws InterruptedException {
+        switch (current) {
+            case middle:
+                planAlpha();
+                break;
+            case right:
+                right;
+                break;
+            case left:
+                left;
+                break;
+            default:
+                planBeta();
+                break;
+        }
+         public void right(){
+            driver.forward(23,1,0.6);
+            driver.turn(30,1,0.6);
+            driver.forward(2,1,0);
+            driver.forward0,0
+        }
+
+
         try
         {
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
@@ -132,6 +139,10 @@ public class BlueStageLeftLinearOpMode extends LinearOpMode
 
     }
 
+      public void pixelRight( ) {
+      }
+        public void pixelLeft( ) {
+        }
 
     /**
      * There is always a plan B.  ;)
