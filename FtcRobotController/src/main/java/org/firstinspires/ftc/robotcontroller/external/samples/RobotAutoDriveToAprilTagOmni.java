@@ -184,6 +184,9 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
                 drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
                 turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
                 strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+                if (drive < .15 && drive > -0.15) {drive = 0;}
+                if (turn < .15 && turn > -0.15) {turn = 0;}
+                if (strafe < .2 && strafe > -0.2) {strafe = 0;}
 
                 telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
             } else {
