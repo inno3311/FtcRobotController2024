@@ -10,15 +10,50 @@ import java.io.IOException;
 @Autonomous(name = "Blue Stage Left", group = "Group3311")
 public class BlueStageLeftLinearOpMode extends LinearOpMode
 {
+    private boolean pixelInMiddle, pixelIsLeft, pixelIsRight;
+
+
 
     /** Drive control */
     MecanumSynchronousDriver driver;
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
+    enum zone
+    {
+        middle,
+        left,
+        right
+    }
+    private zone current = null;
+
+     //private enum zone
+    {
+       // center,
+        //left,
+       // right
+    }
+
+
 
     @Override
-    public void runOpMode() throws InterruptedException
-    {
+    public void runOpMode() throws InterruptedException {
+        switch (current) {
+            case middle:
+                planAlpha();
+                break;
+            case right:
+                right();
+                break;
+            case left:
+                left();
+                break;
+            default:
+                planBeta();
+                break;
+        }
+
+
+
         try
         {
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
@@ -30,6 +65,21 @@ public class BlueStageLeftLinearOpMode extends LinearOpMode
 
         waitForStart();
         start();
+
+//        int day = 1;
+//        switch (day)
+//        {
+//            case 1:
+//                System.out.println("It's sunday");
+//                break;
+//            case 2:
+//                System.out.println("It's Monday");
+//                break;
+//            default:
+//                System.out.println("There is a problem there are only 7 days in a week numbers is not in range");
+//                break;
+//        }
+
 
         //Your code goes in this function.   You can make other plans as well.  (two shells are
         //provided.
@@ -46,6 +96,26 @@ public class BlueStageLeftLinearOpMode extends LinearOpMode
 
         }
     }
+    private void left(){
+
+    }
+//    private void right() {
+//    }
+
+    public void right()
+    {
+
+        driver.forward(24,1,0.6);
+        sleep(500);
+        driver.turn(30,1,0.4);
+        sleep(500);
+        driver.forward(2,1,0.6);
+        sleep(500);
+        driver.forward(2,-1,0.6);
+
+    }
+
+
 
     /**
      * Plan Alpha.  You will design different routes based on what intel the other team provides.
@@ -59,24 +129,35 @@ public class BlueStageLeftLinearOpMode extends LinearOpMode
         //out what route that will be.
 
         //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is
-        driver.forward(25,1,0.6);
 
+        // Drive 25 inches forward
+       driver.forward(25,1,0.6);
+
+       // Sleeps for 500 milisecond to make sure the robot is not turning
         sleep(500);
+
+        // Dives backard 5 inches
 
         driver.forward(5,-1,0.6);
 
         sleep(500);
 
+        // Turns 90 degrees left
         driver.turn(90, -1, .4);
 
         sleep(500);
 
+        // After turning 90 degree drivebase drives 31 inches
         driver.forward(31, 1, 0.6);
 
 
 
     }
 
+      public void pixelRight( ) {
+      }
+        public void pixelLeft( ) {
+        }
 
     /**
      * There is always a plan B.  ;)
