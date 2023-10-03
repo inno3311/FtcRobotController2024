@@ -29,7 +29,16 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
 //                    Circumference of the robot when turning == encoder dist from center (radius) * 2 * pi
 //                                        ^^^
 //   private final double ticksPerDegree = (ticksPerInch * 64.09) / 360; // 16,000
-   private final double ticksPerDegree = (ticksPerInch * 56.0) / 360; // 16,000
+ //  private final double ticksPerDegree = (ticksPerInch * 56.0) / 360; // 16,000
+   //private final double ticksPerDegree = (ticksPerInch * 54.6) / 360; // 16,000
+//private final double ticksPerDegree = (ticksPerInch * 55.0) / 360;
+   //private final double ticksPerDegree = (ticksPerInch * 54.0) / 360;  // 195.57536208817444
+private final double ticksPerDegree = 190;
+//68,466 for 360
+//34,233 for 180
+//17,116 for 90
+// 8,558 for 45
+
    /**
     * Logging method used to write data to file.
     * NOTE: This seems to cause the dev to have to hard reset the bot after each run, making us of
@@ -54,6 +63,8 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
 
 
    PIDController pidRotateImu;
+
+   PIDController pidRotateOd;
 
    double rotation;
 
@@ -88,6 +99,27 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
        // causes the PID controller to gently increase power if the turn is not completed.
        pidRotateImu = new PIDController(.003, .00003, 0);
        //pidRotateImu = new PIDController(.001, .0001, 0);
+
+                                                                     //target 17797.357950
+       //pidRotateOd = new PIDController(.0005, 0, 0);  //overshoot
+       //pidRotateOd = new PIDController(.00025, 0, 0); //undershoot
+       //pidRotateOd = new PIDController(.00025, .000001, 0); //overshoot 18442
+       //pidRotateOd = new PIDController(.00025, .00000001, 0); // under 17064
+//       pidRotateOd = new PIDController(.00025, .0000005, 0);  // slight 17984
+//      pidRotateOd = new PIDController(.00025, .000001, 0); // 17836 17862  //works well for .5 power
+
+//       pidRotateOd = new PIDController(.00025, .00001, 0);
+
+       pidRotateOd = new PIDController(.00025, .0000001, .001);  // slight 17984
+       pidRotateOd = new PIDController(.00025, .0000002, .001);  // works for 90
+
+       pidRotateOd = new PIDController(.00025, .0000001, .003);  // 180 shutters too much
+       pidRotateOd = new PIDController(.00025, .0000001, .002);  // 180 ok... kinda
+
+       pidRotateOd = new PIDController(.00025, .0000002, .000);  // 180 ok... kinda
+
+       Logging.setup();
+       Logging.log("Starting MecanumSynchronousDriver Logging");
     }
 
    /**
@@ -98,18 +130,6 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
     */
     public void forward(double target, int forward, double speed)
     {
-
-       // Set up parameters for turn correction.
-//       pidDrive.setSetpoint(0);
-//       pidDrive.setOutputRange(0, .19);
-//       pidDrive.setInputRange(-5000, 5000);
-//       pidDrive.enable();
-//
-//       // Set up parameters for strafe correction.
-//       pidStrafe.setSetpoint(0);
-//       pidStrafe.setOutputRange(0, .15);
-//       pidStrafe.setInputRange(-5000, 5000);
-//       pidStrafe.enable();
 
         pidDrive.setSetpoint(0);
         pidDrive.setOutputRange(0, speed);
@@ -271,18 +291,6 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
     public void turn(double target, int right, double speed)
     {
 
-        // Set up parameters for turn correction.
-//       pidDrive.setSetpoint(0);
-//       pidDrive.setOutputRange(0, .19);
-//       pidDrive.setInputRange(-5000, 5000);
-//       pidDrive.enable();
-//
-//       // Set up parameters for strafe correction.
-//       pidStrafe.setSetpoint(0);
-//       pidStrafe.setOutputRange(0, .15);
-//       pidStrafe.setInputRange(-5000, 5000);
-//       pidStrafe.enable();
-
         pidDrive.setSetpoint(0);
         pidDrive.setOutputRange(0, speed);
         pidDrive.setInputRange(-5000, 5000);
@@ -350,6 +358,69 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
 //        encoderLogging();
     }
 
+    public void rotateOd(int degrees, double power) throws InterruptedException
+    {
+       Logging.log("#rotateOd degrees = %d  power = %f", degrees, power);
+
+       int startPos = this.rb.getCurrentPosition();
+       double targetPos = degrees * ticksPerDegree;
+       pidRotateOd.reset();
+       pidRotateOd.setSetpoint(targetPos);
+       pidRotateOd.setInputRange(0, targetPos*2);
+       pidRotateOd.setOutputRange(.1, power);
+       pidRotateOd.setTolerance(.25);
+       pidRotateOd.enable();
+
+       // Proportional factor can be found by dividing the max desired pid output by
+       // the setpoint or target. Here 30% power is divided by 90 degrees (.30 / 90)
+       // to get a P factor of .003. This works for the robot we testing this code with.
+       // Your robot may vary but this way finding P works well in most situations.
+       double p = Math.abs(power/targetPos);
+
+       // Integrative factor can be approximated by diving P by 100. Then you have to tune
+       // this value until the robot turns, slows down and stops accurately and also does
+       // not take too long to "home" in on the setpoint. Started with 100 but robot did not
+       // slow and overshot the turn. Increasing I slowed the end of the turn and completed
+       // the turn in a timely manner
+       double i = p / 200.0;
+
+       //Set PID parameters based on power and ticks to travel.
+//       pidRotateOd.setPID(p, i, 0);
+
+       mOpMode.telemetry.addData("rotateOd1", "startPos:  %d   targetPos: %f ", startPos,targetPos);
+       mOpMode.telemetry.update();
+
+       Logging.log("#rotateOd startPos:  %d   targetPos: %f ", startPos,targetPos);
+
+       int onTargetCount = 0;
+
+       do
+       {
+          power = pidRotateOd.performPID(this.rb.getCurrentPosition() - startPos); // power will be + on left turn.
+          this.driveMotors(0, power, 0, 1);
+
+          //mOpMode.telemetry.addData("rotateOd2", "startPos:  %d   targetPos: %f ", startPos,targetPos);
+          //mOpMode.telemetry.addData("rotateOd2", "power: %f currPos:  %d", power, this.rb.getCurrentPosition() - startPos);
+          //mOpMode.telemetry.update();
+
+          Logging.log("#rotateOd targetPos: %f power: %f currPos: %d degrees: %f",targetPos, power, this.rb.getCurrentPosition() - startPos, (this.rb.getCurrentPosition() - startPos)/ticksPerDegree);
+
+          if (pidRotateOd.onTarget())
+          {
+             onTargetCount++;
+          }
+
+       } while (mOpMode.opModeIsActive() && (onTargetCount < 4));
+
+       //Kill motors
+       this.driveMotors(0, 0, 0, 0);
+
+       mOpMode.telemetry.addData("rotateOd3", "startPos:  %d   targetPos: %f ", startPos,targetPos);
+       mOpMode.telemetry.addData("rotateOd3", "currPos:  %d  degrees: %f", this.rb.getCurrentPosition() - startPos, (this.rb.getCurrentPosition() - startPos)/ticksPerDegree);
+       mOpMode.telemetry.update();
+
+       Logging.log("#rotateOd complete  currPos:  %d  degrees: %f",  this.rb.getCurrentPosition() - startPos, (this.rb.getCurrentPosition() - startPos)/ticksPerDegree);
+    }
 
    /**
     * Rotate left or right the number of degrees. Does not support turning more than 359 degrees.

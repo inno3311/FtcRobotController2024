@@ -51,14 +51,17 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
+@TeleOp(name = "Mez: TensorFlow Object Detection", group = "Concept")
 //@Disabled
 public class TensorFlowObjectDetection extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
-    private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/wheel_fish_eye.tflite";
+    private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/red_rev1.tflite";
 
+    private static final String[] LABELS = {
+          "Trash Panda"
+    };
 
     /**
      * The variable to store our instance of the TensorFlow Object Detection processor.
@@ -119,11 +122,11 @@ public class TensorFlowObjectDetection extends LinearOpMode {
             //.setModelAssetName(TFOD_MODEL_ASSET)
             .setModelFileName(TFOD_MODEL_FILE)
 
-            //.setModelLabels(LABELS)
+            .setModelLabels(LABELS)
             //.setIsModelTensorFlow2(true)
             //.setIsModelQuantized(true)
             //.setModelInputSize(300)
-            //.setModelAspectRatio(16.0 / 9.0)
+            .setModelAspectRatio(16.0 / 9.0)
 
             .build();
 
@@ -158,10 +161,12 @@ public class TensorFlowObjectDetection extends LinearOpMode {
         visionPortal = builder.build();
 
         // Set confidence threshold for TFOD recognitions, at any time.
-        //tfod.setMinResultConfidence(0.75f);
+        tfod.setMinResultConfidence(0.3f);
 
         // Disable or re-enable the TFOD processor at any time.
         //visionPortal.setProcessorEnabled(tfod, true);
+
+        tfod.setZoom(1.35);
 
     }   // end method initTfod()
 

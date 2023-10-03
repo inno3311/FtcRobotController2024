@@ -4,9 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
 import org.firstinspires.ftc.teamcode.IMU.IMUControl;
 import org.firstinspires.ftc.teamcode.util.ImuHardware;
+import org.firstinspires.ftc.teamcode.util.Logging;
 import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 
 import java.io.IOException;
@@ -44,6 +46,22 @@ public class LinearOpModeMez extends LinearOpMode
 
         webcam.initTfod();
 
+
+        Recognition rec = null;
+        while ((rec = webcam.findObject()) == null)
+        {
+            telemetry.addData("- Camera", "Looking for object");
+            telemetry.update();
+        }
+
+        double x = (rec.getLeft() + rec.getRight()) / 2 ;
+        double y = (rec.getTop()  + rec.getBottom()) / 2 ;
+
+        telemetry.addData(""," ");
+        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
+        telemetry.addData("- Position", "%.0f / %.0f", x, y);
+        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
+        telemetry.update();
         waitForStart();
         start();
 
@@ -53,7 +71,14 @@ public class LinearOpModeMez extends LinearOpMode
 
 //        aroundyTest();
 
-        //rotateTest();
+        try
+        {
+            rotateTest();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
 
         //Drive forward 72 inches
@@ -92,7 +117,7 @@ public class LinearOpModeMez extends LinearOpMode
         while (opModeIsActive())
         {
 //            driver.rotate(1, 1, imuControl);
-            driver.rotate(90,1, imuControl);
+//            driver.rotate(90,1, imuControl);
 //            driver.rotate(90,1, imuControl);
 
             sleep(2000);
@@ -105,7 +130,7 @@ public class LinearOpModeMez extends LinearOpMode
     }
 
 
-    public void rotateTest()
+    public void rotateTest() throws InterruptedException, IOException
     {
         double rotateSpeed = 0.4;
 //        sleep(3000);
@@ -115,8 +140,36 @@ public class LinearOpModeMez extends LinearOpMode
 //        sleep(3000);
 //        driver.turn(30, 1, rotateSpeed);
 
+//        sleep(2000);
+//        driver.rotateOd(360, 1);
+
+//        int startPos = driver.rb.getCurrentPosition();
+//        Logging.setup();
+//        while (opModeIsActive())
+//        {
+//            driver.driveMotors(0, .5, 0, 1);
+//
+//            telemetry.addData("rotateOd2", "startPos:  %d   targetPos: %d ", startPos, driver.rb.getCurrentPosition() - startPos);
+//            //mOpMode.telemetry.addData("rotateOd2", "power: %f currPos:  %d", power, this.rb.getCurrentPosition() - startPos);
+//            telemetry.update();
+//
+//            Logging.log("#rotateOd startPos:  %d   Pos: %d ", startPos,driver.rb.getCurrentPosition() - startPos);
+//
+//        }
+//
+//        telemetry.addData("rotateOd2", "startPos:  %d   targetPos: %d ", startPos, driver.rb.getCurrentPosition() - startPos);
+//        telemetry.update();
+
+
         sleep(2000);
-        driver.turn(360, -1, rotateSpeed);
+        driver.rotateOd(45, 0.5);
+        sleep(2000);
+        driver.rotateOd(45, .5);
+        sleep(2000);
+        driver.rotateOd(90, .5);
+        sleep(2000);
+        driver.rotateOd(180, .5);
+
 
 
 //        sleep(2000);

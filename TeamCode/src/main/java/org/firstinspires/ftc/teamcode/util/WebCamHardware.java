@@ -16,6 +16,11 @@ public class WebCamHardware
 
    private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
+   private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/red_rev1.tflite";
+
+   private static final String[] LABELS = {
+         "Trash Panda"
+   };
 
    /**
     *  Declare OpMode members.
@@ -44,22 +49,22 @@ public class WebCamHardware
    public void initTfod() {
 
       // Create the TensorFlow processor by using a builder.
-      tfod = TfodProcessor.easyCreateWithDefaults();
+      //tfod = TfodProcessor.easyCreateWithDefaults();
 
-//      tfod = new TfodProcessor.Builder()
+      tfod = new TfodProcessor.Builder()
 //
 //            // Use setModelAssetName() if the TF Model is built in as an asset.
 //            // Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
-//            //.setModelAssetName(TFOD_MODEL_ASSET)
-//            .setModelFileName(TFOD_MODEL_FILE)
+            //.setModelAssetName(TFOD_MODEL_ASSET)
+            .setModelFileName(TFOD_MODEL_FILE)
 //
-//            //.setModelLabels(LABELS)
+            .setModelLabels(LABELS)
 //            //.setIsModelTensorFlow2(true)
 //            //.setIsModelQuantized(true)
 //            //.setModelInputSize(300)
-//            //.setModelAspectRatio(16.0 / 9.0)
+.setModelAspectRatio(16.0 / 9.0)
 //
-//            .build();
+            .build();
 
       // Create the vision portal by using a builder.
       VisionPortal.Builder builder = new VisionPortal.Builder();
@@ -97,6 +102,8 @@ public class WebCamHardware
       // Disable or re-enable the TFOD processor at any time.
       //visionPortal.setProcessorEnabled(tfod, true);
 
+      tfod.setZoom(1.35);
+
    }   // end method initTfod()
 
    /**
@@ -122,7 +129,7 @@ public class WebCamHardware
    }   // end method telemetryTfod()
 
 
-   Recognition findObject()
+   public Recognition findObject()
    {
       List<Recognition> currentRecognitions = tfod.getRecognitions();
       mOpMode.telemetry.addData("# Objects Detected", currentRecognitions.size());
