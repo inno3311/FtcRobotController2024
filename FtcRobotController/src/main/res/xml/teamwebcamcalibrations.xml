@@ -161,10 +161,10 @@
     <Camera vid="Logitech" pid="0x0843">
         <Calibration
             size="1920, 1080"
-            focalLength="1135.090f , 1135.090f"
-            principalPoint="973.901f , 528.851f"
+            focalLength="1135.090f, 1135.090f"
+            principalPoint="973.901f,
+            528.851f"
             distortionCoefficients="0.099323, -0.247720, 0.001900, 0.000862, 0.113627, 0, 0, 0"
-
         />
 
     </Camera>

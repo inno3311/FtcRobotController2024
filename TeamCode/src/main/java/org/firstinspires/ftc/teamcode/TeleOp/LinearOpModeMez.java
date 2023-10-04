@@ -57,6 +57,11 @@ public class LinearOpModeMez extends LinearOpMode
         double x = (rec.getLeft() + rec.getRight()) / 2 ;
         double y = (rec.getTop()  + rec.getBottom()) / 2 ;
 
+        if(x > 50 && x < 150) telemetry.addData("Left", x);
+        else if(x > 160 && x < 450) telemetry.addData("Center", x);
+        else if(x > 460 && x < 600) telemetry.addData("Right", x);
+        else telemetry.addData("OBJECT NOT DETECTED. ADJUST VALUES", "");
+
         telemetry.addData(""," ");
         telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
         telemetry.addData("- Position", "%.0f / %.0f", x, y);

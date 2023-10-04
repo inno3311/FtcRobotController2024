@@ -3,13 +3,16 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
+import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 
 import java.io.IOException;
 
 @Autonomous(name = "Blue Stage Right", group = "Group3311")
 public class BlueStageRightLinearOpMode extends LinearOpMode
 {
+    WebCamHardware webcam;
 
     /** Drive control */
     MecanumSynchronousDriver driver;
@@ -17,12 +20,16 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
     private boolean pixelInMiddle, pixelIsLeft, pixelIsRight;
 
- /* enum zone
+    zoneEnum zone;
+
+ enum zoneEnum
     {
         center,
         left,
         right
     }
+
+    /*
     if (stuff right here to determine which zone it goes to)
     {
         zone current = zone.x; x = center, right, or left
@@ -44,8 +51,6 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     }*/
 
 
-
-
     @Override
     public void runOpMode() throws InterruptedException
     {
@@ -53,11 +58,46 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         try
         {
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
+            webcam = new WebCamHardware(this);
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
+
+        webcam.initTfod();
+
+
+        Recognition rec = null;
+        while ((rec = webcam.findObject()) == null)
+        {
+            telemetry.addData("- Camera", "Looking for object");
+            telemetry.update();
+        }
+
+        double x = (rec.getLeft() + rec.getRight()) / 2 ;
+        double y = (rec.getTop()  + rec.getBottom()) / 2 ;
+
+        if(x > 50 && x < 150)
+        {
+            telemetry.addData("Left", x);
+            zone = zoneEnum.left;
+        }
+        else if(x > 160 && x < 450) {
+            telemetry.addData("Center", x);
+            zone = zoneEnum.center;
+        }
+        else if(x > 460 && x < 600){
+            telemetry.addData("Right", x);
+            zone = zoneEnum.right;
+        }
+        else telemetry.addData("OBJECT NOT DETECTED. ADJUST VALUES", "");
+
+        telemetry.addData(""," ");
+        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
+        telemetry.addData("- Position", "%.0f / %.0f", x, y);
+        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
+        telemetry.update();
 
         waitForStart();
         start();
@@ -65,6 +105,22 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         //Change this to pixelIsLeft = true for left, pixelIsRight = true for right, or pixelInMiddle for middle
         pixelIsLeft = true;
 
+        switch(zone) {
+            case center:
+                planAlpha();
+                break;
+            case right:
+                pixelRight();
+                break;
+            case left:
+                pixelLeft();
+                break;
+            default:
+                planBeta(false, true, false);
+                break;
+        }
+
+        /*
         //Your code goes in this function.   You can make other plans as well.  (two shells are
         //provided.
         if(pixelInMiddle){
@@ -83,7 +139,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         //Sample Test Programs
         //aroundyTest();
         //rotateTest();
-
+*/
         while (opModeIsActive())
         {
 
@@ -112,10 +168,12 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
     }
 
-    public void pixelRight(){
+    public void pixelRight() {
         //Go forward just enough to turn
         driver.forward(2, 1, 0.6);
         driver.turn(30, 1, 0.4);
+       // driver.rotateOd(30, .4);
+
         //Push pixel into place
         driver.forward(12, 1, 0.6);
         //Go backward after placing pixel
@@ -123,9 +181,10 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         sleep(3000);
 
         //To go through truss
-        driver.turn(30, -1, 0.4);
+        driver.turn(25, -1, 0.4);
         //Turn left through the truss
         driver.turn(90, -1, 0.4);
+        //driver.rotateOd(-120, .4);
         sleep(3000);
         
         //Go to the other side
