@@ -49,7 +49,7 @@ public class AprilTagMaster
         initAprilTag(hardwareMap);
     }
 
-    public void detectTags(Telemetry telemetry)
+    public void tagsTelemetry(Telemetry telemetry)
     {
         // Push telemetry to the Driver Station.
         telemetryAprilTag(telemetry);
