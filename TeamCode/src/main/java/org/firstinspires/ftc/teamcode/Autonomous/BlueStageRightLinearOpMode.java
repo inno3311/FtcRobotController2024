@@ -105,7 +105,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         //Change this to pixelIsLeft = true for left, pixelIsRight = true for right, or pixelInMiddle for middle
         pixelIsLeft = true;
 
-        switch(zone) {
+        switch(zone){
             case center:
                 planAlpha();
                 break;
@@ -267,7 +267,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         if(leftBeta){
             //Go forward just enough to turn
             driver.forward(7, 1, 0.6);
-            driver.turn(30, -1, 0.4);
+            driver.turn(60, -1, 0.4);
             //Push pixel into place
             driver.forward(12, 1, 0.6);
             //Go backward after placing pixel
