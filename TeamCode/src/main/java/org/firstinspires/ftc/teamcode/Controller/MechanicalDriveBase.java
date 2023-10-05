@@ -58,12 +58,19 @@ public class MechanicalDriveBase
      * We tend to set all the motor modes at once, so break it out using "extract Method" under the
      * refactor menu
      */
-    private void resetRunMode()
+    protected void resetRunMode()
     {
         lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    protected void resetEncoders()
+    {
+        lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     //make the robot stop

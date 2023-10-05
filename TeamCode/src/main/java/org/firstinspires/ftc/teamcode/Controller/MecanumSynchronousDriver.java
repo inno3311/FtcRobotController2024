@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode.Controller;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.IMU.IMUControl;
+//import org.firstinspires.ftc.teamcode.IMU.IMUControl;
 import org.firstinspires.ftc.teamcode.util.Logging;
 import org.firstinspires.ftc.teamcode.util.PIDController;
+import org.firstinspires.ftc.teamcode.util.ImuHardware;
 
 import java.io.IOException;
 
@@ -24,7 +28,17 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
    private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
 //                    Circumference of the robot when turning == encoder dist from center (radius) * 2 * pi
 //                                        ^^^
-   private final double ticksPerDegree = (ticksPerInch * 64.09) / 360; // 16,000
+//   private final double ticksPerDegree = (ticksPerInch * 64.09) / 360; // 16,000
+ //  private final double ticksPerDegree = (ticksPerInch * 56.0) / 360; // 16,000
+   //private final double ticksPerDegree = (ticksPerInch * 54.6) / 360; // 16,000
+//private final double ticksPerDegree = (ticksPerInch * 55.0) / 360;
+   //private final double ticksPerDegree = (ticksPerInch * 54.0) / 360;  // 195.57536208817444
+private final double ticksPerDegree = 190;
+//68,466 for 360
+//34,233 for 180
+//17,116 for 90
+// 8,558 for 45
+
    /**
     * Logging method used to write data to file.
     * NOTE: This seems to cause the dev to have to hard reset the bot after each run, making us of
@@ -48,6 +62,11 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
    PIDController pidStrafe;
 
 
+   PIDController pidRotateImu;
+
+   PIDController pidRotateOd;
+
+   double rotation;
 
     /**
      * Constructor for MechanicalDriveBase from the hardware map
@@ -64,6 +83,9 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
        mOpMode = opMode;
        opMode.telemetry.update();
 
+//       imuControl = new IMUControl(this.mOpMode.hardwareMap, this.mOpMode.telemetry);
+
+
        //The input can be a large value, therefore the values of Kp needs to be small to compensate.
        //
        // Set PID proportional value to produce non-zero correction value when robot veers off
@@ -72,7 +94,32 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
 
        pidStrafe = new PIDController(0.00001, 0, 0);
 
-        // .05
+       // Set PID proportional value to start reducing power at about 50 degrees of rotation.
+       // P by itself may stall before turn completed so we add a bit of I (integral) which
+       // causes the PID controller to gently increase power if the turn is not completed.
+       pidRotateImu = new PIDController(.003, .00003, 0);
+       //pidRotateImu = new PIDController(.001, .0001, 0);
+
+                                                                     //target 17797.357950
+       //pidRotateOd = new PIDController(.0005, 0, 0);  //overshoot
+       //pidRotateOd = new PIDController(.00025, 0, 0); //undershoot
+       //pidRotateOd = new PIDController(.00025, .000001, 0); //overshoot 18442
+       //pidRotateOd = new PIDController(.00025, .00000001, 0); // under 17064
+//       pidRotateOd = new PIDController(.00025, .0000005, 0);  // slight 17984
+//      pidRotateOd = new PIDController(.00025, .000001, 0); // 17836 17862  //works well for .5 power
+
+//       pidRotateOd = new PIDController(.00025, .00001, 0);
+
+       pidRotateOd = new PIDController(.00025, .0000001, .001);  // slight 17984
+       pidRotateOd = new PIDController(.00025, .0000002, .001);  // works for 90
+
+       pidRotateOd = new PIDController(.00025, .0000001, .003);  // 180 shutters too much
+       pidRotateOd = new PIDController(.00025, .0000001, .002);  // 180 ok... kinda
+
+       pidRotateOd = new PIDController(.00025, .0000002, .000);  // 180 ok... kinda
+
+       Logging.setup();
+       Logging.log("Starting MecanumSynchronousDriver Logging");
     }
 
    /**
@@ -83,18 +130,6 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
     */
     public void forward(double target, int forward, double speed)
     {
-
-       // Set up parameters for turn correction.
-//       pidDrive.setSetpoint(0);
-//       pidDrive.setOutputRange(0, .19);
-//       pidDrive.setInputRange(-5000, 5000);
-//       pidDrive.enable();
-//
-//       // Set up parameters for strafe correction.
-//       pidStrafe.setSetpoint(0);
-//       pidStrafe.setOutputRange(0, .15);
-//       pidStrafe.setInputRange(-5000, 5000);
-//       pidStrafe.enable();
 
         pidDrive.setSetpoint(0);
         pidDrive.setOutputRange(0, speed);
@@ -110,11 +145,18 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
 
         speed *= forward;
         int leftFrontPos = this.lf.getCurrentPosition();
-        if (forward == 1)
+//        if (forward == 1)
         {
-            leftFrontPos += target * ticksPerInch;
-            while ((this.lf.getCurrentPosition() <= leftFrontPos) &&mOpMode.opModeIsActive())
+            if (forward == 1)
+               leftFrontPos += target * ticksPerInch;
+            else
+               leftFrontPos -= target * ticksPerInch;
+
+            while (mOpMode.opModeIsActive())
             {
+               int currPosTicks = this.lf.getCurrentPosition();
+
+
                //if the number is positive the bot is slipping right
                //if the number is negative the bot is slipping left
                //lf and rf are added because rf is reverse of lf direction.
@@ -135,26 +177,42 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
 
                //this.driveMotors(speed, 0, 0, 1); //run with no PID
                correction = correction * (speed * 0.33);
-               this.driveMotors(-speed, correction, -strafeCorrection, 1); // run with PID
+               this.driveMotors(speed, correction * forward, -strafeCorrection, 1); // run with PID
 
-                logger.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction);
+                //logger.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction);
                mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
                mOpMode.telemetry.update();
-            }
-        }
-        else  //TODO: would like to not have a else here and have to repeat the above code or have to call a subjuction..
-        {
-            leftFrontPos -= target;
-            while (this.lf.getCurrentPosition() >= leftFrontPos)
-            {
-                this.driveMotors(speed, 0, 0, 1);
 
-                //logger.log("left Encoder = %d, Right Encoder = %d ", this.lf.getCurrentPosition(), this.rf.getCurrentPosition());
-                //mOpMode.telemetry.addData("NOOOOOOO", this.lf.getCurrentPosition());
-                //mOpMode.telemetry.update();
+               if (forward == 1)
+               {
+                  if (currPosTicks > leftFrontPos)
+                     break;
+               }
+               else
+               {
+                  if (currPosTicks < leftFrontPos)
+                     break;
+               }
             }
         }
+//        else  //TODO: would like to not have a else here and have to repeat the above code or have to call a subjuction..
+//        {
+//            leftFrontPos -= target;
+//            while (this.lf.getCurrentPosition() >= leftFrontPos)
+//            {
+//                this.driveMotors(speed, 0, 0, 1);
+//
+//                //logger.log("left Encoder = %d, Right Encoder = %d ", this.lf.getCurrentPosition(), this.rf.getCurrentPosition());
+//                //mOpMode.telemetry.addData("NOOOOOOO", this.lf.getCurrentPosition());
+//                //mOpMode.telemetry.update();
+//            }
+//        }
         this.driveMotors(0, 0, 0, 0);
+
+       this.resetEncoders();
+       this.resetRunMode();
+
+       //driver.rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        encoderLogging();
     }
 
@@ -233,18 +291,6 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
     public void turn(double target, int right, double speed)
     {
 
-        // Set up parameters for turn correction.
-//       pidDrive.setSetpoint(0);
-//       pidDrive.setOutputRange(0, .19);
-//       pidDrive.setInputRange(-5000, 5000);
-//       pidDrive.enable();
-//
-//       // Set up parameters for strafe correction.
-//       pidStrafe.setSetpoint(0);
-//       pidStrafe.setOutputRange(0, .15);
-//       pidStrafe.setInputRange(-5000, 5000);
-//       pidStrafe.enable();
-
         pidDrive.setSetpoint(0);
         pidDrive.setOutputRange(0, speed);
         pidDrive.setInputRange(-5000, 5000);
@@ -286,7 +332,7 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
                 correction = correction * (speed * 0.33);
                 this.driveMotors(0, speed, 0, 1); // run with PID
 
-                logger.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction);
+                //logger.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction);
                 mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
                 mOpMode.telemetry.update();
             }
@@ -301,9 +347,159 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
                 //logger.log("left Encoder = %d, Right Encoder = %d ", this.lf.getCurrentPosition(), this.rf.getCurrentPosition());
                 //mOpMode.telemetry.addData("NOOOOOOO", this.lf.getCurrentPosition());
                 //mOpMode.telemetry.update();
+
+               mOpMode.telemetry.addData("90 = ", (ticksPerDegree * 90) + "\n current position = " +  rb.getCurrentPosition());
+               mOpMode.telemetry.update();
             }
         }
         this.driveMotors(0, 0, 0, 0);
+        this.resetEncoders();
+        this.resetRunMode();
 //        encoderLogging();
     }
+
+    public void rotateOd(int degrees, double power) throws InterruptedException
+    {
+       Logging.log("#rotateOd degrees = %d  power = %f", degrees, power);
+
+       int startPos = this.rb.getCurrentPosition();
+       double targetPos = degrees * ticksPerDegree;
+       pidRotateOd.reset();
+       pidRotateOd.setSetpoint(targetPos);
+       pidRotateOd.setInputRange(0, targetPos*2);
+       pidRotateOd.setOutputRange(.1, power);
+       pidRotateOd.setTolerance(.25);
+       pidRotateOd.enable();
+
+       // Proportional factor can be found by dividing the max desired pid output by
+       // the setpoint or target. Here 30% power is divided by 90 degrees (.30 / 90)
+       // to get a P factor of .003. This works for the robot we testing this code with.
+       // Your robot may vary but this way finding P works well in most situations.
+       double p = Math.abs(power/targetPos);
+
+       // Integrative factor can be approximated by diving P by 100. Then you have to tune
+       // this value until the robot turns, slows down and stops accurately and also does
+       // not take too long to "home" in on the setpoint. Started with 100 but robot did not
+       // slow and overshot the turn. Increasing I slowed the end of the turn and completed
+       // the turn in a timely manner
+       double i = p / 200.0;
+
+       //Set PID parameters based on power and ticks to travel.
+//       pidRotateOd.setPID(p, i, 0);
+
+       mOpMode.telemetry.addData("rotateOd1", "startPos:  %d   targetPos: %f ", startPos,targetPos);
+       mOpMode.telemetry.update();
+
+       Logging.log("#rotateOd startPos:  %d   targetPos: %f ", startPos,targetPos);
+
+       int onTargetCount = 0;
+
+       do
+       {
+          power = pidRotateOd.performPID(this.rb.getCurrentPosition() - startPos); // power will be + on left turn.
+          this.driveMotors(0, power, 0, 1);
+
+          //mOpMode.telemetry.addData("rotateOd2", "startPos:  %d   targetPos: %f ", startPos,targetPos);
+          //mOpMode.telemetry.addData("rotateOd2", "power: %f currPos:  %d", power, this.rb.getCurrentPosition() - startPos);
+          //mOpMode.telemetry.update();
+
+          Logging.log("#rotateOd targetPos: %f power: %f currPos: %d degrees: %f",targetPos, power, this.rb.getCurrentPosition() - startPos, (this.rb.getCurrentPosition() - startPos)/ticksPerDegree);
+
+          if (pidRotateOd.onTarget())
+          {
+             onTargetCount++;
+          }
+
+       } while (mOpMode.opModeIsActive() && (onTargetCount < 4));
+
+       //Kill motors
+       this.driveMotors(0, 0, 0, 0);
+
+       mOpMode.telemetry.addData("rotateOd3", "startPos:  %d   targetPos: %f ", startPos,targetPos);
+       mOpMode.telemetry.addData("rotateOd3", "currPos:  %d  degrees: %f", this.rb.getCurrentPosition() - startPos, (this.rb.getCurrentPosition() - startPos)/ticksPerDegree);
+       mOpMode.telemetry.update();
+
+       Logging.log("#rotateOd complete  currPos:  %d  degrees: %f",  this.rb.getCurrentPosition() - startPos, (this.rb.getCurrentPosition() - startPos)/ticksPerDegree);
+    }
+
+   /**
+    * Rotate left or right the number of degrees. Does not support turning more than 359 degrees.
+    * @param degrees Degrees to turn, + is left - is right
+    */
+   public void rotate(int degrees, double power, ImuHardware imuControl) throws InterruptedException
+   {
+
+      mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
+      mOpMode.telemetry.update();
+
+      // restart imu angle tracking.
+      imuControl.resetAngle();
+
+//      sleep(3000);
+
+      // if degrees > 359 we cap at 359 with same sign as original degrees.
+      if (Math.abs(degrees) > 359) degrees = (int) Math.copySign(359, degrees);
+
+      // start pid controller. PID controller will monitor the turn angle with respect to the
+      // target angle and reduce power as we approach the target angle. This is to prevent the
+      // robots momentum from overshooting the turn after we turn off the power. The PID controller
+      // reports onTarget() = true when the difference between turn angle and target angle is within
+      // 1% of target (tolerance) which is about 1 degree. This helps prevent overshoot. Overshoot is
+      // dependant on the motor and gearing configuration, starting power, weight of the robot and the
+      // on target tolerance. If the controller overshoots, it will reverse the sign of the output
+      // turning the robot back toward the setpoint value.
+
+      pidRotateImu.reset();
+      pidRotateImu.setSetpoint(degrees);
+      pidRotateImu.setInputRange(0, degrees);
+      pidRotateImu.setOutputRange(0, power);
+      pidRotateImu.setTolerance(.2);
+      pidRotateImu.enable();
+
+      // getAngle() returns + when rotating counter clockwise (left) and - when rotating
+      // clockwise (right).
+
+      // rotate until turn is completed.
+
+      if (degrees < 0)
+      {
+         // On right turn we have to get off zero first.
+         while (mOpMode.opModeIsActive() && imuControl.getAngle() == 0)
+         {
+            this.driveMotors(0, power, 0, 0.1);
+            sleep(100);
+
+         }
+
+         do
+         {
+            power = pidRotateImu.performPID(imuControl.getAngle()); // power will be - on right turn.
+            this.driveMotors(0, power, 0, 1);
+
+            mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
+            mOpMode.telemetry.update();
+         } while (mOpMode.opModeIsActive() && !pidRotateImu.onTarget());
+      }
+      else    // left turn.
+         do
+         {
+            power = pidRotateImu.performPID(imuControl.getAngle()); // power will be + on left turn.
+            this.driveMotors(0, -power, 0, 1);
+         } while (mOpMode.opModeIsActive() && !pidRotateImu.onTarget());
+
+      // turn the motors off.
+      this.driveMotors(0, 0, 0, 1);
+
+      rotation = imuControl.getAngle();
+
+      mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
+      mOpMode.telemetry.update();
+
+      // wait for rotation to stop.
+      sleep(500);
+
+      // reset angle tracking on new heading.
+      imuControl.resetAngle();
+   }
+
 }
