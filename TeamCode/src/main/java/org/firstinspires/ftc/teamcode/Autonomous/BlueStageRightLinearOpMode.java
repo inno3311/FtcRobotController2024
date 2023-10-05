@@ -2,8 +2,12 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.AprilTags.AprilTagMaster;
+import org.firstinspires.ftc.teamcode.AprilTags.DriveToTag;
 import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
 import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 
@@ -16,16 +20,20 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
     /** Drive control */
     MecanumSynchronousDriver driver;
+    AprilTagMaster aprilTagMaster;
+    DriveToTag driveToTag;
+    WebcamName webcamName;
+    ElapsedTime elapsedTime;
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
     private boolean pixelInMiddle, pixelIsLeft, pixelIsRight;
 
-    zoneEnum zone;
+    zoneEnum zone = null;
 
- enum zoneEnum
+    enum zoneEnum
     {
-        center,
         left,
+        center,
         right
     }
 
@@ -59,6 +67,8 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         {
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
             webcam = new WebCamHardware(this);
+            elapsedTime = new ElapsedTime();
+            driveToTag = new DriveToTag(hardwareMap, telemetry, elapsedTime, driver, aprilTagMaster, webcamName);
         }
         catch (IOException e)
         {
@@ -119,6 +129,8 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
                 planBeta(false, true, false);
                 break;
         }
+        //ordinal returns an int +1 because it starts counting at 0
+        driveToTag.drive(7, zone.ordinal() + 1);
 
         /*
         //Your code goes in this function.   You can make other plans as well.  (two shells are
@@ -140,10 +152,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         //aroundyTest();
         //rotateTest();
 */
-        while (opModeIsActive())
-        {
-
-        }
+        stop();
     }
 
    /**
@@ -164,7 +173,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
        driver.forward(15, 1, 0.6);
        //Turn left and go to backdrop 
        driver.turn(90, -1, 0.4);
-       driver.forward(5, 1, 0.6);
+       //driver.forward(5, 1, 0.6);
 
     }
 
