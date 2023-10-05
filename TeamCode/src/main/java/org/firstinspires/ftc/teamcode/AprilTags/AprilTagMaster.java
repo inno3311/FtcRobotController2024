@@ -35,14 +35,16 @@ public class AprilTagMaster
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     private MechanicalDriveBase mechanicalDriveBase;
+    WebcamName webcamName;
     private double rangeError = 0 ;
     private double headingError = 0;
     private double yawError = 0;
 
 
-    public AprilTagMaster(MechanicalDriveBase mechanicalDriveBase, HardwareMap hardwareMap)
+    public AprilTagMaster(MechanicalDriveBase mechanicalDriveBase, HardwareMap hardwareMap, WebcamName webcamName)
     {
         this.mechanicalDriveBase = mechanicalDriveBase;
+        this.webcamName = webcamName;
         initAprilTag(hardwareMap);
     }
 

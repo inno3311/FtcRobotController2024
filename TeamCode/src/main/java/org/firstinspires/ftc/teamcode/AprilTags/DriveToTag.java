@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.AprilTags;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
+import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 
 //Further tuning in AprilTagMaster.java to come, I sure of it
 public class DriveToTag
@@ -13,14 +15,16 @@ public class DriveToTag
     ElapsedTime elapsedTime;
     MechanicalDriveBase mechanicalDriveBase;
     AprilTagMaster aprilTagMaster;
+    WebcamName webcam;
 
-    public DriveToTag(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime elapsedTime, MechanicalDriveBase mechanicalDriveBase, AprilTagMaster aprilTagMaster)
+    public DriveToTag(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime elapsedTime, MechanicalDriveBase mechanicalDriveBase, AprilTagMaster aprilTagMaster, WebcamName webcam)
     {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.elapsedTime = elapsedTime;
         this.mechanicalDriveBase = mechanicalDriveBase;
         this.aprilTagMaster = aprilTagMaster;
+        this.webcam = webcam;
     }
 
     /**

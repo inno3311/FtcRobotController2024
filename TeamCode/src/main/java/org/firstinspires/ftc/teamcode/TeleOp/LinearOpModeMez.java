@@ -43,7 +43,7 @@ public class LinearOpModeMez extends LinearOpMode
             e.printStackTrace();
         }
 
-
+/*
         webcam.initTfod();
 
 
@@ -69,12 +69,12 @@ public class LinearOpModeMez extends LinearOpMode
         telemetry.update();
         waitForStart();
         start();
+*/
 
 
 
 
-
-//        aroundyTest();
+        aroundyTest();
 
         try
         {
