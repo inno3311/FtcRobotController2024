@@ -126,14 +126,16 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
                 pixelLeft();
                 break;
             default:
-                planBeta(false, true, false);
+                planBeta(false, true, false);//(I know putting all three instances as parameters isn't
+                //best practice, but [for now at least] I wanted to put all the beta instances in the same place)
+                //Only one parameter can be set to true.
                 break;
         }
         //ordinal returns an int +1 because it starts counting at 0
         driveToTag.drive(7, zone.ordinal() + 1);
 
         /*
-        //Your code goes in this function.   You can make other plans as well.  (two shells are
+        //Your code goes in this function. You can make other plans as well.  (two shells are
         //provided.
         if(pixelInMiddle){
             //Put planAlpha(); here
@@ -144,9 +146,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
             pixelLeft();
         } else if (pixelIsRight){
             pixelRight();
-        } else planBeta(false, true, false); //(I know putting all three instances as parameters isn't
-        //best practice, but [for now at least] I wanted to put all the beta instances in the same place)
-        //Only one parameter can be set to true.
+        } else planBeta(false, true, false);
 
         //Sample Test Programs
         //aroundyTest();
