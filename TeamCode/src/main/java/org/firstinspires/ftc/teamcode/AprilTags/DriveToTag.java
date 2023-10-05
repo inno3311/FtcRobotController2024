@@ -4,13 +4,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import java.util.List;
 
 //Further tuning in AprilTagMaster.java to come, I sure of it
 public class DriveToTag
@@ -42,7 +35,7 @@ public class DriveToTag
             while (elapsedTime.seconds() < time)
             {
                 telemetry.addData("Time = ",elapsedTime.seconds() + " seconds");
-                aprilTagMaster.findTag(11, 0, 2, telemetry);
+                aprilTagMaster.findTag(11, 0, target, telemetry);
             }
         }
     }

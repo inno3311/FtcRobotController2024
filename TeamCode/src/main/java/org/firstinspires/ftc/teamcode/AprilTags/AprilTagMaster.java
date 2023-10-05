@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.AprilTags;
 
-import static java.lang.Thread.getDefaultUncaughtExceptionHandler;
-import static java.lang.Thread.sleep;
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
