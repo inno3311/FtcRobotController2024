@@ -114,7 +114,7 @@ public class AprilTagMaster
         telemetry.update();
 
         // Apply desired axes motions to the drivetrain.
-        mechanicalDriveBase.driveMotors(drive, -turn, strafe, 1);
+        mechanicalDriveBase.driveMotors(drive, turn, strafe, 1);
     }
 
     private void telemetryAprilTag(Telemetry telemetry)
