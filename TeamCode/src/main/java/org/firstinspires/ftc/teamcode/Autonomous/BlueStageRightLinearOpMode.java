@@ -66,9 +66,11 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         try
         {
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
-            webcam = new WebCamHardware(this);
             elapsedTime = new ElapsedTime();
-            driveToTag = new DriveToTag(hardwareMap, telemetry, elapsedTime, driver, aprilTagMaster, webcamName);
+            aprilTagMaster = new AprilTagMaster(driver, hardwareMap, webcamName);
+            driveToTag = new DriveToTag(hardwareMap, telemetry, elapsedTime, driver, aprilTagMaster);
+            webcam = new WebCamHardware(this);
+
         }
         catch (IOException e)
         {
@@ -76,7 +78,6 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         }
 
         webcam.initTfod();
-
 
         Recognition rec = null;
         while ((rec = webcam.findObject()) == null)
@@ -131,8 +132,9 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
                 //Only one parameter can be set to true.
                 break;
         }
+        //TODO We need to make this work for red side to because red uses targets (AprilTag Ids) 4-6
         //ordinal returns an int +1 because it starts counting at 0
-        driveToTag.drive(7, zone.ordinal() + 1);
+        driveToTag.drive(7, zone.ordinal() + 1, 12, 0);
 
         /*
         //Your code goes in this function. You can make other plans as well.  (two shells are

@@ -71,7 +71,7 @@ public class WebCamHardware
 
       // Set the camera (webcam vs. built-in RC phone camera).
       if (USE_WEBCAM) {
-         builder.setCamera(mOpMode.hardwareMap.get(WebcamName.class, "Webcam 1"));
+         builder.setCamera(mOpMode.hardwareMap.get(WebcamName.class, "TFod"));
       } else {
          builder.setCamera(BuiltinCameraDirection.BACK);
       }
@@ -155,6 +155,11 @@ public class WebCamHardware
          }
       }
       return null;
+   }
+
+   public void closeWebcam()
+   {
+      tfod.shutdown();
    }
 
 }

@@ -15,31 +15,30 @@ public class DriveToTag
     ElapsedTime elapsedTime;
     MechanicalDriveBase mechanicalDriveBase;
     AprilTagMaster aprilTagMaster;
-    WebcamName webcam;
 
-    public DriveToTag(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime elapsedTime, MechanicalDriveBase mechanicalDriveBase, AprilTagMaster aprilTagMaster, WebcamName webcam)
+    public DriveToTag(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime elapsedTime, MechanicalDriveBase mechanicalDriveBase, AprilTagMaster aprilTagMaster)
     {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.elapsedTime = elapsedTime;
         this.mechanicalDriveBase = mechanicalDriveBase;
         this.aprilTagMaster = aprilTagMaster;
-        this.webcam = webcam;
     }
 
     /**
      * @param time The amount of time you want the robot to drive to tag
      * @param target The aprilTag you want to drive to
      * **/
-    public void drive(int time, int target)
+    public void drive(int time, int target, double range, double yaw)
     {
+        elapsedTime.reset();
         if (aprilTagMaster.aprilTagDetected())
         {
             elapsedTime.startTime();
             while (elapsedTime.seconds() < time)
             {
                 telemetry.addData("Time = ",elapsedTime.seconds() + " seconds");
-                aprilTagMaster.findTag(11, 0, target, telemetry);
+                aprilTagMaster.findTag(range, yaw, target, telemetry);
             }
         }
     }
