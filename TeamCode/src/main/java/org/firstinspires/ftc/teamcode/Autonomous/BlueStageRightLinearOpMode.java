@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import android.widget.VideoView;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -8,8 +10,11 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.AprilTags.AprilTagMaster;
 import org.firstinspires.ftc.teamcode.AprilTags.DriveToTag;
+import org.firstinspires.ftc.teamcode.AprilTags.InitAprilTags;
 import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
 import org.firstinspires.ftc.teamcode.util.WebCamHardware;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.io.IOException;
 
@@ -21,9 +26,8 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     /** Drive control */
     MecanumSynchronousDriver driver;
     AprilTagMaster aprilTagMaster;
+    InitAprilTags initAprilTags;
     DriveToTag driveToTag;
-    WebcamName webcamName;
-    ElapsedTime elapsedTime;
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
     private boolean pixelInMiddle, pixelIsLeft, pixelIsRight;
@@ -66,10 +70,12 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         try
         {
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
-            elapsedTime = new ElapsedTime();
-            aprilTagMaster = new AprilTagMaster(driver, hardwareMap, webcamName);
-            driveToTag = new DriveToTag(hardwareMap, telemetry, elapsedTime, driver, aprilTagMaster);
             webcam = new WebCamHardware(this);
+            initAprilTags = new InitAprilTags();
+//            initAprilTags = new InitAprilTags();
+//            aprilTagProcessor = webcam.getAprilTagProcessor();//initAprilTags.initAprilTags(hardwareMap);
+//            aprilTagMaster = new AprilTagMaster(driver, webcamName, aprilTagProcessor);
+//            driveToTag = new DriveToTag(hardwareMap, telemetry, elapsedTime, driver, aprilTagMaster);
 
         }
         catch (IOException e)
@@ -110,6 +116,10 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
         telemetry.update();
 
+
+        initAprilTags.initAprilTags(webcam, driver, hardwareMap, telemetry);
+        aprilTagMaster = initAprilTags.getAprilTagMaster();
+        driveToTag = initAprilTags.getDriveToTag();
         waitForStart();
         start();
 
@@ -134,8 +144,12 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         }
         //TODO We need to make this work for red side to because red uses targets (AprilTag Ids) 4-6
         //ordinal returns an int +1 because it starts counting at 0
-        driveToTag.drive(7, zone.ordinal() + 1, 12, 0);
+        sleep(1000);
+        driveToTag.drive(7, zone.ordinal() + 1, 11, 0);
 
+        telemetry.addData("Finished", "");
+        telemetry.update();
+        sleep(10000);
         /*
         //Your code goes in this function. You can make other plans as well.  (two shells are
         //provided.
@@ -166,13 +180,19 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
        //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is), then go backward
        driver.forward(25, 1, 0.6);
+       sleep(500);
        driver.forward(23, -1, 0.6);
+        sleep(500);
        //Turn left through the truss  
        driver.turn(90, -1, 0.4);
-       driver.forward(80, 1, 0.9);
+        sleep(500);
+       driver.forward(70, 1, 0.9);
+        sleep(500);
        //Turn right  
        driver.turn(90, 1, 0.4);
-       driver.forward(15, 1, 0.6);
+        sleep(500);
+       driver.forward(20, 1, 0.6);
+        sleep(500);
        //Turn left and go to backdrop 
        driver.turn(90, -1, 0.4);
        //driver.forward(5, 1, 0.6);
@@ -192,14 +212,14 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         sleep(3000);
 
         //To go through truss
-        driver.turn(25, -1, 0.4);
+        driver.turn(30, -1, 0.4);
         //Turn left through the truss
         driver.turn(90, -1, 0.4);
         //driver.rotateOd(-120, .4);
         sleep(3000);
         
         //Go to the other side
-        driver.forward(80, 1, 0.9);
+        driver.forward(70, 1, 0.9);
         sleep(3000);
         //Turn right
         driver.turn(90, 1, 0.4);
@@ -229,7 +249,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
         //Turn left through the truss
         //Go to the other side
-        driver.forward(60, 1, 0.9);
+        driver.forward(70, 1, 0.9);
         sleep(3000);
         driver.turn(20, 1, 0.4);
         driver.forward(20, 1, 0.9);

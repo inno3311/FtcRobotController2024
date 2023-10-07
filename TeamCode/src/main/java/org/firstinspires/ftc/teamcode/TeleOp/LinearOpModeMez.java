@@ -3,15 +3,23 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.AprilTags.AprilTagMaster;
+import org.firstinspires.ftc.teamcode.AprilTags.DriveToTag;
+import org.firstinspires.ftc.teamcode.AprilTags.InitAprilTags;
 import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
+import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 import org.firstinspires.ftc.teamcode.IMU.IMUControl;
 import org.firstinspires.ftc.teamcode.util.ImuHardware;
 import org.firstinspires.ftc.teamcode.util.Logging;
 import org.firstinspires.ftc.teamcode.util.WebCamHardware;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.io.IOException;
+import java.lang.annotation.ElementType;
 
 @Autonomous(name = "Mez test", group = "Mez")
 public class LinearOpModeMez extends LinearOpMode
@@ -24,9 +32,8 @@ public class LinearOpModeMez extends LinearOpMode
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
 
     ImuHardware imuControl;
-
     WebCamHardware webcam;
-
+    WebcamName webCamName;
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -74,16 +81,16 @@ public class LinearOpModeMez extends LinearOpMode
 
 
 
-        aroundyTest();
-
-        try
-        {
-            rotateTest();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+//        aroundyTest();
+//
+//        try
+//        {
+//            rotateTest();
+//        }
+//        catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
 
 
         //Drive forward 72 inches
@@ -117,7 +124,9 @@ public class LinearOpModeMez extends LinearOpMode
 //        sleep(1000);
 //        driver.forward(12 * 4,-1,0.3);
 
-        imuControl.resetAngle();
+//        imuControl.resetAngle();
+
+
 
         while (opModeIsActive())
         {

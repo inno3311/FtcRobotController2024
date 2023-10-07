@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.AprilTags;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
-import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 
 //Further tuning in AprilTagMaster.java to come, I sure of it
 public class DriveToTag
@@ -32,9 +30,11 @@ public class DriveToTag
     public void drive(int time, int target, double range, double yaw)
     {
         elapsedTime.reset();
+        elapsedTime.startTime();
+        while (!aprilTagMaster.aprilTagDetected() && elapsedTime.seconds() < time) {}
+
         if (aprilTagMaster.aprilTagDetected())
         {
-            elapsedTime.startTime();
             while (elapsedTime.seconds() < time)
             {
                 telemetry.addData("Time = ",elapsedTime.seconds() + " seconds");
