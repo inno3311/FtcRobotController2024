@@ -72,11 +72,6 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
             webcam = new WebCamHardware(this);
             initAprilTags = new InitAprilTags();
-//            initAprilTags = new InitAprilTags();
-//            aprilTagProcessor = webcam.getAprilTagProcessor();//initAprilTags.initAprilTags(hardwareMap);
-//            aprilTagMaster = new AprilTagMaster(driver, webcamName, aprilTagProcessor);
-//            driveToTag = new DriveToTag(hardwareMap, telemetry, elapsedTime, driver, aprilTagMaster);
-
         }
         catch (IOException e)
         {
