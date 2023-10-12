@@ -90,16 +90,19 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         double x = (rec.getLeft() + rec.getRight()) / 2 ;
         double y = (rec.getTop()  + rec.getBottom()) / 2 ;
 
-        if(x > 50 && x < 150)
+        if(x <= 159)
         {
+            //Range for left 50-150
             telemetry.addData("Left", x);
             zone = zoneEnum.left;
         }
-        else if(x > 160 && x < 450) {
+        else if(x > 160 && x <= 459){
+            //Range for the center 160 - 459
             telemetry.addData("Center", x);
             zone = zoneEnum.center;
         }
-        else if(x > 460 && x < 600){
+        else if(x >= 460){
+            //Range for the right
             telemetry.addData("Right", x);
             zone = zoneEnum.right;
         }
@@ -123,13 +126,17 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
         switch(zone){
             case center:
-                planAlpha();
+                telemetry.addData("Center detected", "");
+                planBeta(true, false, false);
+              //  planAlpha();
                 break;
             case right:
-                pixelRight();
+                planBeta(false, false, true);
+                //pixelRight();
                 break;
             case left:
-                pixelLeft();
+                planBeta(false, true, false);
+                //pixelLeft();
                 break;
             default:
                 planBeta(false, true, false);//(I know putting all three instances as parameters isn't
@@ -261,7 +268,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     /**
      * There is always a plan B.  ;)
      */
-    public void planBeta(boolean beta, boolean leftBeta, boolean rightBeta)
+    public void planBeta(boolean centerBeta, boolean leftBeta, boolean rightBeta)
     {
 
         /*THESE ARE PLAN BETA INSTANCES FOR ALL THREE INSTANCES. SET beta TO true FOR THE PLAN BETA
@@ -271,22 +278,42 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
           ONLY ONE INSTANCE CAN BE TRUE (This goes without saying, but I said it anyway (: )
 
          */
-        if(beta){
+        if(centerBeta){
             //BETA INSTANCE IF PIXEL IS IN THE MIDDLE
             //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is), then go backward
             driver.forward(25, 1, 0.6);
-            driver.forward(23, -1, 0.6);
+            driver.forward(12, -1, 0.6);
+
+            //sleep
+            sleep(2000);
+
             //Turn right (out of the way of the pixel)
-            driver.turn(90, 1, 0.4);
-            driver.forward(8, 1, 0.9);
+            driver.turn(30, 1, 0.4);
+            driver.forward(20, 1, 0.9);
+
+            sleep(2000);
+
             //Turn left
+            driver.turn(30, -1, 0.4);
+            driver.forward(13, 1, 0.6);
+
+            sleep(2000);
+
+            //Turn left through truss
             driver.turn(90, -1, 0.4);
-            driver.forward(25, 1, 0.6);
-            //Turn left and go to backdrop
+            driver.forward(80, 1, 0.6);
+
+            sleep(2000);
+
+            //Turn left once through truss for next command
             driver.turn(90, -1, 0.4);
-            driver.forward(40, 1, 0.6);
-            driver.turn(90, -1, 0.4);
-            driver.forward(15, 1, 0.8);
+            driver.forward(30, 1, 0.8);
+
+            sleep(2000);
+
+            //Face right and let AprilTag take over
+            driver.turn(90, 1, 0.4);
+
 
         }
 
@@ -396,5 +423,3 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     }
 
 }
-
-
