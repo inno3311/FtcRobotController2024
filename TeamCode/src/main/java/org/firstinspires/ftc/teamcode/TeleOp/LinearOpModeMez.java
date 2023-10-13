@@ -74,18 +74,35 @@ public class LinearOpModeMez extends LinearOpMode
         telemetry.addData("- Position", "%.0f / %.0f", x, y);
         telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
         telemetry.update();
-        waitForStart();
-        start();
+
 */
 
+        waitForStart();
+        start();
 
-
-
+        try
+        {
+            driver.rotateMez(45,1,imuControl);
+            sleep(1000);
+            driver.rotateMez(45,1,imuControl);
+            sleep(1000);
+            driver.rotateMez(45,1,imuControl);
+            sleep(1000);
+            driver.rotateMez(45,1,imuControl);
+            sleep(1000);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 //        aroundyTest();
 //
 //        try
 //        {
-//            rotateTest();
+//            driver.rotate(90,0.5,imuControl);
+//
+//            driver.rotationTest(imuControl);
+//            //rotateTest();
 //        }
 //        catch (IOException e)
 //        {
@@ -175,6 +192,19 @@ public class LinearOpModeMez extends LinearOpMode
 //        telemetry.update();
 
 
+//        sleep(2000);
+//        driver.rotateOd(180, 0.5);
+//        sleep(2000);
+//        driver.rotateOd(180, .5);
+//        sleep(2000);
+//        driver.rotateOd(180, .5);
+//        sleep(2000);
+//        driver.rotateOd(180, .5);
+//        sleep(2000);
+//        driver.rotateOd(180, .5);
+//        sleep(2000);
+//        driver.rotateOd(180, .5);
+
         sleep(2000);
         driver.rotateOd(45, 0.5);
         sleep(2000);
@@ -183,6 +213,10 @@ public class LinearOpModeMez extends LinearOpMode
         driver.rotateOd(90, .5);
         sleep(2000);
         driver.rotateOd(180, .5);
+        sleep(2000);
+        //driver.rotateOd(180, .5);
+        sleep(2000);
+        //driver.rotateOd(-180, .5);
 
 
 

@@ -33,7 +33,8 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
    //private final double ticksPerDegree = (ticksPerInch * 54.6) / 360; // 16,000
 //private final double ticksPerDegree = (ticksPerInch * 55.0) / 360;
    //private final double ticksPerDegree = (ticksPerInch * 54.0) / 360;  // 195.57536208817444
-private final double ticksPerDegree = 190;
+//private final double ticksPerDegree = 202.75;//190;  //FOR BATT 12.3 VOLTS
+   private final double ticksPerDegree = 199;  // 12.63 V
 //68,466 for 360
 //34,233 for 180
 //17,116 for 90
@@ -98,7 +99,8 @@ private final double ticksPerDegree = 190;
        // P by itself may stall before turn completed so we add a bit of I (integral) which
        // causes the PID controller to gently increase power if the turn is not completed.
        pidRotateImu = new PIDController(.003, .00003, 0);
-       //pidRotateImu = new PIDController(.001, .0001, 0);
+       pidRotateImu = new PIDController(.02, .001, 0);  //works pretty good
+       pidRotateImu = new PIDController(.03, .003, 0);
 
                                                                      //target 17797.357950
        //pidRotateOd = new PIDController(.0005, 0, 0);  //overshoot
@@ -117,6 +119,8 @@ private final double ticksPerDegree = 190;
        pidRotateOd = new PIDController(.00025, .0000001, .002);  // 180 ok... kinda
 
        pidRotateOd = new PIDController(.00025, .0000002, .000);  // 180 ok... kinda
+
+       pidRotateOd = new PIDController(.0003, .0000002, .000);  // 180 ok... kinda
 
        Logging.setup();
        Logging.log("Starting MecanumSynchronousDriver Logging");
@@ -367,8 +371,8 @@ private final double ticksPerDegree = 190;
        pidRotateOd.reset();
        pidRotateOd.setSetpoint(targetPos);
        pidRotateOd.setInputRange(0, targetPos*2);
-       pidRotateOd.setOutputRange(.1, power);
-       pidRotateOd.setTolerance(.25);
+       pidRotateOd.setOutputRange(.15, power);
+       pidRotateOd.setTolerance(.15);
        pidRotateOd.enable();
 
        // Proportional factor can be found by dividing the max desired pid output by
@@ -408,9 +412,11 @@ private final double ticksPerDegree = 190;
           if (pidRotateOd.onTarget())
           {
              onTargetCount++;
+             Logging.log("#onTargetCount: %d",onTargetCount);
+
           }
 
-       } while (mOpMode.opModeIsActive() && (onTargetCount < 4));
+       } while (mOpMode.opModeIsActive() && (onTargetCount < 8));
 
        //Kill motors
        this.driveMotors(0, 0, 0, 0);
@@ -422,13 +428,87 @@ private final double ticksPerDegree = 190;
        Logging.log("#rotateOd complete  currPos:  %d  degrees: %f",  this.rb.getCurrentPosition() - startPos, (this.rb.getCurrentPosition() - startPos)/ticksPerDegree);
     }
 
+
+    public void rotateMez(double degrees, double power, ImuHardware imuControl) throws InterruptedException, IOException
+    {
+       pidRotateImu.reset();
+       pidRotateImu.setSetpoint(degrees);
+       pidRotateImu.setInputRange(0, degrees + degrees / 10);
+       pidRotateImu.setOutputRange(.14, 1);
+       pidRotateImu.setTolerance(.4);
+       pidRotateImu.enable();
+
+       int onTargetCount = 0;
+       int onTargetCountTotal = 0;
+       // restart imu angle tracking.
+       imuControl.resetAngle();
+
+       double currAngle = 0.0;
+       double remainingAngle = 0.0;
+       if (degrees < 0)
+       {
+          // On right turn we have to get off zero first.
+          while (mOpMode.opModeIsActive() && imuControl.getAngle() == 0)
+          {
+             this.driveMotors(0, power, 0, 1);
+             sleep(100);
+
+          }
+       }
+       else    // left turn.
+          do
+          {
+             currAngle = imuControl.getAngle();
+             remainingAngle = degrees - currAngle;
+
+             power = -1.0;//pidRotateImu.performPID(currAngle); // power will be + on left turn.
+             this.driveMotors(0, -1, 0, 1);
+             Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
+
+          } while (mOpMode.opModeIsActive() && remainingAngle > 30.0);
+
+       Logging.log("remaining angle %f", remainingAngle);
+       pidRotateImu.setOutputRange(.13, 1);
+       do
+       {
+          currAngle = imuControl.getAngle();
+          remainingAngle = degrees - currAngle;     // 90-60 = 30
+          pidRotateImu.setSetpoint(degrees);
+
+          power = pidRotateImu.performPID(currAngle); // power will be + on left turn.
+          this.driveMotors(0, -power, 0, 1);
+          Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
+
+          if (pidRotateImu.onTarget())
+          {
+             pidRotateImu.setOutputRange(.05, 1);
+             onTargetCount++;
+             onTargetCountTotal++;
+             Logging.log("onTargetCount %d", onTargetCount);
+          }
+          else
+          {
+             onTargetCount = 0;
+          }
+
+       } while (mOpMode.opModeIsActive() && onTargetCount < 5 && onTargetCountTotal < 10);
+
+       // turn the motors off.
+       this.driveMotors(0, 0, 0, 1);
+       Logging.log("completed rotate of angle %f", degrees);
+
+
+
+
+    }
+
    /**
     * Rotate left or right the number of degrees. Does not support turning more than 359 degrees.
     * @param degrees Degrees to turn, + is left - is right
     */
-   public void rotate(int degrees, double power, ImuHardware imuControl) throws InterruptedException
+   public void rotate(int degrees, double power, ImuHardware imuControl) throws InterruptedException, IOException
    {
-
+      //Logging.setup();
       mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
       mOpMode.telemetry.update();
 
@@ -451,41 +531,68 @@ private final double ticksPerDegree = 190;
 
       pidRotateImu.reset();
       pidRotateImu.setSetpoint(degrees);
-      pidRotateImu.setInputRange(0, degrees);
-      pidRotateImu.setOutputRange(0, power);
-      pidRotateImu.setTolerance(.2);
+      pidRotateImu.setInputRange(0, degrees + degrees / 10);
+      pidRotateImu.setOutputRange(.15, 1);
+      pidRotateImu.setTolerance(.25);
       pidRotateImu.enable();
 
       // getAngle() returns + when rotating counter clockwise (left) and - when rotating
       // clockwise (right).
 
       // rotate until turn is completed.
+      int onTargetCount = 0;
 
       if (degrees < 0)
       {
          // On right turn we have to get off zero first.
          while (mOpMode.opModeIsActive() && imuControl.getAngle() == 0)
          {
-            this.driveMotors(0, power, 0, 0.1);
+            this.driveMotors(0, power, 0, 1);
             sleep(100);
 
          }
+
+
 
          do
          {
             power = pidRotateImu.performPID(imuControl.getAngle()); // power will be - on right turn.
             this.driveMotors(0, power, 0, 1);
 
-            mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
-            mOpMode.telemetry.update();
-         } while (mOpMode.opModeIsActive() && !pidRotateImu.onTarget());
+            //mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
+            //mOpMode.telemetry.update();
+            Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
+
+            if (pidRotateImu.onTarget())
+            {
+               onTargetCount++;
+               Logging.log("onTargetCount %d", onTargetCount);
+            }
+            else
+            {
+               onTargetCount = 0;
+            }
+
+         } while (mOpMode.opModeIsActive() && onTargetCount < 5);
       }
       else    // left turn.
          do
          {
             power = pidRotateImu.performPID(imuControl.getAngle()); // power will be + on left turn.
             this.driveMotors(0, -power, 0, 1);
-         } while (mOpMode.opModeIsActive() && !pidRotateImu.onTarget());
+            Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
+
+            if (pidRotateImu.onTarget())
+            {
+               onTargetCount++;
+               Logging.log("onTargetCount %d", onTargetCount);
+            }
+            else
+            {
+               onTargetCount = 0;
+            }
+
+         } while (mOpMode.opModeIsActive() && onTargetCount < 5);
 
       // turn the motors off.
       this.driveMotors(0, 0, 0, 1);
@@ -502,4 +609,44 @@ private final double ticksPerDegree = 190;
       imuControl.resetAngle();
    }
 
+
+   public void rotationTest(ImuHardware imuControl) throws IOException
+   {
+      int startPos = rb.getCurrentPosition();
+      double startHeading = imuControl.getHeading();
+      double power = .5;
+      double targetPos = 90.0;
+      pidRotateOd.reset();
+      pidRotateOd.setSetpoint(targetPos);
+      pidRotateOd.setInputRange(0, targetPos*2);
+      pidRotateOd.setOutputRange(.15, power);
+      pidRotateOd.setTolerance(.15);
+      pidRotateOd.enable();
+
+      Logging.setup();
+      int onTargetCount = 0;
+
+      do
+      {
+         power = pidRotateOd.performPID(this.rb.getCurrentPosition() - startPos); // power will be + on left turn.
+         this.driveMotors(0, power, 0, 1);
+
+         this.driveMotors(0, .5, 0, 1);
+         int currPos = startPos - rb.getCurrentPosition();
+         mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)  wheel: %d", imuControl.getHeading(), currPos);
+         mOpMode.telemetry.update();
+         Logging.log("%.2f Deg. (Heading)  wheel: %d", imuControl.getHeading(), currPos);
+
+         if (pidRotateOd.onTarget())
+         {
+            onTargetCount++;
+            Logging.log("#onTargetCount: %d",onTargetCount);
+         }
+      }
+      while (onTargetCount < 8 && mOpMode.opModeIsActive());
+
+
+      this.driveMotors(0, 0, 0, 1);
+      Logging.log("STOP!  %.2f Deg. (Heading)  wheel: %d", startHeading - imuControl.getHeading(), startPos - rb.getCurrentPosition());
+   }
 }
