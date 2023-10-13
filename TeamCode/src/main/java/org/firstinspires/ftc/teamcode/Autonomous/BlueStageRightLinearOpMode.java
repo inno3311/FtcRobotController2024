@@ -280,36 +280,47 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
          */
         if(centerBeta){
             //BETA INSTANCE IF PIXEL IS IN THE MIDDLE
-            //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is), then go backward
+
+            //Go forward 25 in
             driver.forward(25, 1, 0.6);
+
+            //Go backward 12 in for space to turn
             driver.forward(12, -1, 0.6);
 
             //sleep
-            sleep(2000);
+            sleep(1000);
 
-            //Turn right (out of the way of the pixel)
+            //Turn right 30° (out of the way of the pixel)
             driver.turn(30, 1, 0.4);
+
+            //Forward after turning to go into position for going through truss
             driver.forward(20, 1, 0.9);
 
-            sleep(2000);
+            sleep(1000);
 
             //Turn left
             driver.turn(30, -1, 0.4);
+
+            //Continue to go into position
             driver.forward(13, 1, 0.6);
 
-            sleep(2000);
+            sleep(1000);
 
-            //Turn left through truss
+            //Turn left to go through truss
             driver.turn(90, -1, 0.4);
+
+            //Go through truss
             driver.forward(80, 1, 0.6);
 
-            sleep(2000);
+            sleep(1000);
 
             //Turn left once through truss for next command
             driver.turn(90, -1, 0.4);
-            driver.forward(30, 1, 0.8);
 
-            sleep(2000);
+            //Go forward into position
+            driver.forward(24, 1, 0.8);
+
+            sleep(1000);
 
             //Face right and let AprilTag take over
             driver.turn(90, 1, 0.4);
@@ -372,6 +383,47 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
             driver.forward(15, 1, 0.6);
 
         }
+
+    }
+
+    public void planPurple(boolean targetIsCenter, boolean targetIsLeft, boolean targetIsRight){
+        /***
+            This is a backup to the backup. Different initial position and
+            different "parking" position for flexibility.
+        ***/
+
+
+        //Go forward to determine whether object is left/center/right
+        driver.forward(20, 1, 0.6);
+
+        sleep(1000);
+
+        //If target is in the center...
+        if(targetIsCenter) {
+
+            //Go forward and place pixel
+            driver.forward(4, 1, 0.5);
+
+            sleep(1000);
+
+            //Go backward into position
+            driver.forward(5, -1, 0.6);
+
+
+        }
+
+
+        if(targetIsLeft){
+            //Code if pixel is left here
+
+        }
+
+        if(targetIsRight){
+            //Code if pixel is right here
+
+
+        }
+
 
     }
 
