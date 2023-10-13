@@ -393,11 +393,14 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         ***/
 
 
+        //Following line remains true for all three instances...
         //Go forward to determine whether object is left/center/right
         driver.forward(20, 1, 0.6);
 
         sleep(1000);
 
+        //...then calls one of the if statements      
+                
         //If target is in the center...
         if(targetIsCenter) {
 
@@ -412,19 +415,52 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
         }
 
-
+        //If target is on the left...
         if(targetIsLeft){
-            //Code if pixel is left here
+
+            //Face left
+            driver.turn(40, -1, 0.4);
+                        
+            //Go forward and place pixel
+            driver.forward(4, 1, 0.5);
+
+            sleep(1000);
+
+            //Turn back
+            driver.turn(40, 1, 0.4);
+
+            sleep(1000);
+            
+            //Go backward into position
+            driver.forward(5, -1, 0.6);
 
         }
 
         if(targetIsRight){
-            //Code if pixel is right here
+            //Face right
+            driver.turn(40, 1, 0.4);
+                        
+            //Go forward and place pixel
+            driver.forward(4, 1, 0.5);
+
+            sleep(1000);
+
+            //Turn back
+            driver.turn(40, -1, 0.4);
+
+            sleep(1000);
+            
+            //Go backward into position
+            driver.forward(5, -1, 0.6);
 
 
         }
 
+        //Wait for next command...
+        sleep(1000);
+        
 
+        
     }
 
     /**
