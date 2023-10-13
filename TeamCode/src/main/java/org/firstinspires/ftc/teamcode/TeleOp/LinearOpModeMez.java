@@ -82,14 +82,25 @@ public class LinearOpModeMez extends LinearOpMode
 
         try
         {
-            driver.rotateMez(45,1,imuControl);
+            driver.rotateLeft90(imuControl);
             sleep(1000);
-            driver.rotateMez(45,1,imuControl);
-            sleep(1000);
-            driver.rotateMez(45,1,imuControl);
-            sleep(1000);
-            driver.rotateMez(45,1,imuControl);
-            sleep(1000);
+//            driver.rotateLeft90(imuControl);
+//            sleep(1000);
+//            driver.rotateLeft90(imuControl);
+//            sleep(1000);
+//            driver.rotateLeft90(imuControl);
+//            sleep(1000);
+
+//            driver.rotateMez(90,1,imuControl);
+//            sleep(1000);
+//            driver.rotateMez(90,1,imuControl);
+//            sleep(1000);
+//            driver.rotateMez(90,1,imuControl);
+//            sleep(1000);
+//            driver.rotateMez(45,1,imuControl);
+//            sleep(1000);
+//            driver.rotateMez(45,1,imuControl);
+//            sleep(1000);
         }
         catch (IOException e)
         {

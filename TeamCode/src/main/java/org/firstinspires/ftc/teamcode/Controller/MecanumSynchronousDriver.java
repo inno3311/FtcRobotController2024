@@ -18,7 +18,7 @@ import java.io.IOException;
  * methods to command the bot.  The movements are backed up by PID controller to ensure the bot
  * stays on cource.  This class is intended to be used by autonomous programs.
  */
-public class MecanumSynchronousDriver extends MechanicalDriveBase
+public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
 {
 
    /**
@@ -100,7 +100,8 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
        // causes the PID controller to gently increase power if the turn is not completed.
        pidRotateImu = new PIDController(.003, .00003, 0);
        pidRotateImu = new PIDController(.02, .001, 0);  //works pretty good
-       pidRotateImu = new PIDController(.03, .003, 0);
+       pidRotateImu = new PIDController(.03, .003, 0);  //low bat
+       pidRotateImu = new PIDController(.02, .003, .001);
 
                                                                      //target 17797.357950
        //pidRotateOd = new PIDController(.0005, 0, 0);  //overshoot
@@ -428,6 +429,59 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
        Logging.log("#rotateOd complete  currPos:  %d  degrees: %f",  this.rb.getCurrentPosition() - startPos, (this.rb.getCurrentPosition() - startPos)/ticksPerDegree);
     }
 
+    public void rotateLeft90(ImuHardware imuControl) throws InterruptedException, IOException
+    {
+       double degrees = 90.0;
+       double power = .5;
+
+       //pidRotateImu = new PIDController(.035, .0002, .06);
+       pidRotateImu = new PIDController(.04, .0001, .11);
+
+       pidRotateImu.reset();
+       pidRotateImu.setSetpoint(90);
+       pidRotateImu.setInputRange(0, 90 + 90 / 10);
+       pidRotateImu.setOutputRange(0, 1);
+       pidRotateImu.setTolerance(.3);
+       pidRotateImu.enable();
+
+       int onTargetCount = 0;
+       int onTargetCountTotal = 0;
+       // restart imu angle tracking.
+       imuControl.resetAngle();
+
+       double currAngle = 0.0;
+       double remainingAngle = 0.0;
+
+       do
+       {
+          currAngle = imuControl.getAngle();
+          remainingAngle = degrees - currAngle;     // 90-60 = 30
+
+
+          power = pidRotateImu.performPID(currAngle); // power will be + on left turn.
+          this.driveMotors(0, -power, 0, 1);
+          Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
+
+          if (pidRotateImu.onTarget())
+          {
+             //pidRotateImu.setOutputRange(.05, 1);
+             onTargetCount++;
+             onTargetCountTotal++;
+             Logging.log("onTargetCount %d", onTargetCount);
+          }
+          else
+          {
+             onTargetCount = 0;
+          }
+
+       }
+       while (mOpMode.opModeIsActive() && onTargetCount < 5 && onTargetCountTotal < 10);
+
+       this.driveMotors(0, 0, 0, 1);
+       Logging.log("completed rotate of angle %f", degrees);
+       mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
+       mOpMode.telemetry.update();
+    }
 
     public void rotateMez(double degrees, double power, ImuHardware imuControl) throws InterruptedException, IOException
     {
@@ -455,7 +509,8 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
 
           }
        }
-       else    // left turn.
+       else
+       {
           do
           {
              currAngle = imuControl.getAngle();
@@ -465,38 +520,41 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
              this.driveMotors(0, -1, 0, 1);
              Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
 
-          } while (mOpMode.opModeIsActive() && remainingAngle > 30.0);
-
-       Logging.log("remaining angle %f", remainingAngle);
-       pidRotateImu.setOutputRange(.13, 1);
-       do
-       {
-          currAngle = imuControl.getAngle();
-          remainingAngle = degrees - currAngle;     // 90-60 = 30
-          pidRotateImu.setSetpoint(degrees);
-
-          power = pidRotateImu.performPID(currAngle); // power will be + on left turn.
-          this.driveMotors(0, -power, 0, 1);
-          Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
-
-          if (pidRotateImu.onTarget())
-          {
-             pidRotateImu.setOutputRange(.05, 1);
-             onTargetCount++;
-             onTargetCountTotal++;
-             Logging.log("onTargetCount %d", onTargetCount);
           }
-          else
+          while (mOpMode.opModeIsActive() && remainingAngle > 30.0);
+
+          Logging.log("remaining angle %f", remainingAngle);
+          pidRotateImu.setOutputRange(.13, 1);
+          do
           {
-             onTargetCount = 0;
+             currAngle = imuControl.getAngle();
+             remainingAngle = degrees - currAngle;     // 90-60 = 30
+             pidRotateImu.setSetpoint(degrees);
+
+             power = pidRotateImu.performPID(currAngle); // power will be + on left turn.
+             this.driveMotors(0, -power, 0, 1);
+             Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
+
+             if (pidRotateImu.onTarget())
+             {
+                pidRotateImu.setOutputRange(.05, 1);
+                onTargetCount++;
+                onTargetCountTotal++;
+                Logging.log("onTargetCount %d", onTargetCount);
+             }
+             else
+             {
+                onTargetCount = 0;
+             }
+
           }
-
-       } while (mOpMode.opModeIsActive() && onTargetCount < 5 && onTargetCountTotal < 10);
-
+          while (mOpMode.opModeIsActive() && onTargetCount < 5 && onTargetCountTotal < 10);
+       }
        // turn the motors off.
        this.driveMotors(0, 0, 0, 1);
        Logging.log("completed rotate of angle %f", degrees);
-
+       mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
+       mOpMode.telemetry.update();
 
 
 
