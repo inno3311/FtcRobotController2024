@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.AprilTags;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
+import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
@@ -24,12 +28,14 @@ public class AprilTagMaster
     final double MAX_AUTO_STRAFE = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
     final double MAX_AUTO_TURN = 0.5;   //  Clip the turn speed to this max value (adjust for your robot)
 
+    private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private static  int desiredTagID = -1;// Choose the tag you want to approach or set to -1 for ANY tag.
 
 //    private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     private MechanicalDriveBase mechanicalDriveBase;
+    WebcamName webcamName;
     private double rangeError = 0 ;
     private double headingError = 0;
     private double yawError = 0;
@@ -223,5 +229,31 @@ public class AprilTagMaster
         }
         return false;
     }
+
+//    public void closeAprilTags()
+//    {
+////        visionPortal.close();
+//    }
+//
+//    /**
+//     * Initialize the AprilTag processor.
+//     */
+//    private void initAprilTag(HardwareMap hardwareMap)
+//    {
+//        // Create the AprilTag processor by using a builder.
+//        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
+//
+//        // Create the vision portal the easy way.
+//        if (USE_WEBCAM)
+//        {
+//            visionPortal = VisionPortal.easyCreateWithDefaults(
+//                    hardwareMap.get(WebcamName.class, "Bottom"), aprilTag);
+//        }
+//        else
+//        {
+//            visionPortal = VisionPortal.easyCreateWithDefaults(
+//                    BuiltinCameraDirection.BACK, aprilTag);
+//        }
+//    }
 
 }
