@@ -84,6 +84,9 @@ public class LinearOpModeMez extends LinearOpMode
         {
             driver.rotateLeft90(imuControl);
             sleep(1000);
+
+            driver.rotateRight90(imuControl);
+            sleep(1000);
 //            driver.rotateLeft90(imuControl);
 //            sleep(1000);
 //            driver.rotateLeft90(imuControl);

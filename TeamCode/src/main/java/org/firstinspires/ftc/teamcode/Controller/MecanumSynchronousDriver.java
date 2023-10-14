@@ -429,19 +429,46 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
        Logging.log("#rotateOd complete  currPos:  %d  degrees: %f",  this.rb.getCurrentPosition() - startPos, (this.rb.getCurrentPosition() - startPos)/ticksPerDegree);
     }
 
-    public void rotateLeft90(ImuHardware imuControl) throws InterruptedException, IOException
+    public enum DirectionType
+    {
+       LEFT,
+       RIGHT
+    }
+
+   public void rotateLeft90(ImuHardware imuControl) throws IOException, InterruptedException
+    {
+       rotate90(DirectionType.LEFT, imuControl);
+    }
+
+   public void rotateRight90(ImuHardware imuControl) throws IOException, InterruptedException
+   {
+      rotate90(DirectionType.RIGHT, imuControl);
+   }
+
+    public void rotate90(DirectionType direction, ImuHardware imuControl) throws InterruptedException, IOException
     {
        double degrees = 90.0;
-       double power = .5;
+       double power = 0.0;
+       int directionInt = 0;
+
+       switch (direction)
+       {
+          case LEFT:
+             directionInt =-1;
+             break;
+          case RIGHT:
+             directionInt = 1;
+             break;
+       }
 
        //pidRotateImu = new PIDController(.035, .0002, .06);
        pidRotateImu = new PIDController(.04, .0001, .11);
 
        pidRotateImu.reset();
-       pidRotateImu.setSetpoint(90);
-       pidRotateImu.setInputRange(0, 90 + 90 / 10);
+       pidRotateImu.setSetpoint(degrees);
+       pidRotateImu.setInputRange(0, degrees);
        pidRotateImu.setOutputRange(0, 1);
-       pidRotateImu.setTolerance(.3);
+       pidRotateImu.setTolerance(.4);
        pidRotateImu.enable();
 
        int onTargetCount = 0;
@@ -459,7 +486,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
 
 
           power = pidRotateImu.performPID(currAngle); // power will be + on left turn.
-          this.driveMotors(0, -power, 0, 1);
+          this.driveMotors(0, power * directionInt, 0, 1);
           Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
 
           if (pidRotateImu.onTarget())
@@ -475,9 +502,10 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
           }
 
        }
-       while (mOpMode.opModeIsActive() && onTargetCount < 5 && onTargetCountTotal < 10);
+       while (mOpMode.opModeIsActive() && onTargetCount < 1 && onTargetCountTotal < 6);
 
        this.driveMotors(0, 0, 0, 1);
+       Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
        Logging.log("completed rotate of angle %f", degrees);
        mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
        mOpMode.telemetry.update();
