@@ -127,7 +127,8 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         switch(zone){
             case center:
                 telemetry.addData("Center detected", "");
-                planBeta(true, false, false);
+                planPurple(true, false, false);
+                //planBeta(true, false, false);
               //  planAlpha();
                 break;
             case right:
@@ -390,6 +391,8 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         /***
             This is a backup to the backup. Different initial position and
             different "parking" position for flexibility.
+
+         //TODO robot has to be a little off-center for this code to work (left a little forward)
         ***/
 
 
@@ -410,7 +413,22 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
             sleep(1000);
 
             //Go backward into position
-            driver.forward(5, -1, 0.6);
+            driver.forward(23, -1, 0.6);
+
+            //Turn left
+            driver.turn(88, -1, 0.4);
+
+            //Go through truss
+            driver.forward(60, 1, 0.6);
+
+            //Turn right
+            driver.turn(90, 1, 0.4);
+
+            //Go forward position to backdrop
+            driver.forward(15, 1, 0.6);
+
+            //Turn left and let AprilTag take over
+            driver.turn(90, -1, 0.4);
 
 
         }
