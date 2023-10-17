@@ -435,34 +435,51 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
        RIGHT
     }
 
+//   public enum DegreesType
+//   {
+//      30,
+//      RIGHT
+//   }
+
    public void rotateLeft90(ImuHardware imuControl) throws IOException, InterruptedException
     {
-       rotate90(DirectionType.LEFT, imuControl);
+       //rotate90(DirectionType.LEFT, imuControl);
     }
 
    public void rotateRight90(ImuHardware imuControl) throws IOException, InterruptedException
    {
-      rotate90(DirectionType.RIGHT, imuControl);
+      //rotate90(DirectionType.RIGHT, imuControl);
    }
 
-    public void rotate90(DirectionType direction, ImuHardware imuControl) throws InterruptedException, IOException
+    public void rotate90(double degrees, ImuHardware imuControl) throws InterruptedException, IOException
     {
-       double degrees = 90.0;
+       //double degrees = 30.0;
        double power = 0.0;
-       int directionInt = 0;
+       int directionInt = 1;
+       int counter = 0;
 
-       switch (direction)
+       if (degrees < 0)
        {
-          case LEFT:
-             directionInt =-1;
-             break;
-          case RIGHT:
-             directionInt = 1;
-             break;
+          degrees = Math.abs(degrees);
+          directionInt = -1;
        }
 
-       //pidRotateImu = new PIDController(.035, .0002, .06);
-       pidRotateImu = new PIDController(.04, .0001, .11);
+       if (degrees == 30)
+       {
+          pidRotateImu = new PIDController(.04, .0001, .067);   // 30 degrees
+       }
+       else if (degrees == 45)
+       {
+          pidRotateImu = new PIDController(.04, .0001, .067);   // 45 degrees
+       }
+       else if (degrees == 90)
+       {
+          pidRotateImu = new PIDController(.04, .0001, .11);   // 90 degrees
+       }
+       else
+       {
+
+       }
 
        pidRotateImu.reset();
        pidRotateImu.setSetpoint(degrees);
@@ -485,13 +502,12 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
           remainingAngle = degrees - currAngle;     // 90-60 = 30
 
 
-          power = pidRotateImu.performPID(currAngle); // power will be + on left turn.
+          power = pidRotateImu.performPID(Math.abs(currAngle)); // power will be + on left turn.
           this.driveMotors(0, power * directionInt, 0, 1);
           Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
 
           if (pidRotateImu.onTarget())
           {
-             //pidRotateImu.setOutputRange(.05, 1);
              onTargetCount++;
              onTargetCountTotal++;
              Logging.log("onTargetCount %d", onTargetCount);
@@ -501,8 +517,9 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
              onTargetCount = 0;
           }
 
+          counter++;
        }
-       while (mOpMode.opModeIsActive() && onTargetCount < 1 && onTargetCountTotal < 6);
+       while (mOpMode.opModeIsActive() && onTargetCount < 1 && counter < (degrees * 2));
 
        this.driveMotors(0, 0, 0, 1);
        Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
