@@ -451,7 +451,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
       //rotate90(DirectionType.RIGHT, imuControl);
    }
 
-    public void rotate90(double degrees, ImuHardware imuControl) throws InterruptedException, IOException
+    public void rotate(double degrees, ImuHardware imuControl) throws InterruptedException, IOException
     {
        //double degrees = 30.0;
        double power = 0.0;
@@ -478,7 +478,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
        }
        else
        {
-
+          pidRotateImu = new PIDController(.04, .0001, .067);   // ?? degrees
        }
 
        pidRotateImu.reset();
@@ -609,7 +609,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
     * Rotate left or right the number of degrees. Does not support turning more than 359 degrees.
     * @param degrees Degrees to turn, + is left - is right
     */
-   public void rotate(int degrees, double power, ImuHardware imuControl) throws InterruptedException, IOException
+   public void rotateOld(int degrees, double power, ImuHardware imuControl) throws InterruptedException, IOException
    {
       //Logging.setup();
       mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
