@@ -136,6 +136,9 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
     public void forward(double target, int forward, double speed)
     {
 
+        this.resetEncoders();
+        resetRunMode();
+
         pidDrive.setSetpoint(0);
         pidDrive.setOutputRange(0, speed);
         pidDrive.setInputRange(-5000, 5000);
@@ -179,12 +182,12 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
                double strafeCorrection = pidStrafe.performPID(strafeDifference);
                mOpMode.telemetry.addData("strafeCorrection ", "correction: " + strafeCorrection + " strafeDifference: " + strafeDifference);
 
+               logger.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction);
 
                //this.driveMotors(speed, 0, 0, 1); //run with no PID
                correction = correction * (speed * 0.33);
                this.driveMotors(speed, correction * forward, -strafeCorrection, 1); // run with PID
 
-                //logger.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction);
                mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
                mOpMode.telemetry.update();
 
