@@ -14,6 +14,9 @@ public class LinerSlide
 
     DcMotor linerSlide;
 
+    private final int lowerPosition = 0; //TODO need to find and set this value
+    private final int upperPosition = 0; //TODO need to find and set this value
+
     private void initMotor()
     {
         linerSlide = hardwareMap.get(DcMotor.class, "slide");
@@ -31,7 +34,7 @@ public class LinerSlide
 
     public void driveSlide()
     {
-        if (!gamepad.a && !gamepad.b && ! (linerSlide.isBusy() && linerSlide.getMode() == DcMotor.RunMode.RUN_TO_POSITION))
+        if (!gamepad.a && !gamepad.b && !(linerSlide.isBusy() && linerSlide.getMode() == DcMotor.RunMode.RUN_TO_POSITION))
         {
             joystickDive();
         }
@@ -50,23 +53,24 @@ public class LinerSlide
     private void encoderDrive()
     {
         linerSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        if (gamepad.a)
+        if (gamepad.y)
         {
-            linerSlide.setTargetPosition(0); //put value here in place of 0
+            linerSlide.setTargetPosition(upperPosition);
+            linerSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             linerSlide.setPower(1);
         }
-        else if (gamepad.b)
+        else if (gamepad.a)
         {
-            linerSlide.setTargetPosition(0); //put value here in place of 0
+            linerSlide.setTargetPosition(lowerPosition);
+            linerSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             linerSlide.setPower(1);
         }
-        linerSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     private void joystickDive()
     {
         linerSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linerSlide.setPower(gamepad.left_stick_x);
+        linerSlide.setPower(gamepad.right_stick_x);
     }
 
     private void slideBreak()
