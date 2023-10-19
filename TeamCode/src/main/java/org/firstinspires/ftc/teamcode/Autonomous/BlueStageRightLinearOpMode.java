@@ -258,7 +258,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
           ONLY ONE INSTANCE CAN BE TRUE (This goes without saying, but I said it anyway (: )
 
          */
-        if(zone == SpikeLineEnum.CENTER_SPIKE ){
+        if(zone == SpikeLineEnum.CENTER_SPIKE){
             //Beta instance if object is in the middle
 
             //Go forward 25 in
@@ -378,18 +378,47 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
     }
 
-    public int findTarget(int targetPosition){
+    public String findTarget(int x){
+
+        String targetPosition = ""; //("targetPosition" means "position of the target", not "hoped-for" position)
 
         //left
-        int leftMinimum = -150;
+     //   int leftMinimum = -150;
         int leftMaximum = 160;
         //
         int centerMinimum = 161;
         int centerMaximum = 459;
         int rightMinimum = 460;
-        int rightMaximum = 800;
+//        int rightMaximum = 800;
 
-        int leftRange =
+//        boolean leftRange;
+//        boolean centerRange;
+//        boolean rightRange;
+
+
+        if(x < leftMaximum)
+        {
+            //Range for left 50-150
+            targetPosition = "left";
+        }
+        else if(x > centerMinimum && x <= centerMaximum){
+            //Range for the center 160 - 459
+           targetPosition = "center";
+        }
+        else if(x >= rightMinimum){
+            //Range for the right
+            targetPosition = "right";
+        }
+        else telemetry.addData("Adjust values", "");
+
+
+        switch (targetPosition){
+            case "left":
+
+
+
+        }
+
 
 
         return targetPosition;
@@ -397,17 +426,14 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     }
 
     //This is code for controlling what happens if obj
-    public void planPurple(boolean targetIsCenter, boolean targetIsLeft, boolean targetIsRight, boolean beta) throws IOException, InterruptedException
+    public void planPurple(SpikeLineEnum zone, boolean beta) throws IOException, InterruptedException
     {
         /***
             This is a backup to the backup. Different initial position and
             different "parking" position for flexibility.
         ***/
 
-        boolean center, left, right;
-        center = targetIsCenter;
-        left = targetIsLeft;
-        right = targetIsRight;
+
 
 
         sleep(1000);
@@ -415,7 +441,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         //...then calls one of the if statements
 
         //If target is in the center...
-        if(targetIsCenter) {
+        if(zone == SpikeLineEnum.CENTER_SPIKE) {
 
             //Go forward to determine whether object is left/center/right
             driver.forward(20, 1, 0.6);
@@ -428,7 +454,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         }
 
         //If target is on the left...
-       else if(targetIsLeft){
+       else if(zone == SpikeLineEnum.LEFT_SPIKE){
 
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
@@ -452,7 +478,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
         }
 
-        else if(targetIsRight){
+        else if(zone == SpikeLineEnum.RIGHT_SPIKE){
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
 
