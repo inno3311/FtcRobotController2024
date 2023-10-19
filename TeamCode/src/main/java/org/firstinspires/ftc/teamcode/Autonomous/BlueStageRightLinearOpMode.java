@@ -33,15 +33,15 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     DriveToTag driveToTag;
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
-    private boolean pixelInCenter, pixelIsLeft, pixelIsRight;
+//    private boolean pixelInCenter, pixelIsLeft, pixelIsRight;
 
-    zoneEnum zone = null;
+    SpikeLineEnum zone = null;
 
-    enum zoneEnum
+    enum SpikeLineEnum
     {
-        left,
-        center,
-        right
+        LEFT_SPIKE,
+        CENTER_SPIKE,
+        RIGHT_SPIKE
     }
 
     /*
@@ -94,21 +94,21 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         double x = (rec.getLeft() + rec.getRight()) / 2 ;
         double y = (rec.getTop()  + rec.getBottom()) / 2 ;
 
-        if(x <= 159)
+        if(x <= 160)
         {
             //Range for left 50-150
             telemetry.addData("Left", x);
-            zone = zoneEnum.left;
+            zone = SpikeLineEnum.LEFT_SPIKE;
         }
         else if(x > 160 && x <= 459){
             //Range for the center 160 - 459
             telemetry.addData("Center", x);
-            zone = zoneEnum.center;
+            zone = SpikeLineEnum.CENTER_SPIKE;
         }
         else if(x >= 460){
             //Range for the right
             telemetry.addData("Right", x);
-            zone = zoneEnum.right;
+            zone = SpikeLineEnum.RIGHT_SPIKE;
         }
         else telemetry.addData("OBJECT NOT DETECTED. ADJUST VALUES", "");
 
@@ -129,50 +129,48 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
 
         switch(zone){
-            case center:
+            case CENTER_SPIKE:
                 telemetry.addData("Center detected", "");
-                pixelInCenter = true;
-                try
-                {
-                    planAlpha();
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-                //planBeta(true, false, false);
+//                pixelInCenter = true;
+//                try
+//                {
+////                    planAlpha();
+//                }
+//                catch (IOException e)
+//                {
+//                    e.printStackTrace();
+//                }
+                planBeta(zone);
               //  planAlpha();
                 break;
-            case right:
-         //      planBeta(false, false, true);
-                pixelIsRight = true;
-                try
-                {
-                    planAlpha();
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
+            case RIGHT_SPIKE:
+               planBeta(zone);
+//                pixelIsRight = true;
+//                try
+//                {
+//                    planAlpha();
+//                }
+//                catch (IOException e)
+//                {
+//                    e.printStackTrace();
+//                }
                 //pixelRight();
                 break;
-            case left:
-                pixelIsLeft = true;
-                try
-                {
-                    planAlpha();
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-                //            planBeta(false, true, false);
+            case LEFT_SPIKE:
+//                pixelIsLeft = true;
+             //   try
+//                {
+//                    planAlpha();
+//                }
+//                catch (IOException e)
+//                {
+//                    e.printStackTrace();
+//                }
+                 planBeta(zone);
                 //pixelLeft();
                 break;
             default:
-                planBeta(false, true, false);//(I know putting all three instances as parameters isn't
-                //best practice, but [for now at least] I wanted to put all the beta instances in the same place)
-                //Only one parameter can be set to true.
+                planBeta(zone); //Only one parameter can be set to true.
                 break;
         }
         //TODO We need to make this work for red side to because red uses targets (AprilTag Ids) 4-6
@@ -211,7 +209,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     public void planAlpha() throws IOException, InterruptedException
     {
 
-        planPurple(pixelInCenter, pixelIsLeft, pixelIsRight);
+        planPurple(zone, false);
         sleep(1000);
 
          //Turn left
@@ -227,7 +225,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         //driver.turn(90, 1, 0.4);
         driver.rotate(90, imuControl);
 
-        driver.forward(12, 1, 0.5);
+        driver.forward(16, 1, 0.5);
 
         //Left and let AprilTag take over
         driver.rotate(-90, imuControl);
@@ -247,11 +245,10 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
     }
 
-
     /**
      * There is always a plan B.  ;)
      */
-    public void planBeta(boolean centerBeta, boolean leftBeta, boolean rightBeta)
+    public void planBeta(SpikeLineEnum zone)
     {
 
         /*THESE ARE PLAN BETA INSTANCES FOR ALL THREE INSTANCES. SET beta TO true FOR THE PLAN BETA
@@ -261,8 +258,8 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
           ONLY ONE INSTANCE CAN BE TRUE (This goes without saying, but I said it anyway (: )
 
          */
-        if(centerBeta){
-            //BETA INSTANCE IF PIXEL IS IN THE MIDDLE
+        if(zone == SpikeLineEnum.CENTER_SPIKE ){
+            //Beta instance if object is in the middle
 
             //Go forward 25 in
             driver.forward(25, 1, 0.6);
@@ -311,7 +308,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
         }
 
-        if(leftBeta){
+        if(zone == SpikeLineEnum.LEFT_SPIKE ){
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
 
@@ -350,7 +347,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
         }
 
-        if(rightBeta){
+        if(zone == SpikeLineEnum.RIGHT_SPIKE){
             //Go forward just enough to turn
             driver.forward(2, 1, 0.6);
             driver.turn(30, 1, 0.4);
@@ -381,19 +378,42 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
     }
 
-    public void planPurple(boolean targetIsCenter, boolean targetIsLeft, boolean targetIsRight) throws IOException, InterruptedException
+    public int findTarget(int targetPosition){
+
+        //left
+        int leftMinimum = -150;
+        int leftMaximum = 160;
+        //
+        int centerMinimum = 161;
+        int centerMaximum = 459;
+        int rightMinimum = 460;
+        int rightMaximum = 800;
+
+        int leftRange =
+
+
+        return targetPosition;
+
+    }
+
+    //This is code for controlling what happens if obj
+    public void planPurple(boolean targetIsCenter, boolean targetIsLeft, boolean targetIsRight, boolean beta) throws IOException, InterruptedException
     {
         /***
             This is a backup to the backup. Different initial position and
             different "parking" position for flexibility.
-
-
         ***/
+
+        boolean center, left, right;
+        center = targetIsCenter;
+        left = targetIsLeft;
+        right = targetIsRight;
+
 
         sleep(1000);
 
-        //...then calls one of the if statements      
-                
+        //...then calls one of the if statements
+
         //If target is in the center...
         if(targetIsCenter) {
 
@@ -402,12 +422,8 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
             //Go forward and place pixel
             driver.forward(4, 1, 0.5);
 
-            sleep(1000);
-
             //Go backward into position
             driver.forward(23, -1, 0.6);
-
-
 
         }
 
@@ -417,12 +433,8 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
 
-            sleep(1000);
-
             //driver.turn(45, -1, 0.4);
             driver.rotate(-45, imuControl);
-
-            sleep(1000);
 
             //Push pixel into place
             driver.forward(7, 1, 0.6);
@@ -431,8 +443,6 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
             //Go backward after placing pixel
             driver.forward(7, -1, 0.6);
-
-            sleep(1000);
 
             //Adjust
             //driver.turn(45, 1, 0.4);
@@ -459,7 +469,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
             sleep(1000);
 
             //Go backward after placing pixel
-            driver.forward(7, -1, 0.6);
+            driver.forward(6, -1, 0.6);
 
             sleep(1000);
 
@@ -472,6 +482,16 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
         }
 
+        if (beta){
+
+
+
+
+
+
+        }
+
+
         //Wait for next command...
         sleep(1000);
 
@@ -483,8 +503,6 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 //
 //        //Turn right
 //        driver.turn(90, 1, 0.4);
-
-
 
 
     }
