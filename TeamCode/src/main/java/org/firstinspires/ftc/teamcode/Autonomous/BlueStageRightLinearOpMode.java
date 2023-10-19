@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.AprilTags.AprilTagMaster;
 import org.firstinspires.ftc.teamcode.AprilTags.DriveToTag;
 import org.firstinspires.ftc.teamcode.AprilTags.InitAprilTags;
 import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
+import org.firstinspires.ftc.teamcode.util.ImuHardware;
 import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -23,6 +24,8 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 {
     WebCamHardware webcam;
 
+    ImuHardware imuControl;
+
     /** Drive control */
     MecanumSynchronousDriver driver;
     AprilTagMaster aprilTagMaster;
@@ -30,7 +33,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     DriveToTag driveToTag;
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
-    private boolean pixelInMiddle, pixelIsLeft, pixelIsRight;
+    private boolean pixelInCenter, pixelIsLeft, pixelIsRight;
 
     zoneEnum zone = null;
 
@@ -71,6 +74,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         {
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
             webcam = new WebCamHardware(this);
+            imuControl = new ImuHardware(this);
             initAprilTags = new InitAprilTags();
         }
         catch (IOException e)
@@ -122,21 +126,47 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         start();
 
         //Change this to pixelIsLeft = true for left, pixelIsRight = true for right, or pixelInMiddle for middle
-        pixelIsLeft = true;
+
 
         switch(zone){
             case center:
                 telemetry.addData("Center detected", "");
-                planPurple(true, false, false);
+                pixelInCenter = true;
+                try
+                {
+                    planAlpha();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
                 //planBeta(true, false, false);
               //  planAlpha();
                 break;
             case right:
-                planBeta(false, false, true);
+         //      planBeta(false, false, true);
+                pixelIsRight = true;
+                try
+                {
+                    planAlpha();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
                 //pixelRight();
                 break;
             case left:
-                planBeta(false, true, false);
+                pixelIsLeft = true;
+                try
+                {
+                    planAlpha();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+                //            planBeta(false, true, false);
                 //pixelLeft();
                 break;
             default:
@@ -178,93 +208,45 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
      * Plan Alpha.  You will design different routes based on what intel the other team provides.
      * We don't want to run into their robot, so we need different plans.
      */
-    public void planAlpha()
+    public void planAlpha() throws IOException, InterruptedException
     {
 
-       //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is), then go backward
-       driver.forward(25, 1, 0.6);
-       sleep(500);
-       driver.forward(23, -1, 0.6);
-        sleep(500);
-       //Turn left through the truss  
-       driver.turn(90, -1, 0.4);
-        sleep(500);
-       driver.forward(70, 1, 0.9);
-        sleep(500);
-       //Turn right  
-       driver.turn(90, 1, 0.4);
-        sleep(500);
-       driver.forward(20, 1, 0.6);
-        sleep(500);
-       //Turn left and go to backdrop 
-       driver.turn(90, -1, 0.4);
-       //driver.forward(5, 1, 0.6);
+        planPurple(pixelInCenter, pixelIsLeft, pixelIsRight);
+        sleep(1000);
 
-    }
+         //Turn left
+        //driver.turn(88, -1, 0.4);
+        driver.rotate(-90, imuControl);
+        sleep(1000);
 
-    public void pixelRight() {
-        //Go forward just enough to turn
-        driver.forward(2, 1, 0.6);
-        driver.turn(30, 1, 0.4);
-       // driver.rotateOd(30, .4);
 
-        //Push pixel into place
-        driver.forward(12, 1, 0.6);
-        //Go backward after placing pixel
-        driver.forward(13, -1, 0.6);
-        sleep(3000);
-
-        //To go through truss
-        driver.turn(30, -1, 0.4);
-        //Turn left through the truss
-        driver.turn(90, -1, 0.4);
-        //driver.rotateOd(-120, .4);
-        sleep(3000);
-        
-        //Go to the other side
-        driver.forward(70, 1, 0.9);
-        sleep(3000);
+        //Go through truss
+        driver.forward(60, 1, 0.6);
+        sleep(1000);
         //Turn right
-        driver.turn(90, 1, 0.4);
-        sleep(3000);
-        
-        //Turn left and go to backdrop
-        driver.turn(90, -1, 0.4);
-        driver.forward(15, 1, 0.6);
-        driver.turn(90, -1, 0.4);
-        driver.forward(5, 1, 0.5);
+        //driver.turn(90, 1, 0.4);
+        driver.rotate(90, imuControl);
+
+        driver.forward(12, 1, 0.5);
+
+        //Left and let AprilTag take over
+        driver.rotate(-90, imuControl);
+
+
+      //Go left through truss
+//      driver.rotate(-35, imuControl);
+//      driver.forward(25, 1, 0.6);
+//
+//      //turn right
+//      driver.rotate(40, imuControl);
+//
+//      driver.forward(12, 1, 0.5);
+//
+//      driver.rotate(-35, imuControl);
+
 
     }
 
-    public void pixelLeft(){
-
-        //Go forward just enough to turn
-        driver.forward(7, 1, 0.6);
-        driver.turn(30, -1, 0.4);
-        //Push pixel into place
-        driver.forward(12, 1, 0.6);
-        //Go backward after placing pixel
-        driver.forward(19, -1, 0.6);
-        sleep(3000);
-
-        //To go through truss
-        driver.turn(56, -1, 0.4);
-
-        //Turn left through the truss
-        //Go to the other side
-        driver.forward(70, 1, 0.9);
-        sleep(3000);
-        driver.turn(20, 1, 0.4);
-        driver.forward(20, 1, 0.9);
-
-        //Turn right
-        driver.turn(90, 1, 0.4);
-        sleep(3000);
-
-
-        driver.turn(30, 1, 0.4);
-        driver.forward(15, 1, 0.7);
-    }
 
     /**
      * There is always a plan B.  ;)
@@ -331,20 +313,32 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
         if(leftBeta){
             //Go forward just enough to turn
-            driver.forward(7, 1, 0.6);
-            driver.turn(60, -1, 0.4);
+            driver.forward(17, 1, 0.6);
+
+            sleep(1000);
+
+            driver.turn(45, -1, 0.4);
+
+            sleep(1000);
+
             //Push pixel into place
-            driver.forward(12, 1, 0.6);
+            driver.forward(7, 1, 0.6);
+
+            sleep(1000);
+
             //Go backward after placing pixel
-            driver.forward(19, -1, 0.6);
+            driver.forward(7, -1, 0.6);
+
+            sleep(1000);
+
             //Adjust
-            driver.turn(25, 1, 0.4);
+            driver.turn(45, 1, 0.4);
 
             //Drive forward (meant to go through the middle of the truss)
-            driver.forward(50, 1, 0.7);
+            driver.forward(14, -1, 0.7);
             sleep(2000);
             //Go through the middle of the truss
-            driver.turn(60, -1, 0.4);
+            driver.turn(52, -1, 0.4);
             driver.forward(46, 1, 0.7);
             sleep(3000);
             //Turn left (position into backdrop)
@@ -387,18 +381,14 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
     }
 
-    public void planPurple(boolean targetIsCenter, boolean targetIsLeft, boolean targetIsRight){
+    public void planPurple(boolean targetIsCenter, boolean targetIsLeft, boolean targetIsRight) throws IOException, InterruptedException
+    {
         /***
             This is a backup to the backup. Different initial position and
             different "parking" position for flexibility.
 
-         //TODO robot has to be a little off-center for this code to work (left a little forward)
+
         ***/
-
-
-        //Following line remains true for all three instances...
-        //Go forward to determine whether object is left/center/right
-        driver.forward(20, 1, 0.6);
 
         sleep(1000);
 
@@ -407,6 +397,8 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         //If target is in the center...
         if(targetIsCenter) {
 
+            //Go forward to determine whether object is left/center/right
+            driver.forward(20, 1, 0.6);
             //Go forward and place pixel
             driver.forward(4, 1, 0.5);
 
@@ -415,71 +407,90 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
             //Go backward into position
             driver.forward(23, -1, 0.6);
 
-            //Turn left
-            driver.turn(88, -1, 0.4);
-
-            //Go through truss
-            driver.forward(60, 1, 0.6);
-
-            //Turn right
-            driver.turn(90, 1, 0.4);
-
-            //Go forward position to backdrop
-            driver.forward(15, 1, 0.6);
-
-            //Turn left and let AprilTag take over
-            driver.turn(90, -1, 0.4);
 
 
         }
 
         //If target is on the left...
-        if(targetIsLeft){
+       else if(targetIsLeft){
 
-            //Face left
-            driver.turn(40, -1, 0.4);
-                        
-            //Go forward and place pixel
-            driver.forward(4, 1, 0.5);
+            //Go forward just enough to turn
+            driver.forward(17, 1, 0.6);
 
             sleep(1000);
 
-            //Turn back
-            driver.turn(40, 1, 0.4);
+            //driver.turn(45, -1, 0.4);
+            driver.rotate(-45, imuControl);
 
             sleep(1000);
-            
-            //Go backward into position
-            driver.forward(5, -1, 0.6);
+
+            //Push pixel into place
+            driver.forward(7, 1, 0.6);
+
+            sleep(1000);
+
+            //Go backward after placing pixel
+            driver.forward(7, -1, 0.6);
+
+            sleep(1000);
+
+            //Adjust
+            //driver.turn(45, 1, 0.4);
+            driver.rotate(45, imuControl);
+
+            driver.forward(15, -1, 0.5);
 
         }
 
-        if(targetIsRight){
-            //Face right
-            driver.turn(40, 1, 0.4);
-                        
-            //Go forward and place pixel
-            driver.forward(4, 1, 0.5);
+        else if(targetIsRight){
+            //Go forward just enough to turn
+            driver.forward(17, 1, 0.6);
 
             sleep(1000);
 
-            //Turn back
-            driver.turn(40, -1, 0.4);
+            //driver.turn(45, -1, 0.4);
+            driver.rotate(45, imuControl);
 
             sleep(1000);
-            
-            //Go backward into position
-            driver.forward(5, -1, 0.6);
+
+            //Push pixel into place
+            driver.forward(6, 1, 0.6);
+
+            sleep(1000);
+
+            //Go backward after placing pixel
+            driver.forward(7, -1, 0.6);
+
+            sleep(1000);
+
+            //Adjust
+            //driver.turn(45, 1, 0.4);
+            driver.rotate(-45, imuControl);
+
+            driver.forward(15, -1, 0.5);
 
 
         }
 
         //Wait for next command...
         sleep(1000);
-        
 
-        
+//        //Turn left
+//        driver.turn(88, -1, 0.4);
+//
+//        //Go through truss
+//        driver.forward(60, 1, 0.6);
+//
+//        //Turn right
+//        driver.turn(90, 1, 0.4);
+
+
+
+
     }
+
+
+
 
     /**
      * This test rotates in place. Each step has a 3 second pause.
