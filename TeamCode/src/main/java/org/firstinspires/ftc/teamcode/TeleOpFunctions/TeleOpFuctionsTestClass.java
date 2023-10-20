@@ -14,7 +14,7 @@ public class TeleOpFuctionsTestClass extends OpMode
     public void init()
     {
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
-        intake = new Intake(hardwareMap, telemetry, gamepad2);
+        intake = new Intake(hardwareMap, telemetry, gamepad1);
     }
 
     @Override

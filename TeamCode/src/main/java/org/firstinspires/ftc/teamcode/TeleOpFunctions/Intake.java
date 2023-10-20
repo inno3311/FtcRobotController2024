@@ -54,6 +54,7 @@ public class Intake
         }
         else
         {
+            intake.setPower(0);
             intakeBreak();
         }
     }
@@ -80,6 +81,10 @@ public class Intake
         {
             height.setPower(-0.2);
         }
+        else
+        {
+            height.setPower(0);
+        }
     }
 
     private void heightEncoder()
@@ -100,12 +105,18 @@ public class Intake
             height.setPower(0.2);        }
         else
         {
+            height.setPower(0);
             heightBreak();
         }
     }
 
     private void intakeBreak() {intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);}
     private void heightBreak() {height.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);}
-    private void telemetry() {telemetry.addData("Intake", "Intake Speed %.2f, Height speed %.2f, Height position %.2f", intake.getPower(), height.getPower(), height.getCurrentPosition());}
+    private void telemetry()
+    {
+        telemetry.addData("Intake", "Intake Speed" + intake.getPower());
+        telemetry.addData("Height", "Height speed" + height.getPower());
+        telemetry.addData("Height", "Height position" + height.getCurrentPosition());
+    }
 
 }
