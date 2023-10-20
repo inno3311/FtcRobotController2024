@@ -94,23 +94,35 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         double x = (rec.getLeft() + rec.getRight()) / 2 ;
         double y = (rec.getTop()  + rec.getBottom()) / 2 ;
 
-        if(x <= 160)
-        {
-            //Range for left 50-150
+        findTarget(x);
+        if(findTarget(x).equals("left")){
             telemetry.addData("Left", x);
             zone = SpikeLineEnum.LEFT_SPIKE;
-        }
-        else if(x > 160 && x <= 459){
-            //Range for the center 160 - 459
+        }else if (findTarget(x).equals("center")){
             telemetry.addData("Center", x);
             zone = SpikeLineEnum.CENTER_SPIKE;
-        }
-        else if(x >= 460){
-            //Range for the right
+        } else if (findTarget(x).equals("right")){
             telemetry.addData("Right", x);
             zone = SpikeLineEnum.RIGHT_SPIKE;
-        }
-        else telemetry.addData("OBJECT NOT DETECTED. ADJUST VALUES", "");
+        } else telemetry.addData("OBJECT NOT DETECTED. ADJUST VALUES", "");
+//
+//        if(x <= 160)
+//        {
+//            //Range for left 50-150
+//            telemetry.addData("Left", x);
+//            zone = SpikeLineEnum.LEFT_SPIKE;
+//        }
+//        else if(x > 160 && x <= 459){
+//            //Range for the center 160 - 459
+//            telemetry.addData("Center", x);
+//            zone = SpikeLineEnum.CENTER_SPIKE;
+//        }
+//        else if(x >= 460){
+//            //Range for the right
+//            telemetry.addData("Right", x);
+//            zone = SpikeLineEnum.RIGHT_SPIKE;
+//        }
+
 
         telemetry.addData(""," ");
         telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
@@ -184,16 +196,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         /*
         //Your code goes in this function. You can make other plans as well.  (two shells are
         //provided.
-        if(pixelInMiddle){
-            //Put planAlpha(); here
-            planAlpha();
-        }
-        if(pixelIsLeft){
-            //Put pixelLeft(); here
-            pixelLeft();
-        } else if (pixelIsRight){
-            pixelRight();
-        } else planBeta(false, true, false);
+
 
         //Sample Test Programs
         //aroundyTest();
@@ -378,53 +381,31 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
     }
 
-    public String findTarget(int x, Enum<?> currentEnum){
+    public String findTarget(double x){
+        //This is supposed to find the target's position. (Made more sense than writing plain code.)
+        String targetPosition = ""; //("targetPosition" means "position of the target", not "goal" position)
 
-        String targetPosition = ""; //("targetPosition" means "position of the target", not "hoped-for" position)
 
-        //left
-     //   int leftMinimum = -150;
         int leftMaximum = 160;
-        //
         int centerMinimum = 161;
         int centerMaximum = 459;
         int rightMinimum = 460;
-//        int rightMaximum = 800;
-
-//        boolean leftRange;
-//        boolean centerRange;
-//        boolean rightRange;
 
         if(x < leftMaximum)
-        {
-            //Range for left 50-150
+        {   //Range for left 50-150
             targetPosition = "left";
-           zone = (SpikeLineEnum) currentEnum;
+
         }
         else if(x > centerMinimum && x <= centerMaximum){
-            //Range for the center 160 - 459
+           //Range for the center 160 - 459
            targetPosition = "center";
-            zone = (SpikeLineEnum) currentEnum;
         }
         else if(x >= rightMinimum){
             //Range for the right
             targetPosition = "right";
-            zone = (SpikeLineEnum) currentEnum;
-        }
-        else telemetry.addData("Adjust values", "");
-
-
-        switch (targetPosition){
-            case "left":
-
-
-
-        }
-
-
+        } else telemetry.addData("Adjust values", "");
 
         return targetPosition;
-
     }
 
     //This is code for controlling what happens if obj
