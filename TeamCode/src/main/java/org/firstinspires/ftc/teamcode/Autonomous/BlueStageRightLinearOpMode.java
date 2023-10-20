@@ -378,7 +378,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
     }
 
-    public String findTarget(int x){
+    public String findTarget(int x, Enum<?> currentEnum){
 
         String targetPosition = ""; //("targetPosition" means "position of the target", not "hoped-for" position)
 
@@ -395,19 +395,21 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 //        boolean centerRange;
 //        boolean rightRange;
 
-
         if(x < leftMaximum)
         {
             //Range for left 50-150
             targetPosition = "left";
+           zone = (SpikeLineEnum) currentEnum;
         }
         else if(x > centerMinimum && x <= centerMaximum){
             //Range for the center 160 - 459
            targetPosition = "center";
+            zone = (SpikeLineEnum) currentEnum;
         }
         else if(x >= rightMinimum){
             //Range for the right
             targetPosition = "right";
+            zone = (SpikeLineEnum) currentEnum;
         }
         else telemetry.addData("Adjust values", "");
 
