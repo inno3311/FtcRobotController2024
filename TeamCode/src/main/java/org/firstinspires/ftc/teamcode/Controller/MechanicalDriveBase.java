@@ -105,10 +105,10 @@ public class MechanicalDriveBase
      */
       public void driveMotors(double drive, double turn, double strafe, double speed)
       {
-          leftPowerFront  = (drive - turn + strafe);
-          rightPowerFront = (drive + turn - strafe);
-          leftPowerBack   = (drive - turn - strafe);
-          rightPowerBack  = (drive + turn + strafe);
+          leftPowerFront  = (drive + turn + strafe);
+          rightPowerFront = (drive - turn - strafe);
+          leftPowerBack   = (drive + turn - strafe);
+          rightPowerBack  = (drive - turn + strafe);
 
           // This code is awful.
           double maxAbsVal = maxAbsVal(leftPowerFront, leftPowerBack,

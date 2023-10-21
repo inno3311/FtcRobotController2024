@@ -34,7 +34,7 @@ public class LinerSlide
 
     public void driveSlide()
     {
-        if (!gamepad.a && !gamepad.b && !(linerSlide.isBusy() && linerSlide.getMode() == DcMotor.RunMode.RUN_TO_POSITION))
+        if (!gamepad.a && !gamepad.b)
         {
             joystickDive();
         }
@@ -65,12 +65,13 @@ public class LinerSlide
             linerSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             linerSlide.setPower(1);
         }
+
     }
 
     private void joystickDive()
     {
         linerSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linerSlide.setPower(gamepad.right_stick_x);
+        linerSlide.setPower(gamepad.right_stick_y * 0.5);
     }
 
     private void slideBreak()

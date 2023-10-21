@@ -15,16 +15,19 @@ public class Intake
     DcMotor intake;
     DcMotor height;
 
-    private final int lowerPosition = 0; //TODO need to find and set this value
-    private final int upperPosition = 0; //TODO need to find and set this value
+    private final int pixelsOne = -1780;
+    private final int pixelsTwo = -1610;
+    private final int pixelsThree = -1570;
+    private final int pixelsFour = -1540;
+    private final int pixelsFive = -1520;
 
     private void initIntake()
     {
         intake = hardwareMap.get(DcMotor.class, "intake");
         height = hardwareMap.get(DcMotor.class, "height");
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
-        height.setDirection(DcMotorSimple.Direction.FORWARD);
-        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        height.setDirection(DcMotorSimple.Direction.REVERSE);
+        height.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public Intake(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad)
@@ -61,62 +64,130 @@ public class Intake
 
     private void heightControl()
     {
-        if (gamepad.left_bumper)
-        {
-            adjustHeight();
-        }
-        else
-        {
-            heightEncoder();
-        }
+        analogHeight();
+
+        encoderHeight();
     }
 
-    private void adjustHeight()
+    private void analogHeight()
     {
-        if (gamepad.dpad_up)
+        double heightSpeed = -gamepad.left_stick_y;
+
+        if (Math.abs(heightSpeed) > 0)
         {
-            height.setPower(0.2);
+            height.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            height.setPower(heightSpeed * 0.5);
         }
-        else if (gamepad.dpad_down)
+        else if (height.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)
         {
-            height.setPower(-0.2);
+            height.setTargetPosition(height.getCurrentPosition());
+            height.setPower(0.4);
+            height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
-        else
-        {
-            height.setPower(0);
-        }
+
     }
 
-    private void heightEncoder()
-    {
 
-        height.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    private void encoderHeight()
+    {
 
         if (gamepad.dpad_up)
         {
-            height.setTargetPosition(0);
+            height.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            height.setTargetPosition(pixelsFive);
+            height.setPower(0.3);
             height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            height.setPower(0.2);
+        }
+        else if (gamepad.dpad_right)
+        {
+            height.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            height.setTargetPosition(pixelsFour);
+            height.setPower(0.3);
+            height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
         else if (gamepad.dpad_down)
         {
-            height.setTargetPosition(0);
+            height.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            height.setTargetPosition(pixelsThree);
+            height.setPower(0.3);
             height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            height.setPower(0.2);        }
-        else
+        }
+        else if (gamepad.dpad_left)
         {
-            height.setPower(0);
-            heightBreak();
+            height.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            height.setTargetPosition(pixelsTwo);
+            height.setPower(0.3);
+            height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+        else if (gamepad.left_trigger > 0.5)
+        {
+            height.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            height.setTargetPosition(pixelsOne);
+            height.setPower(0.3);
+            height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
     }
+
+//    private void heightEncoder()
+//    {
+//
+//        if (gamepad.dpad_up && heightVal != 0)
+//        {
+//            heightVal--;
+//            adjustHeight();
+//        }
+//        else if (gamepad.dpad_down && heightVal != 5)
+//        {
+//            heightVal++;
+//            adjustHeight();
+//        }
+//    }
+//
+//        switch (heightVal)
+//        {
+//            case 0:
+//                height.setTargetPosition(0);
+//                height.setPower(0.3);
+//                height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                break;
+//            case 1:
+//                height.setTargetPosition(pixelsFive);
+//                height.setPower(0.3);
+//                height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                break;
+//            case 2:
+//                height.setTargetPosition(pixelsFour);
+//                height.setPower(0.3);
+//                height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                break;
+//            case 3:
+//                height.setTargetPosition(pixelsThree);
+//                height.setPower(0.3);
+//                height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                break;
+//            case 4:
+//                height.setTargetPosition(pixelsTwo);
+//                height.setPower(0.3);
+//                height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                break;
+//            case 5:
+//                height.setTargetPosition(pixelsOne);
+//                height.setPower(0.3);
+//                height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                break;
+//            default:
+//                height.setPower(0);
+//                heightBreak();
+//                break;
+//        }
 
     private void intakeBreak() {intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);}
     private void heightBreak() {height.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);}
     private void telemetry()
     {
-        telemetry.addData("Intake", "Intake Speed" + intake.getPower());
-        telemetry.addData("Height", "Height speed" + height.getPower());
-        telemetry.addData("Height", "Height position" + height.getCurrentPosition());
+        telemetry.addData("Intake", "Intake Speed = " + intake.getPower());
+        telemetry.addData("Height", "Height speed = " + height.getPower());
+        telemetry.addData("Height", "Height position = " + height.getCurrentPosition());
     }
 
 }
