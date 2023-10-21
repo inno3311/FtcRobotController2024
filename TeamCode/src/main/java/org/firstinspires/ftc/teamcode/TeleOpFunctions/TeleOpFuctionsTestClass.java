@@ -8,14 +8,14 @@ import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 public class TeleOpFuctionsTestClass extends OpMode
 {
     MechanicalDriveBase mechanicalDriveBase;
-//    LinerSlide linerSlide;
+    LinerSlide linerSlide;
     Intake intake;
 
     @Override
     public void init()
     {
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
-//        linerSlide = new LinerSlide(hardwareMap, telemetry, gamepad1);
+        linerSlide = new LinerSlide(hardwareMap, telemetry, gamepad2);
         intake = new Intake(hardwareMap, telemetry, gamepad2);
     }
 
@@ -23,7 +23,7 @@ public class TeleOpFuctionsTestClass extends OpMode
     public void loop()
     {
         mechanicalDriveBase.gamepadController(gamepad1);
-//        linerSlide.driveSlide();
+        linerSlide.driveSlide();
         intake.intakeControl();
     }
 }

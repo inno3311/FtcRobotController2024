@@ -14,8 +14,8 @@ public class LinerSlide
 
     DcMotor linerSlide;
 
-    private final int lowerPosition = 0; //TODO need to find and set this value
-    private final int upperPosition = 0; //TODO need to find and set this value
+    private final int lowerPosition = 50;
+    private final int upperPosition = 2650;
 
     private void initMotor()
     {
@@ -34,23 +34,16 @@ public class LinerSlide
 
     public void driveSlide()
     {
-        if (!gamepad.a && !gamepad.b)
-        {
-            joystickDive();
-        }
-        else if (gamepad.a || gamepad.b)
-        {
-            encoderDrive();
-        }
-        else if (linerSlide.getPower() == 0)
-        {
-            slideBreak();
-        }
+
+//        encoderControl();
+
+        analogControl();
+
 
         telemetry();
     }
 
-    private void encoderDrive()
+    private void encoderControl()
     {
         linerSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (gamepad.y)
@@ -68,17 +61,34 @@ public class LinerSlide
 
     }
 
-    private void joystickDive()
+    private void analogControl()
     {
-        linerSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linerSlide.setPower(gamepad.right_stick_y * 0.5);
+        double slidePower = gamepad.right_stick_y * 0.7;
+
+        if (Math.abs(slidePower) > 0)
+        {
+            if (linerSlide.getCurrentPosition() > upperPosition && slidePower < 0) {linerSlide.setPower(0);}
+            else if (linerSlide.getCurrentPosition() < lowerPosition && slidePower > 0) {linerSlide.setPower(0);}
+            else
+            {
+                linerSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                linerSlide.setPower(slidePower);
+            }
+        }
+//        else if (linerSlide.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)
+//        {
+//            linerSlide.setTargetPosition(linerSlide.getCurrentPosition());
+//            linerSlide.setPower(0.2);
+//            linerSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        }
     }
 
-    private void slideBreak()
-    {
-        linerSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    }
+    private void slideBreak() {linerSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);}
 
-    private void telemetry() {telemetry.addData("Liner slide", "Speed, Encoder Position", linerSlide.getPower(), linerSlide.getCurrentPosition());}
+    private void telemetry()
+    {
+        telemetry.addData("Liner slide", "Speed" + linerSlide.getPower());
+        telemetry.addData("Liner slide", "Encoder Position" + linerSlide.getCurrentPosition());
+    }
 
 }

@@ -128,58 +128,6 @@ public class Intake
         }
     }
 
-//    private void heightEncoder()
-//    {
-//
-//        if (gamepad.dpad_up && heightVal != 0)
-//        {
-//            heightVal--;
-//            adjustHeight();
-//        }
-//        else if (gamepad.dpad_down && heightVal != 5)
-//        {
-//            heightVal++;
-//            adjustHeight();
-//        }
-//    }
-//
-//        switch (heightVal)
-//        {
-//            case 0:
-//                height.setTargetPosition(0);
-//                height.setPower(0.3);
-//                height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                break;
-//            case 1:
-//                height.setTargetPosition(pixelsFive);
-//                height.setPower(0.3);
-//                height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                break;
-//            case 2:
-//                height.setTargetPosition(pixelsFour);
-//                height.setPower(0.3);
-//                height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                break;
-//            case 3:
-//                height.setTargetPosition(pixelsThree);
-//                height.setPower(0.3);
-//                height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                break;
-//            case 4:
-//                height.setTargetPosition(pixelsTwo);
-//                height.setPower(0.3);
-//                height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                break;
-//            case 5:
-//                height.setTargetPosition(pixelsOne);
-//                height.setPower(0.3);
-//                height.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                break;
-//            default:
-//                height.setPower(0);
-//                heightBreak();
-//                break;
-//        }
 
     private void intakeBreak() {intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);}
     private void heightBreak() {height.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);}
