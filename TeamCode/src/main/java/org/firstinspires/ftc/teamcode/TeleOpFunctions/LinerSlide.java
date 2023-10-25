@@ -14,8 +14,10 @@ public class LinerSlide
 
     DcMotor linerSlide;
 
-    private final int lowerPosition = 50;
-    private final int upperPosition = 2650;
+    private final int lowerBounds = 5;
+    private final int upperBounds = 2700;
+    private final int resetPosition = 50;
+    private final int upperPosition = 1000;
 
     private void initMotor()
     {
@@ -34,29 +36,25 @@ public class LinerSlide
 
     public void driveSlide()
     {
-
-//        encoderControl();
-
+        encoderControl();
         analogControl();
-
-
         telemetry();
     }
 
     private void encoderControl()
     {
-        linerSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        linerSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (gamepad.y)
         {
             linerSlide.setTargetPosition(upperPosition);
             linerSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            linerSlide.setPower(1);
+            linerSlide.setPower(0.3);
         }
         else if (gamepad.a)
         {
-            linerSlide.setTargetPosition(lowerPosition);
+            linerSlide.setTargetPosition(resetPosition);
             linerSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            linerSlide.setPower(1);
+            linerSlide.setPower(0.3);
         }
 
     }
@@ -67,28 +65,29 @@ public class LinerSlide
 
         if (Math.abs(slidePower) > 0)
         {
-            if (linerSlide.getCurrentPosition() > upperPosition && slidePower < 0) {linerSlide.setPower(0);}
-            else if (linerSlide.getCurrentPosition() < lowerPosition && slidePower > 0) {linerSlide.setPower(0);}
+            if (linerSlide.getCurrentPosition() > upperBounds && slidePower < 0) {linerSlide.setPower(0);}
+            else if (linerSlide.getCurrentPosition() < lowerBounds && slidePower > 0) {linerSlide.setPower(0);}
             else
             {
                 linerSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 linerSlide.setPower(slidePower);
             }
         }
-//        else if (linerSlide.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)
-//        {
-//            linerSlide.setTargetPosition(linerSlide.getCurrentPosition());
-//            linerSlide.setPower(0.2);
-//            linerSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        }
+        else
+        {
+            linerSlide.setPower(0);
+            slideBreak();
+        }
+
     }
 
     private void slideBreak() {linerSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);}
 
     private void telemetry()
     {
-        telemetry.addData("Liner slide", "Speed" + linerSlide.getPower());
-        telemetry.addData("Liner slide", "Encoder Position" + linerSlide.getCurrentPosition());
+        telemetry.addData("Liner slide", "Speed " + linerSlide.getPower());
+        telemetry.addData("Liner slide", "Encoder Position = " + linerSlide.getCurrentPosition());
+        telemetry.addData("", linerSlide.getCurrentPosition());
     }
 
 }

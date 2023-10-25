@@ -7,23 +7,23 @@ import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 @TeleOp(name = "TeleOp Comp base", group = "TeleOp")
 public class TeleOpFuctionsTestClass extends OpMode
 {
-    MechanicalDriveBase mechanicalDriveBase;
+//    MechanicalDriveBase mechanicalDriveBase;
     LinerSlide linerSlide;
-    Intake intake;
+//    Intake intake;
 
     @Override
     public void init()
     {
-        mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
+//        mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
         linerSlide = new LinerSlide(hardwareMap, telemetry, gamepad2);
-        intake = new Intake(hardwareMap, telemetry, gamepad2);
+//        intake = new Intake(hardwareMap, telemetry, gamepad2);
     }
 
     @Override
     public void loop()
     {
-        mechanicalDriveBase.gamepadController(gamepad1);
+//        mechanicalDriveBase.gamepadController(gamepad1);
         linerSlide.driveSlide();
-        intake.intakeControl();
+//        intake.intakeControl();
     }
 }

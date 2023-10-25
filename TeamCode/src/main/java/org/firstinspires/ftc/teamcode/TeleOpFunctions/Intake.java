@@ -65,7 +65,6 @@ public class Intake
     private void heightControl()
     {
         analogHeight();
-
         encoderHeight();
     }
 
