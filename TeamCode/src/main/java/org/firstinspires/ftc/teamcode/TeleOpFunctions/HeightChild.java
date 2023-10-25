@@ -15,11 +15,13 @@ public class HeightChild extends MotorControl
     private final int lowerBound = -1800;
     private final int upperBound = 0;
 
+    //Constructor calls parent constructor using hardcoded input
     public HeightChild()
     {
         super("Height", false, true);
     }
 
+    //Calls all methods and then is called itself in the OpMode loop
     public void heightDrive()
     {
         this.analogControl();

@@ -5,11 +5,13 @@ import org.firstinspires.ftc.teamcode.Controller.MotorControl;
 public class IntakeChild extends MotorControl
 {
 
+    //Constructor calls parent constructor using hardcoded input
     public IntakeChild()
     {
         super("Intake", true, false);
     }
 
+    //Calls all methods and then is called itself in the OpMode loop
     public void IntakeDrive()
     {
         this.simpleDrive();

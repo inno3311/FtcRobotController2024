@@ -10,11 +10,13 @@ public class LinerSlideChild extends MotorControl
     private final int lowerBounds = 5;
     private final int upperBounds = 2700;
 
+    //Constructor calls parent constructor using hardcoded input
     public LinerSlideChild()
     {
         super("Slide", true, true);
     }
 
+    //Calls all methods and then is called itself in the OpMode loop
     public void linerSlideDrive()
     {
         this.encoderDrive();
