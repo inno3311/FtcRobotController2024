@@ -2,13 +2,32 @@ package org.firstinspires.ftc.teamcode.Controller;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.TeleOpFuctionsTestClass;
 
 public class MotorControl extends HardwareMapTelemetryGampad
 {
     private DcMotor motor;
     private String motorName;
     private boolean hasEncoder;
+
+    protected HardwareMap hardwareMap;
+    protected Telemetry telemetry;
+    protected Gamepad gamepad1;
+    protected Gamepad gamepad2;
+
+    //Will be used to get the parameters below from the masterclass
+    public MotorControl(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2)
+    {
+        this.hardwareMap = hardwareMap;
+        this.telemetry = telemetry;
+        this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
+    }
 
     /**
      *
