@@ -74,11 +74,11 @@ public class MotorControl extends HardwareMapTelemetryGampad
      * Analog control method with bounds
      *
      * @param speedLimit Put's restriction on how fast the motor can spin
+     * @param input which gamepad float value that will mak this spin
      * @param lowerBound Motor will not spin past this bound at negative power (must have encoder to use this feature)
      * @param upperBound Motor will not spin past this bound at positive power(must have encoder to use this feature)
-     * @param input which gamepad float value that will mak this spin
      */
-    protected void analogControl(double speedLimit, int lowerBound, int upperBound, double input)
+    protected void analogControl(double speedLimit, double input, int lowerBound, int upperBound)
     {
         double slidePower = input;
         Range.clip(slidePower, -speedLimit, speedLimit);

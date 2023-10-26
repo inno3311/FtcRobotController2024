@@ -31,7 +31,7 @@ public class HeightChild extends MotorControl
 
     private void analogControl()
     {
-        super.analogControl(1, lowerBound, upperBound, gamepad2.left_stick_y);
+        super.analogControl(1, gamepad2.left_stick_y, lowerBound, upperBound);
     }
 
     private void encoderDrive()
