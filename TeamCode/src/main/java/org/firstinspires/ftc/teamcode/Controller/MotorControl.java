@@ -166,8 +166,8 @@ public class MotorControl extends HardwareMapTelemetryGampad
      */
     protected void telemetry()
     {
-        telemetry.addData(motorName, "Speed " + motor.getPower());
-        if (hasEncoder) {telemetry.addData(motorName, "Encoder Position = " + motor.getCurrentPosition());}
+        telemetry.addData(motorName, "Speed: %.2f", motor.getPower());
+        if (hasEncoder) {telemetry.addData(motorName, "Encoder Position: %.2f", motor.getCurrentPosition());}
     }
 
 }
