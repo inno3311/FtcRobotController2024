@@ -9,14 +9,14 @@ public class TeleOpFuctionsTestClass extends OpMode
 {
 //    MechanicalDriveBase mechanicalDriveBase;
     LinerSlide linerSlide;
-//    Intake intake;
+    Intake intake;
 
     @Override
     public void init()
     {
 //        mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
         linerSlide = new LinerSlide(hardwareMap, telemetry, gamepad2);
-//        intake = new Intake(hardwareMap, telemetry, gamepad2);
+        intake = new Intake(hardwareMap, telemetry, gamepad2);
     }
 
     @Override
@@ -24,6 +24,6 @@ public class TeleOpFuctionsTestClass extends OpMode
     {
 //        mechanicalDriveBase.gamepadController(gamepad1);
         linerSlide.driveSlide();
-//        intake.intakeControl();
+        intake.intakeControl();
     }
 }

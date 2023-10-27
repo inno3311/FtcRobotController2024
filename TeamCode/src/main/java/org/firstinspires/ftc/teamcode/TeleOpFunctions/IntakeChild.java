@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOpFunctions;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.teamcode.Controller.MotorControl;
 
 public class IntakeChild extends MotorControl

@@ -6,15 +6,16 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.TeleOpFunctionsInheritanceTest;
 
-public class MotorControl extends HardwareMapTelemetryGampad
+public class MotorControl extends TeleOpFunctionsInheritanceTest
 {
     private DcMotor motor;
     private String motorName;
     private boolean hasEncoder;
 
-    protected HardwareMap hardwareMap;
-    protected Telemetry telemetry;
+    private HardwareMap hardwareMap;
+    private Telemetry telemetry;
     protected Gamepad gamepad1;
     protected Gamepad gamepad2;
 
@@ -28,7 +29,6 @@ public class MotorControl extends HardwareMapTelemetryGampad
     }
 
     /**
-     *
      * @param motorName Name that you well enter for configuration
      * @param direction Direction you want the motor to spin: true = FORWARD, false = REVERSE
      * @param hasEncoder Does it have an encoder?
@@ -37,7 +37,7 @@ public class MotorControl extends HardwareMapTelemetryGampad
     {
         this.motorName = motorName;
         this.hasEncoder = hasEncoder;
-        motor = hardwareMap.get(DcMotor.class, motorName);
+        motor = this.hardwareMap.get(DcMotor.class, motorName);
 
         if (direction) {motor.setDirection(DcMotorSimple.Direction.FORWARD);}
             else {motor.setDirection(DcMotorSimple.Direction.REVERSE);}
@@ -130,6 +130,18 @@ public class MotorControl extends HardwareMapTelemetryGampad
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor.setPower(speed);
         }
+    }
+
+    /**
+     * @param target Target location that the motor will move to
+     * @param speed The speed at which the motor will spin
+     */
+    protected void encoderControlAutonomous(int target, double speed)
+    {
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setTargetPosition(target);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(speed);
     }
 
     /**
