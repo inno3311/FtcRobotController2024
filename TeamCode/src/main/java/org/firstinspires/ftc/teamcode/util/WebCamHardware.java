@@ -201,6 +201,39 @@ public class WebCamHardware
       return null;
    }
 
+   public String findTarget(double x)
+   {
+      //This is supposed to find the target's position. (Made more sense than writing plain code.)
+      String targetPosition = ""; //("targetPosition" means "position of the target", not "goal" position)
+
+      int leftMaximum = 160;
+      int centerMinimum = 161;
+      int centerMaximum = 459;
+      int rightMinimum = 460;
+
+      if(x < leftMaximum)
+      {   //Range for left 50-150
+         targetPosition = "left";
+
+      }
+      else if(x > centerMinimum && x <= centerMaximum){
+         //Range for the center 160 - 459
+         targetPosition = "center";
+      }
+      else if(x >= rightMinimum)
+      {
+         //Range for the right
+         targetPosition = "right";
+      }
+      else
+      {
+         //telemetry.addData("Adjust values", "");
+      }
+
+      return targetPosition;
+   }
+
+
    public void closeWebcam()
    {
       tfod.shutdown();

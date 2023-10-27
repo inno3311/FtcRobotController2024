@@ -4,6 +4,7 @@ import android.widget.VideoView;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -35,7 +36,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
 //    private boolean pixelInCenter, pixelIsLeft, pixelIsRight;
 
-    SpikeLineEnum zone = null;
+     SpikeLineEnum zone = null;
 
     enum SpikeLineEnum
     {
@@ -66,10 +67,10 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     }*/
 
 
+
     @Override
     public void runOpMode() throws InterruptedException
     {
-
         try
         {
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
@@ -81,6 +82,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         {
             e.printStackTrace();
         }
+
 
         webcam.initTfod();
 
@@ -94,14 +96,14 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         double x = (rec.getLeft() + rec.getRight()) / 2 ;
         double y = (rec.getTop()  + rec.getBottom()) / 2 ;
 
-        findTarget(x);
-        if(findTarget(x).equals("left")){
+        String getXPosition = webcam.findTarget(x);
+        if(getXPosition.equals("left")){
             telemetry.addData("Left", x);
             zone = SpikeLineEnum.LEFT_SPIKE;
-        }else if (findTarget(x).equals("center")){
+        }else if (getXPosition.equals("center")){
             telemetry.addData("Center", x);
             zone = SpikeLineEnum.CENTER_SPIKE;
-        } else if (findTarget(x).equals("right")){
+        } else if (getXPosition.equals("right")){
             telemetry.addData("Right", x);
             zone = SpikeLineEnum.RIGHT_SPIKE;
         } else telemetry.addData("OBJECT NOT DETECTED. ADJUST VALUES", "");
@@ -137,8 +139,6 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         waitForStart();
         start();
 
-        //Change this to pixelIsLeft = true for left, pixelIsRight = true for right, or pixelInMiddle for middle
-
 
         switch(zone){
             case CENTER_SPIKE:
@@ -152,11 +152,19 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 //                {
 //                    e.printStackTrace();
 //                }
-                planBeta(zone);
-              //  planAlpha();
+                try {
+                    planBeta(zone);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //  planAlpha();
                 break;
             case RIGHT_SPIKE:
-               planBeta(zone);
+                try {
+                    planBeta(zone);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 //                pixelIsRight = true;
 //                try
 //                {
@@ -178,11 +186,19 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 //                {
 //                    e.printStackTrace();
 //                }
-                 planBeta(zone);
+                try {
+                    planBeta(zone);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 //pixelLeft();
                 break;
             default:
-                planBeta(zone); //Only one parameter can be set to true.
+                try {
+                    planBeta(zone); //Only one parameter can be set to true.
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
         //TODO We need to make this work for red side to because red uses targets (AprilTag Ids) 4-6
@@ -211,7 +227,6 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
      */
     public void planAlpha() throws IOException, InterruptedException
     {
-
         planPurple(zone, false);
         sleep(1000);
 
@@ -219,7 +234,6 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         //driver.turn(88, -1, 0.4);
         driver.rotate(-90, imuControl);
         sleep(1000);
-
 
         //Go through truss
         driver.forward(60, 1, 0.6);
@@ -251,8 +265,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     /**
      * There is always a plan B.  ;)
      */
-    public void planBeta(SpikeLineEnum zone)
-    {
+    public void planBeta(SpikeLineEnum zone) throws IOException, InterruptedException {
 
         /*THESE ARE PLAN BETA INSTANCES FOR ALL THREE INSTANCES. SET beta TO true FOR THE PLAN BETA
           FOR THE MIDDLE INSTANCE (PIXEL IN MIDDLE). SET leftBeta TO true FOR THE PLAN BETA
@@ -261,36 +274,52 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
           ONLY ONE INSTANCE CAN BE TRUE (This goes without saying, but I said it anyway (: )
 
          */
+
+//        planPurple(zone, true);
+
         if(zone == SpikeLineEnum.CENTER_SPIKE){
             //Beta instance if object is in the middle
+//
+//            //Go forward 25 in
+            driver.forward(24, 1, 0.6);
 
-            //Go forward 25 in
-            driver.forward(25, 1, 0.6);
-
-            //Go backward 12 in for space to turn
-            driver.forward(12, -1, 0.6);
+            sleep(1000);
+//
+//            //Go backward 12 in for space to turn
+            driver.forward(3, -1, 0.6);
 
             //sleep
             sleep(1000);
 
-            //Turn right 30° (out of the way of the pixel)
-            driver.turn(30, 1, 0.4);
-
-            //Forward after turning to go into position for going through truss
-            driver.forward(20, 1, 0.9);
+            driver.strafe(12, 1, 0.6, imuControl);
 
             sleep(1000);
 
+            //Turn right 30° (out of the way of the pixel)
+            //driver.turn(30, 1, 0.4);
+//            driver.rotate(45, imuControl);
+
+            //           sleep(1000);
+
+            //Forward after turning to go into position for going through truss
+//            driver.forward(24, 1, 0.6);
+
+//            sleep(1000);
+
             //Turn left
-            driver.turn(30, -1, 0.4);
+//            driver.rotate(-45, imuControl);
+            //driver.turn(30, -1, 0.4);
+
+//            sleep(1000);
 
             //Continue to go into position
-            driver.forward(13, 1, 0.6);
+            driver.forward(28, 1, 0.6);
 
             sleep(1000);
 
             //Turn left to go through truss
-            driver.turn(90, -1, 0.4);
+            //driver.turn(90, -1, 0.4);
+            driver.rotate(-90, imuControl);
 
             //Go through truss
             driver.forward(80, 1, 0.6);
@@ -298,7 +327,8 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
             sleep(1000);
 
             //Turn left once through truss for next command
-            driver.turn(90, -1, 0.4);
+            //driver.turn(90, -1, 0.4);
+            driver.rotate(-90, imuControl);
 
             //Go forward into position
             driver.forward(24, 1, 0.8);
@@ -306,51 +336,56 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
             sleep(1000);
 
             //Face right and let AprilTag take over
-            driver.turn(90, 1, 0.4);
-
-
+            //driver.turn(90, 1, 0.4);
+            driver.rotate(90, imuControl);
         }
 
-        if(zone == SpikeLineEnum.LEFT_SPIKE ){
+        if(zone == SpikeLineEnum.LEFT_SPIKE )
+        {
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
 
             sleep(1000);
 
-            driver.turn(45, -1, 0.4);
+            //driver.turn(45, -1, 0.4);
+            driver.rotate(-45, imuControl);
 
             sleep(1000);
 
             //Push pixel into place
-            driver.forward(7, 1, 0.6);
+            driver.forward(4, 1, 0.6);
 
             sleep(1000);
 
             //Go backward after placing pixel
-            driver.forward(7, -1, 0.6);
+            driver.forward(4, -1, 0.6);
 
             sleep(1000);
 
             //Adjust
-            driver.turn(45, 1, 0.4);
+            //driver.turn(45, 1, 0.4);
+            driver.rotate(45, imuControl);
 
             //Drive forward (meant to go through the middle of the truss)
-            driver.forward(14, -1, 0.7);
-            sleep(2000);
+            driver.forward(24, 1, 0.7);
+            sleep(1000);
             //Go through the middle of the truss
-            driver.turn(52, -1, 0.4);
+            //driver.turn(52, -1, 0.4);
+            driver.rotate(-90, imuControl);
+            sleep(1000);
             driver.forward(46, 1, 0.7);
-            sleep(3000);
+            sleep(1000);
             //Turn left (position into backdrop)
-            driver.turn(80, -1, 0.4);
-            driver.forward(70, 1, 0.7);
+//            driver.turn(80, -1, 0.4);
+//            driver.forward(70, 1, 0.7);
 
             //Face right
-            driver.turn(60, 1, 0.4);
+//            driver.turn(60, 1, 0.4);
 
         }
 
-        if(zone == SpikeLineEnum.RIGHT_SPIKE){
+        if(zone == SpikeLineEnum.RIGHT_SPIKE)
+        {
             //Go forward just enough to turn
             driver.forward(2, 1, 0.6);
             driver.turn(30, 1, 0.4);
@@ -381,63 +416,39 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
     }
 
-    public String findTarget(double x){
-        //This is supposed to find the target's position. (Made more sense than writing plain code.)
-        String targetPosition = ""; //("targetPosition" means "position of the target", not "goal" position)
 
-
-        int leftMaximum = 160;
-        int centerMinimum = 161;
-        int centerMaximum = 459;
-        int rightMinimum = 460;
-
-        if(x < leftMaximum)
-        {   //Range for left 50-150
-            targetPosition = "left";
-
-        }
-        else if(x > centerMinimum && x <= centerMaximum){
-           //Range for the center 160 - 459
-           targetPosition = "center";
-        }
-        else if(x >= rightMinimum){
-            //Range for the right
-            targetPosition = "right";
-        } else telemetry.addData("Adjust values", "");
-
-        return targetPosition;
-    }
 
     //This is code for controlling what happens if obj
     public void planPurple(SpikeLineEnum zone, boolean beta) throws IOException, InterruptedException
     {
         /***
-            This is a backup to the backup. Different initial position and
-            different "parking" position for flexibility.
+            This is the starting code for if the object is on the left/center/right.
+            PlanAlpha or planBeta to follow.
         ***/
-
-
-
 
         sleep(1000);
 
         //...then calls one of the if statements
 
         //If target is in the center...
-        if(zone == SpikeLineEnum.CENTER_SPIKE) {
+        if(zone == SpikeLineEnum.CENTER_SPIKE)
+        {
 
             //Go forward to determine whether object is left/center/right
-            driver.forward(20, 1, 0.6);
+            driver.forward(24, 1, 0.6);
             //Go forward and place pixel
-            driver.forward(4, 1, 0.5);
+            //driver.forward(4, 1, 0.5);
+
+            sleep(1000);
 
             //Go backward into position
-            driver.forward(23, -1, 0.6);
+            driver.forward(19, -1, 0.6);
 
         }
 
         //If target is on the left...
-       else if(zone == SpikeLineEnum.LEFT_SPIKE){
+       else if(zone == SpikeLineEnum.LEFT_SPIKE)
+       {
 
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
@@ -495,9 +506,6 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
 
 
 
-
-
-
         }
 
 
@@ -517,53 +525,5 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     }
 
 
-
-
-    /**
-     * This test rotates in place. Each step has a 3 second pause.
-     * 1.  Rotate right 90 degrees.
-     * 2.  Rotate left 90 degrees.
-     * 3.  Rotate left 180 degrees.
-     * 4.  Rotate right 360 degrees.
-     */
-    public void rotateTest()
-    {
-        double rotateSpeed = 0.5;
-
-        sleep(3000);
-        driver.turn(90, 1, rotateSpeed);
-
-        sleep(3000);
-        driver.turn(90, -1, rotateSpeed);
-
-        sleep(3000);
-        driver.turn(180, -1, rotateSpeed);
-
-        sleep(3000);
-        driver.turn(360, 1, rotateSpeed);
-    }
-
-    /**
-     * This is a sample run that drives in a "O" shape counter clockwise.
-     *
-     */
-    public void aroundyTest()
-    {
-        driver.forward(12 * 4,1,0.8);
-        sleep(100);
-        driver.turn(90, -1, .5);
-        sleep(100);
-        driver.forward(12 * 1.5,1,0.8);
-        sleep(100);
-        driver.turn(90, -1, .5);
-        sleep(100);
-        driver.forward(12 * 4,1,0.8);
-        sleep(100);
-        driver.turn(90, -1, .5);
-        sleep(100);
-        driver.forward(12 * 1.5,1,0.8);
-        sleep(100);
-        driver.turn(90, -1, .5);
-    }
 
 }
