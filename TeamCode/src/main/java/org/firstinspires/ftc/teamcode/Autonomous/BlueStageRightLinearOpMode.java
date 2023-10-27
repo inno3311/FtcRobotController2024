@@ -1,49 +1,22 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import android.widget.VideoView;
+import static org.firstinspires.ftc.teamcode.Autonomous.LeftRightSuper.SpikeLineEnum.CENTER_SPIKE;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.AprilTags.AprilTagMaster;
-import org.firstinspires.ftc.teamcode.AprilTags.DriveToTag;
 import org.firstinspires.ftc.teamcode.AprilTags.InitAprilTags;
 import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
 import org.firstinspires.ftc.teamcode.util.ImuHardware;
 import org.firstinspires.ftc.teamcode.util.WebCamHardware;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.io.IOException;
 
 @Autonomous(name = "Blue Stage Right", group = "Group3311")
-public class BlueStageRightLinearOpMode extends LinearOpMode
+public class BlueStageRightLinearOpMode extends LeftRightSuper
 {
-    WebCamHardware webcam;
 
-    ImuHardware imuControl;
-
-    /** Drive control */
-    MecanumSynchronousDriver driver;
-    AprilTagMaster aprilTagMaster;
-    InitAprilTags initAprilTags;
-    DriveToTag driveToTag;
-    private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
-    private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
-//    private boolean pixelInCenter, pixelIsLeft, pixelIsRight;
-
-     SpikeLineEnum zone = null;
-
-    enum SpikeLineEnum
-    {
-        LEFT_SPIKE,
-        CENTER_SPIKE,
-        RIGHT_SPIKE
-    }
 
     /*
     if (stuff right here to determine which zone it goes to)
@@ -64,9 +37,7 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
     default:
         planBeta(false,true,false);
         break;
-    }*/
-
-
+    }
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -82,7 +53,6 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         {
             e.printStackTrace();
         }
-
 
         webcam.initTfod();
 
@@ -217,11 +187,17 @@ public class BlueStageRightLinearOpMode extends LinearOpMode
         //Sample Test Programs
         //aroundyTest();
         //rotateTest();
-*/
+
         stop();
     }
+*/
 
-   /**
+    @Override
+    public void runOpMode() throws InterruptedException {
+        super.runOpMode();
+    }
+
+    /**
      * Plan Alpha.  You will design different routes based on what intel the other team provides.
      * We don't want to run into their robot, so we need different plans.
      */
