@@ -18,26 +18,25 @@ public class BlueStageLeftLinearOpMode extends LeftRightSuper
 {
     private boolean pixelInMiddle, pixelIsLeft, pixelIsRight;
 
-    BlueStageRightLinearOpMode blueStageRightLinearOpMode;
-
-    WebCamHardware webcam;
-
-    ImuHardware imuControl;
-
-    /** Drive control */
-    MecanumSynchronousDriver driver;
-    AprilTagMaster aprilTagMaster;
-    InitAprilTags initAprilTags;
-    DriveToTag driveToTag;
-    private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
-    private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
-    enum zone
-    {
-        middle,
-        left,
-        right
-    }
-    private zone current = null;
+//    BlueStageRightLinearOpMode blueStageRightLinearOpMode;
+//
+//    WebCamHardware webcam;
+//
+//    ImuHardware imuControl;
+//
+//    /** Drive control */
+//    MecanumSynchronousDriver driver;
+//    AprilTagMaster aprilTagMaster;
+//    InitAprilTags initAprilTags;
+//    DriveToTag driveToTag;
+//    private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
+//    private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
+//    enum zone
+//    {
+//        middle,
+//        left,
+//        right
+//    };
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -77,14 +76,13 @@ public class BlueStageLeftLinearOpMode extends LeftRightSuper
         //out what route that will be.
 
         //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is
-        blueStageRightLinearOpMode.planPurple(blueStageRightLinearOpMode.zone, false);
+        planPurple(zone, false);
 
         sleep(1000);
 
         //Turn left
         driver.rotate(-90, imuControl);
         sleep(1000);
-
 
         sleep(1000);
         //Turn right
@@ -96,7 +94,6 @@ public class BlueStageLeftLinearOpMode extends LeftRightSuper
         //Left and let AprilTag take over
         driver.rotate(-90, imuControl);
 
-
     }
 
     /**
@@ -106,12 +103,7 @@ public class BlueStageLeftLinearOpMode extends LeftRightSuper
         planPurple(zone, false);
 
 
-
-
     }
-
-
-
 
 }
 

@@ -93,12 +93,12 @@ public class LeftRightSuper extends LinearOpMode {
         telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
         telemetry.update();
 
+        waitForStart();
+
         initAprilTags.initAprilTags(webcam, driver, hardwareMap, telemetry);
         aprilTagMaster = initAprilTags.getAprilTagMaster();
         driveToTag = initAprilTags.getDriveToTag();
 
-
-        waitForStart();
         start();
 
         //TODO We need to make this work for red side to because red uses targets (AprilTag Ids) 4-6
