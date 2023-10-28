@@ -44,7 +44,11 @@ public class BlueStageLeftLinearOpMode extends LeftRightSuper
     {
         super.runOpMode();
 
-        planGamma(zone);
+        try {
+            planGamma(zone);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         sleep(1000);
         driveToTag.drive(7, zone.ordinal() + 1, 11, 0);
@@ -98,8 +102,9 @@ public class BlueStageLeftLinearOpMode extends LeftRightSuper
     /**
      * There is always a plan B.  ;)
      */
-    public void planGamma(SpikeLineEnum zone)
-    {
+    public void planGamma(SpikeLineEnum zone) throws IOException, InterruptedException {
+        planPurple(zone, false);
+
 
 
 

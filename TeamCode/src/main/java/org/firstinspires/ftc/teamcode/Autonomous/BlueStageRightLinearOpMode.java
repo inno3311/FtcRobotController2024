@@ -121,7 +121,7 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
             driver.forward(3, 1, 0.4);
         }
 
-        if(zone == SpikeLineEnum.LEFT_SPIKE )
+        if(zone == SpikeLineEnum.LEFT_SPIKE)
         {
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
