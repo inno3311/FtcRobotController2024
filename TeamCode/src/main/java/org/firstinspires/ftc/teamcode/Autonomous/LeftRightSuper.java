@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -104,17 +101,12 @@ public class LeftRightSuper extends LinearOpMode {
         waitForStart();
         start();
 
-
-
         //TODO We need to make this work for red side to because red uses targets (AprilTag Ids) 4-6
         //ordinal returns an int +1 because it starts counting at 0
  //       sleep(1000);
-//
 
  //       telemetry.addData("Finished", "");
  //       telemetry.update();
-
-
 
     }
 
@@ -153,6 +145,97 @@ public class LeftRightSuper extends LinearOpMode {
                 }
                 break;
         }
+
+    }
+
+    //This is code for controlling what happens if obj
+    public void planPurple(SpikeLineEnum zone, boolean beta) throws IOException, InterruptedException
+    {
+        /***
+         This is the starting code for if the object is on the left/center/right.
+         PlanAlpha or planBeta to follow.
+         ***/
+
+        sleep(1000);
+
+        //...then calls one of the if statements
+
+        //If target is in the center...
+        if(zone == SpikeLineEnum.CENTER_SPIKE)
+        {
+
+            //Go forward to determine whether object is left/center/right
+            driver.forward(24, 1, 0.6);
+            //Go forward and place pixel
+            //driver.forward(4, 1, 0.5);
+
+            sleep(1000);
+
+            //Go backward into position
+            driver.forward(19, -1, 0.6);
+
+        }
+
+        //If target is on the left...
+        else if(zone == SpikeLineEnum.LEFT_SPIKE)
+        {
+
+            //Go forward just enough to turn
+            driver.forward(17, 1, 0.6);
+
+            //driver.turn(45, -1, 0.4);
+            driver.rotate(-45, imuControl);
+
+            //Push pixel into place
+            driver.forward(7, 1, 0.6);
+
+            sleep(1000);
+
+            //Go backward after placing pixel
+            driver.forward(7, -1, 0.6);
+
+            //Adjust
+            //driver.turn(45, 1, 0.4);
+            driver.rotate(45, imuControl);
+
+            driver.forward(15, -1, 0.5);
+
+        }
+
+        else if(zone == SpikeLineEnum.RIGHT_SPIKE){
+            //Go forward just enough to turn
+            driver.forward(17, 1, 0.6);
+
+            sleep(1000);
+
+            //driver.turn(45, -1, 0.4);
+            driver.rotate(45, imuControl);
+
+            sleep(1000);
+
+            //Push pixel into place
+            driver.forward(6, 1, 0.6);
+
+            sleep(1000);
+
+            //Go backward after placing pixel
+            driver.forward(6, -1, 0.6);
+
+            sleep(1000);
+
+            //Adjust
+            //driver.turn(45, 1, 0.4);
+            driver.rotate(-45, imuControl);
+
+            driver.forward(15, -1, 0.5);
+
+        }
+
+        if (beta){
+
+        }
+        //Wait for next command...
+        sleep(1000);
 
     }
 
