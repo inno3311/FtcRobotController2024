@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
+import org.firstinspires.ftc.teamcode.Autonomous.LeftRightSuper;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
@@ -18,7 +19,8 @@ public class WebCamHardware
 
    private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
-   private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/red_rev1.tflite";
+   //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/red_rev1.tflite";
+   private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/Red_10-27.tflite";
 
    AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
    private WebcamName webcam1, webcam2;
@@ -201,10 +203,10 @@ public class WebCamHardware
       return null;
    }
 
-   public String findTarget(double x)
+   public LeftRightSuper.SpikeLineEnum findTarget(double x)
    {
       //This is supposed to find the target's position. (Made more sense than writing plain code.)
-      String targetPosition = ""; //("targetPosition" means "position of the target", not "goal" position)
+      LeftRightSuper.SpikeLineEnum targetPosition = LeftRightSuper.SpikeLineEnum.UNKNOWN; //("targetPosition" means "position of the target", not "goal" position)
 
       int leftMaximum = 160;
       int centerMinimum = 161;
@@ -213,17 +215,17 @@ public class WebCamHardware
 
       if(x < leftMaximum)
       {   //Range for left 50-150
-         targetPosition = "left";
+         targetPosition = LeftRightSuper.SpikeLineEnum.LEFT_SPIKE;
 
       }
       else if(x > centerMinimum && x <= centerMaximum){
          //Range for the center 160 - 459
-         targetPosition = "center";
+         targetPosition = LeftRightSuper.SpikeLineEnum.CENTER_SPIKE;
       }
       else if(x >= rightMinimum)
       {
          //Range for the right
-         targetPosition = "right";
+         targetPosition = LeftRightSuper.SpikeLineEnum.RIGHT_SPIKE;
       }
       else
       {
@@ -232,7 +234,6 @@ public class WebCamHardware
 
       return targetPosition;
    }
-
 
    public void closeWebcam()
    {

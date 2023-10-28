@@ -30,21 +30,22 @@ public class LeftRightSuper extends LinearOpMode {
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
 
 
-    SpikeLineEnum zone = null;
+    SpikeLineEnum zone = SpikeLineEnum.UNKNOWN;
 
-    enum SpikeLineEnum
+    public enum SpikeLineEnum
     {
         LEFT_SPIKE,
         CENTER_SPIKE,
-        RIGHT_SPIKE
+        RIGHT_SPIKE,
+        UNKNOWN
     }
 
     public LeftRightSuper() {
 
 
     }
-    @Override
-    public void runOpMode() throws InterruptedException
+
+    protected void initMembers()
     {
         try
         {
@@ -57,7 +58,13 @@ public class LeftRightSuper extends LinearOpMode {
         {
             e.printStackTrace();
         }
+    }
 
+
+    @Override
+    public void runOpMode() throws InterruptedException
+    {
+        initMembers();
 
         webcam.initTfod();
 
@@ -71,17 +78,17 @@ public class LeftRightSuper extends LinearOpMode {
         double x = (rec.getLeft() + rec.getRight()) / 2 ;
         double y = (rec.getTop()  + rec.getBottom()) / 2 ;
 
-        String getXPosition = webcam.findTarget(x);
-        if(getXPosition.equals("left")){
-            telemetry.addData("Left", x);
-            zone = BlueStageRightLinearOpMode.SpikeLineEnum.LEFT_SPIKE;
-        }else if (getXPosition.equals("center")){
-            telemetry.addData("Center", x);
-            zone = BlueStageRightLinearOpMode.SpikeLineEnum.CENTER_SPIKE;
-        } else if (getXPosition.equals("right")){
-            telemetry.addData("Right", x);
-            zone = BlueStageRightLinearOpMode.SpikeLineEnum.RIGHT_SPIKE;
-        } else telemetry.addData("OBJECT NOT DETECTED. ADJUST VALUES", "");
+        zone = webcam.findTarget(x);
+//        if(getXPosition.equals("left")){
+//            telemetry.addData("Left", x);
+//            zone = SpikeLineEnum.LEFT_SPIKE;
+//        }else if (getXPosition.equals("center")){
+//            telemetry.addData("Center", x);
+//            zone = SpikeLineEnum.CENTER_SPIKE;
+//        } else if (getXPosition.equals("right")){
+//            telemetry.addData("Right", x);
+//            zone = SpikeLineEnum.RIGHT_SPIKE;
+//        } else telemetry.addData("OBJECT NOT DETECTED. ADJUST VALUES", "");
 
         telemetry.addData(""," ");
         telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
@@ -92,6 +99,8 @@ public class LeftRightSuper extends LinearOpMode {
         initAprilTags.initAprilTags(webcam, driver, hardwareMap, telemetry);
         aprilTagMaster = initAprilTags.getAprilTagMaster();
         driveToTag = initAprilTags.getDriveToTag();
+
+
         waitForStart();
         start();
 
@@ -99,12 +108,13 @@ public class LeftRightSuper extends LinearOpMode {
 
         //TODO We need to make this work for red side to because red uses targets (AprilTag Ids) 4-6
         //ordinal returns an int +1 because it starts counting at 0
-        sleep(1000);
-        driveToTag.drive(7, zone.ordinal() + 1, 11, 0);
+ //       sleep(1000);
+//
 
-        telemetry.addData("Finished", "");
-        telemetry.update();
-        sleep(10000);
+ //       telemetry.addData("Finished", "");
+ //       telemetry.update();
+
+
 
     }
 

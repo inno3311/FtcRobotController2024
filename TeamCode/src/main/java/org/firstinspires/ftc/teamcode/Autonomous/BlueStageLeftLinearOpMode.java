@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 import java.io.IOException;
 
 @Autonomous(name = "Blue Stage Left", group = "Group3311")
-public class BlueStageLeftLinearOpMode extends LeftRightSuper
+public class BlueStageLeftLinearOpMode extends LinearOpMode
 {
     private boolean pixelInMiddle, pixelIsLeft, pixelIsRight;
 
@@ -24,21 +24,29 @@ public class BlueStageLeftLinearOpMode extends LeftRightSuper
 
     ImuHardware imuControl;
 
-//    enum zone
-//    {
-//        middle,
-//        left,
-//        right
-//    }
-//    private zone current = null;
-//
-//     //private enum zone
-//    {
-//       // center,
-//        //left,
-//       // right
-//    }
-   @Override
+    /** Drive control */
+    MecanumSynchronousDriver driver;
+    AprilTagMaster aprilTagMaster;
+    InitAprilTags initAprilTags;
+    DriveToTag driveToTag;
+    private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
+    private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
+    enum zone
+    {
+        middle,
+        left,
+        right
+    }
+    private zone current = null;
+
+     //private enum zone
+    {
+       // center,
+        //left,
+       // right
+    }
+
+    @Override
     public void runOpMode() throws InterruptedException
     {
         try
@@ -64,7 +72,7 @@ public class BlueStageLeftLinearOpMode extends LeftRightSuper
         double x = (rec.getLeft() + rec.getRight()) / 2 ;
         double y = (rec.getTop()  + rec.getBottom()) / 2 ;
 
-        String getXPosition = webcam.findTarget(x);
+        LeftRightSuper.SpikeLineEnum getXPosition = webcam.findTarget(x);
         if(getXPosition.equals("left")){
             telemetry.addData("Left", x);
             blueStageRightLinearOpMode.zone = BlueStageRightLinearOpMode.SpikeLineEnum.LEFT_SPIKE;

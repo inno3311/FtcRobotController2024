@@ -193,8 +193,20 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
 */
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() throws InterruptedException
+    {
         super.runOpMode();
+
+        try
+        {
+            planBeta(zone);
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        sleep(1000);
+        driveToTag.drive(7, zone.ordinal() + 1, 11, 0);
     }
 
     /**
@@ -298,7 +310,7 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
             driver.rotate(-90, imuControl);
 
             //Go through truss
-            driver.forward(80, 1, 0.6);
+            driver.forward(74, 1, 0.6);
 
             sleep(1000);
 
@@ -307,13 +319,16 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
             driver.rotate(-90, imuControl);
 
             //Go forward into position
-            driver.forward(24, 1, 0.8);
+            driver.forward(17, 1, 0.8);
 
             sleep(1000);
 
             //Face right and let AprilTag take over
             //driver.turn(90, 1, 0.4);
             driver.rotate(90, imuControl);
+
+            //let apriltag
+            driver.forward(3, 1, 0.4);
         }
 
         if(zone == SpikeLineEnum.LEFT_SPIKE )
