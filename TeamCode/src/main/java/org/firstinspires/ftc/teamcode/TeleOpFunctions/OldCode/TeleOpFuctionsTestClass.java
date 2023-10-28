@@ -1,8 +1,10 @@
-package org.firstinspires.ftc.teamcode.TeleOpFunctions;
+package org.firstinspires.ftc.teamcode.TeleOpFunctions.OldCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
+
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.OldCode.Intake;
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.OldCode.LinerSlide;
 
 @TeleOp(name = "TeleOp Comp base", group = "TeleOp")
 public class TeleOpFuctionsTestClass extends OpMode

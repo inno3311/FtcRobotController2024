@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOpFunctions;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Controller.MotorControl;
 
 public class HeightChild extends MotorControl
@@ -14,9 +15,9 @@ public class HeightChild extends MotorControl
     private final int upperBound = 0;
 
     //Constructor calls parent constructor using hardcoded input
-    public HeightChild()
+    public HeightChild(OpMode opmode)
     {
-        super("Height", false, true);
+        super("height", false, true, opmode);
     }
 
     //Calls all methods and then is called itself in the OpMode loop
@@ -29,7 +30,7 @@ public class HeightChild extends MotorControl
 
     private void analogControl()
     {
-        super.analogControl(1, gamepad2.left_stick_y, lowerBound, upperBound);
+        super.analogControl(1, gamepad2.left_stick_y, lowerBound, upperBound, true);
     }
 
     private void encoderDrive()

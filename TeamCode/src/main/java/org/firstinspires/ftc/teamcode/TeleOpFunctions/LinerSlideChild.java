@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOpFunctions;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Controller.MotorControl;
 
 public class LinerSlideChild extends MotorControl
@@ -11,9 +12,9 @@ public class LinerSlideChild extends MotorControl
     private final int upperBounds = 2700;
 
     //Constructor calls parent constructor using hardcoded input
-    public LinerSlideChild()
+    public LinerSlideChild(OpMode opMode)
     {
-        super("Slide", true, true);
+        super("slide", true, true, opMode);
     }
 
     //Calls all methods and then is called itself in the OpMode loop
@@ -26,7 +27,7 @@ public class LinerSlideChild extends MotorControl
 
     private void analogControl()
     {
-        super.analogControl(0.5, gamepad2.right_stick_y, lowerBounds, upperBounds);
+        super.analogControl(0.5, gamepad2.right_stick_y, lowerBounds, upperBounds, false);
     }
 
     private void encoderDrive()

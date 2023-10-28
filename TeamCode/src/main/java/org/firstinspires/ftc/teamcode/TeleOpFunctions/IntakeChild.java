@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode.TeleOpFunctions;
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Controller.MotorControl;
 
 public class IntakeChild extends MotorControl
 {
 
     //Constructor calls parent constructor using hardcoded input
-    public IntakeChild()
+    public IntakeChild(OpMode opmode)
     {
-        super("Intake", true, false);
+        super("intake", true, false, opmode);
     }
 
     //Calls all methods and then is called itself in the OpMode loop
@@ -22,7 +21,7 @@ public class IntakeChild extends MotorControl
 
     private void simpleDrive()
     {
-        super.simpleDrive(0.5, gamepad2.right_bumper, gamepad2.back);
+        super.simpleDrive(1, gamepad2.right_bumper, gamepad2.back);
     }
 
     @Override

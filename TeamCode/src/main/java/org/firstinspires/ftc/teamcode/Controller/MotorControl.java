@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.Controller;
 
+import android.graphics.Path;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -20,12 +23,12 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
     protected Gamepad gamepad2;
 
     //Will be used to get the parameters below from the masterclass
-    public MotorControl(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2)
+    private MotorControl(OpMode opMode)
     {
-        this.hardwareMap = hardwareMap;
-        this.telemetry = telemetry;
-        this.gamepad1 = gamepad1;
-        this.gamepad2 = gamepad2;
+        this.hardwareMap = opMode.hardwareMap;
+        this.telemetry = opMode.telemetry;
+        this.gamepad1 = opMode.gamepad1;
+        this.gamepad2 = opMode.gamepad2;
     }
 
     /**
@@ -33,8 +36,10 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
      * @param direction Direction you want the motor to spin: true = FORWARD, false = REVERSE
      * @param hasEncoder Does it have an encoder?
      */
-    protected MotorControl(String motorName, Boolean direction, Boolean hasEncoder)
+    protected MotorControl(String motorName, Boolean direction, Boolean hasEncoder, OpMode opMode)
     {
+        this(opMode);
+
         this.motorName = motorName;
         this.hasEncoder = hasEncoder;
         motor = this.hardwareMap.get(DcMotor.class, motorName);
@@ -76,7 +81,7 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
      * @param lowerBound Motor will not spin past this bound at negative power (must have encoder to use this feature)
      * @param upperBound Motor will not spin past this bound at positive power(must have encoder to use this feature)
      */
-    protected void analogControl(double speedLimit, double input, int lowerBound, int upperBound)
+    protected void analogControl(double speedLimit, double input, int lowerBound, int upperBound, boolean advanceBreak)
     {
         double slidePower = input;
         Range.clip(slidePower, -speedLimit, speedLimit);
@@ -90,6 +95,13 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
                 motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motor.setPower(slidePower);
             }
+        }
+        else if (advanceBreak && motor.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)
+        {
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor.setTargetPosition(motor.getCurrentPosition());
+            motor.setPower(0.4);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
         else {motorBreak();}
 
@@ -177,7 +189,7 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
     protected void telemetry()
     {
         telemetry.addData(motorName, "Speed: %.2f", motor.getPower());
-        if (hasEncoder) {telemetry.addData(motorName, "Encoder Position: %.2f", motor.getCurrentPosition());}
+        if (hasEncoder) {telemetry.addData(motorName, "Encoder Position: %d", motor.getCurrentPosition());}
     }
 
 }
