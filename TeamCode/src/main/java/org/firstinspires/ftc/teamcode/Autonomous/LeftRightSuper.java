@@ -23,9 +23,6 @@ public class LeftRightSuper extends LinearOpMode {
     AprilTagMaster aprilTagMaster;
     InitAprilTags initAprilTags;
     DriveToTag driveToTag;
-    private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
-    private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
-
 
     SpikeLineEnum zone = SpikeLineEnum.UNKNOWN;
 
@@ -38,7 +35,6 @@ public class LeftRightSuper extends LinearOpMode {
     }
 
     public LeftRightSuper() {
-
 
     }
 
@@ -56,7 +52,6 @@ public class LeftRightSuper extends LinearOpMode {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -76,16 +71,6 @@ public class LeftRightSuper extends LinearOpMode {
         double y = (rec.getTop()  + rec.getBottom()) / 2 ;
 
         zone = webcam.findTarget(x);
-//        if(getXPosition.equals("left")){
-//            telemetry.addData("Left", x);
-//            zone = SpikeLineEnum.LEFT_SPIKE;
-//        }else if (getXPosition.equals("center")){
-//            telemetry.addData("Center", x);
-//            zone = SpikeLineEnum.CENTER_SPIKE;
-//        } else if (getXPosition.equals("right")){
-//            telemetry.addData("Right", x);
-//            zone = SpikeLineEnum.RIGHT_SPIKE;
-//        } else telemetry.addData("OBJECT NOT DETECTED. ADJUST VALUES", "");
 
         telemetry.addData(""," ");
         telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
@@ -110,42 +95,13 @@ public class LeftRightSuper extends LinearOpMode {
 
     }
 
-    public void goToPixel(){
+    public void goToPixel() {
         BlueStageRightLinearOpMode blueStage = new BlueStageRightLinearOpMode();
-        switch(zone){
+        switch (zone) {
             case CENTER_SPIKE:
                 telemetry.addData("Center detected", "");
 
-                try {
-                    blueStage.planBeta(zone);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-                //  planAlpha();
-                break;
-            case RIGHT_SPIKE:
-                try {
-                    blueStage.planBeta(zone);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case LEFT_SPIKE:
-                try {
-                   blueStage.planBeta(zone);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-                break;
-            default:
-                try {
-                   blueStage.planBeta(zone);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-                break;
         }
-
     }
 
     //This is code for controlling what happens if obj

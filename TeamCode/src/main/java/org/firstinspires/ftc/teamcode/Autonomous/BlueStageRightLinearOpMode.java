@@ -24,6 +24,36 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
 
         sleep(1000);
         driveToTag.drive(7, zone.ordinal() + 1, 11, 0);
+
+//        try {
+//         planBeta(zone);
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        //  planAlpha();
+//        break;
+//        case RIGHT_SPIKE:
+//        try {
+//            blueStage.planBeta(zone);
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        break;
+//        case LEFT_SPIKE:
+//        try {
+//            blueStage.planBeta(zone);
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        break;
+//        default:
+//        try {
+//            blueStage.planBeta(zone);
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        break;
+//    }
     }
 
     /**
@@ -50,19 +80,6 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
 
         //Left and let AprilTag take over
         driver.rotate(-90, imuControl);
-
-
-      //Go left through truss
-//      driver.rotate(-35, imuControl);
-//      driver.forward(25, 1, 0.6);
-//
-//      //turn right
-//      driver.rotate(40, imuControl);
-//
-//      driver.forward(12, 1, 0.5);
-//
-//      driver.rotate(-35, imuControl);
-
 
     }
 
