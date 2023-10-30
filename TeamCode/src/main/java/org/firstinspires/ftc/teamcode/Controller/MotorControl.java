@@ -148,18 +148,6 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
     /**
      * @param target Target location that the motor will move to
      * @param speed The speed at which the motor will spin
-     */
-    protected void encoderControlAutonomous(int target, double speed)
-    {
-        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor.setTargetPosition(target);
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setPower(speed);
-    }
-
-    /**
-     * @param target Target location that the motor will move to
-     * @param speed The speed at which the motor will spin
      * @param argument The Gamepad analog input that will make it move if its value is greater than 0.2
      */
     protected void encoderControl(int target, double speed, double argument)
@@ -171,6 +159,27 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor.setPower(speed);
         }
+    }
+
+    /**
+     * @param target Target location that the motor will move to
+     * @param speed The speed at which the motor will spin
+     */
+    protected void encoderControlAutonomous(int target, double speed)
+    {
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setTargetPosition(target);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(speed);
+    }
+
+    /**
+     * Used for autonomous motors that just need to spin call break to stop
+     * @param speed
+     */
+    protected void run(double speed)
+    {
+        motor.setPower(speed);
     }
 
 
