@@ -39,7 +39,6 @@ public class LeftRightSuper extends LinearOpMode {
 
     public LeftRightSuper() {
 
-
     }
 
     protected void initMembers()
@@ -56,7 +55,6 @@ public class LeftRightSuper extends LinearOpMode {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -76,16 +74,14 @@ public class LeftRightSuper extends LinearOpMode {
         double y = (rec.getTop()  + rec.getBottom()) / 2 ;
 
         zone = webcam.findTarget(x);
-//        if(getXPosition.equals("left")){
-//            telemetry.addData("Left", x);
-//            zone = SpikeLineEnum.LEFT_SPIKE;
-//        }else if (getXPosition.equals("center")){
-//            telemetry.addData("Center", x);
-//            zone = SpikeLineEnum.CENTER_SPIKE;
-//        } else if (getXPosition.equals("right")){
-//            telemetry.addData("Right", x);
-//            zone = SpikeLineEnum.RIGHT_SPIKE;
-//        } else telemetry.addData("OBJECT NOT DETECTED. ADJUST VALUES", "");
+
+        telemetry.addData(""," ");
+        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
+        telemetry.addData("- Position", "%.0f / %.0f", x, y);
+        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
+        telemetry.update();
+
+        waitForStart();
 
         telemetry.addData(""," ");
         telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
@@ -97,8 +93,6 @@ public class LeftRightSuper extends LinearOpMode {
         aprilTagMaster = initAprilTags.getAprilTagMaster();
         driveToTag = initAprilTags.getDriveToTag();
 
-
-        waitForStart();
         start();
 
         //TODO We need to make this work for red side to because red uses targets (AprilTag Ids) 4-6
@@ -110,42 +104,13 @@ public class LeftRightSuper extends LinearOpMode {
 
     }
 
-    public void goToPixel(){
+    public void goToPixel() {
         BlueStageRightLinearOpMode blueStage = new BlueStageRightLinearOpMode();
-        switch(zone){
+        switch (zone) {
             case CENTER_SPIKE:
                 telemetry.addData("Center detected", "");
 
-                try {
-                    blueStage.planBeta(zone);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-                //  planAlpha();
-                break;
-            case RIGHT_SPIKE:
-                try {
-                    blueStage.planBeta(zone);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case LEFT_SPIKE:
-                try {
-                   blueStage.planBeta(zone);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-                break;
-            default:
-                try {
-                   blueStage.planBeta(zone);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-                break;
         }
-
     }
 
     //This is code for controlling what happens if obj
