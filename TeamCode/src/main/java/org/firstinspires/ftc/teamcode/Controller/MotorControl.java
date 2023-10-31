@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Controller;
 
-import android.graphics.Path;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -184,7 +182,7 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
 
 
     /**
-     *     Breaking method
+     *     Breaking method also sets power to zero
      */
     protected void motorBreak()
     {
