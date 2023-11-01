@@ -69,7 +69,7 @@ public class MechanicalDriveBase
     {
         lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     //make the robot stop
@@ -90,7 +90,7 @@ public class MechanicalDriveBase
           double drive = -gamepad.left_stick_y;
           double turn = gamepad.right_stick_x;
           double strafe = gamepad.left_stick_x;
-          speed = 0.5;//1 - (0.6 * gamepad.right_trigger);
+          speed = 1 - (0.6 * gamepad.right_trigger);
           driveMotors(drive, turn, strafe, speed);
     }
 
@@ -155,108 +155,5 @@ public class MechanicalDriveBase
     {
         telemetry.addData("Motors", "lf: %.2f rf: %.2f lb: %.2f rb: %.2f", leftPowerFront, rightPowerFront, leftPowerBack, rightPowerBack);
         telemetry.addData("Speed control", speed);
-    }
-
-      /**======================================== Autonomous Code ===============================================**/
-      //LF encoder for left side
-      //RF encoder for right side
-      //LB for turning and strafing
-      //Bore encoders ticks per rotation 8192
-
-      /*
-        static final double  COUNTS_PER_INCH =
-          (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-          (WHEEL_DIAMETER_INCHES * 3.1415);
-          For our drive base 1,303.835747254496 drives an inch
-      */
-
-      //                                 How far do you want which way do you  How fast do
-      //                                 to drive in inches   want to drive   you want to go
-      //                                   positives only   true is forward   positive only
-      public void driveForwardWithEncoders(double distance, boolean direction, double speed)
-      {
-            if (direction)
-            {
-                distance += Math.abs(lf.getCurrentPosition());
-                driveMotors(-1,0,0, speed);
-                while (Math.abs(lf.getCurrentPosition()) < distance) {}
-                driveMotors(0,0,0,0);
-            }
-            else
-            {
-                distance -= Math.abs(lf.getCurrentPosition());
-                driveMotors(1,0,0, speed);
-                while (Math.abs(lf.getCurrentPosition()) > distance) {}
-                driveMotors(0,0,0,0);
-            }
-      }
-
-    //                               How far do you want  which way do you  How fast do
-    //                               to drive in inches    want to drive   you want to go
-    //                                  positives only     true is right    positive only
-    public void strafeWithEncoders(double distance, boolean direction, double speed)
-    {
-        heading = imuControl.getAngle();
-
-        if (direction)
-        {
-            distance += Math.abs(lb.getCurrentPosition());
-            driveMotors(0,1,0, speed);
-            while (Math.abs(lb.getCurrentPosition()) < distance)
-            {
-                strafeCorrectionRight();
-            }
-            driveMotors(0,0,0,0);
-        }
-        else
-        {
-            distance -= Math.abs(lb.getCurrentPosition());
-            driveMotors(0,-1,0, speed);
-            while (Math.abs(lb.getCurrentPosition()) > distance)
-            {
-                strafeCorrectionLeft();
-            }
-            driveMotors(0,0,0,0);
-        }
-    }
-
-    private void strafeCorrectionRight()
-    {
-        if (imuControl.getAngle() < heading)
-        {
-            while (imuControl.getAngle() < heading)
-            {
-                lf.setPower(lf.getPower() + 0.1);
-                rf.setPower(rf.getPower() - 0.1);
-            }
-        }
-        else if (imuControl.getAngle() > heading)
-        {
-            while (imuControl.getAngle() > heading)
-            {
-                lb.setPower(lf.getPower() - 0.1);
-                rb.setPower(rf.getPower() + 0.1);
-            }
-        }
-    }
-
-    private void strafeCorrectionLeft()
-    {
-        if (imuControl.getAngle() < heading)
-        {
-            while (imuControl.getAngle() < heading)
-            {
-                lf.setPower(lf.getPower() - 0.1);
-                rf.setPower(rf.getPower() + 0.1);
-            }
-        }
-        else if (imuControl.getAngle() > heading)
-        {
-            while (imuControl.getAngle() > heading)
-            {
-                lb.setPower(lf.getPower() + 0.1);
-                rb.setPower(rf.getPower() - 0.1);
-            }
-        }
     }
 }
