@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Controller;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -91,7 +90,7 @@ public class MechanicalDriveBase
           double drive = -gamepad.left_stick_y;
           double turn = gamepad.right_stick_x;
           double strafe = gamepad.left_stick_x;
-          speed = 1 - (0.6 * gamepad.right_trigger);
+          speed = 0.5;//1 - (0.6 * gamepad.right_trigger);
           driveMotors(drive, turn, strafe, speed);
     }
 
@@ -105,10 +104,10 @@ public class MechanicalDriveBase
      */
       public void driveMotors(double drive, double turn, double strafe, double speed)
       {
-          leftPowerFront  = (drive - turn + strafe);
-          rightPowerFront = (drive + turn - strafe);
-          leftPowerBack   = (drive - turn - strafe);
-          rightPowerBack  = (drive + turn + strafe);
+          leftPowerFront  = (drive + turn + strafe);
+          rightPowerFront = (drive - turn - strafe);
+          leftPowerBack   = (drive + turn - strafe);
+          rightPowerBack  = (drive - turn + strafe);
 
           // This code is awful.
           double maxAbsVal = maxAbsVal(leftPowerFront, leftPowerBack,
@@ -154,7 +153,7 @@ public class MechanicalDriveBase
      */
     public void driveBaseTelemetry(Telemetry telemetry)
     {
-        telemetry.addData("Motors", "lf(%.2f), rf(%.2f), lb(%.2f), rb(%.2f)", leftPowerFront, rightPowerFront, leftPowerBack, rightPowerBack);
+        telemetry.addData("Motors", "lf: %.2f rf: %.2f lb: %.2f rb: %.2f", leftPowerFront, rightPowerFront, leftPowerBack, rightPowerBack);
         telemetry.addData("Speed control", speed);
     }
 
