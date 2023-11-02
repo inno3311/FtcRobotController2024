@@ -82,30 +82,30 @@ public class LinearOpModeMez extends LinearOpMode
 
         try
         {
-            driver.strafe(48, 1, 0.6, imuControl);
-            sleep(3000);
-            driver.strafe(48, -1, 0.6, imuControl);
-            sleep(3000);
+//            driver.strafe(48, 1, 0.6, imuControl);
+//            sleep(3000);
+//            driver.strafe(48, -1, 0.6, imuControl);
+//            sleep(3000);
 
-            driver.rotate(-30, imuControl);
+            driver.rotate2(-30, imuControl);
             sleep(1000);
 
-            driver.rotate(-30, imuControl);
+            driver.rotate2(-30, imuControl);
             sleep(1000);
 
-            driver.rotate(-30, imuControl);
+            driver.rotate2(-30, imuControl);
             sleep(1000);
 
-            driver.rotate(-45, imuControl);
+            driver.rotate2(-45, imuControl);
             sleep(1000);
 
-            driver.rotate(-45, imuControl);
+            driver.rotate2(-45, imuControl);
             sleep(1000);
 
-            driver.rotate(-90, imuControl);
+            driver.rotate2(-90, imuControl);
             sleep(1000);
 
-            driver.rotate(-90, imuControl);
+            driver.rotate2(-90, imuControl);
             sleep(1000);
 
 
