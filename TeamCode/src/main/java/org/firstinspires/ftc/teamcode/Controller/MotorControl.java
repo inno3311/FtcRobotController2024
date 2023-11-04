@@ -59,13 +59,13 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
      */
     protected void analogControl(double speedLimit, double input)
     {
-        double slidePower = input;
-        Range.clip(slidePower, -speedLimit, speedLimit);
+        double motorPower = input;
+        motorPower = Range.clip(motorPower, -speedLimit, speedLimit);
 
-        if (Math.abs(slidePower) > 0)
+        if (Math.abs(motorPower) > 0)
         {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motor.setPower(slidePower);
+            motor.setPower(motorPower);
         }
         else {motorBreak();}
 
@@ -81,17 +81,17 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
      */
     protected void analogControl(double speedLimit, double input, int lowerBound, int upperBound, boolean advanceBreak)
     {
-        double slidePower = input;
-        Range.clip(slidePower, -speedLimit, speedLimit);
+        double motorPower = input;
+        motorPower = Range.clip(motorPower, -speedLimit, speedLimit);
 
-        if (Math.abs(slidePower) > 0)
+        if (Math.abs(motorPower) > 0)
         {
-            if (motor.getCurrentPosition() > upperBound && slidePower > 0) {motorBreak();}
-            else if (motor.getCurrentPosition() < lowerBound && slidePower < 0) {motorBreak();}
+            if (motor.getCurrentPosition() > upperBound && motorPower > 0) {motorBreak();}
+            else if (motor.getCurrentPosition() < lowerBound && motorPower < 0) {motorBreak();}
             else
             {
                 motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                motor.setPower(slidePower);
+                motor.setPower(motorPower);
             }
         }
         else if (advanceBreak && motor.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)
@@ -196,8 +196,8 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
      */
     protected void telemetry()
     {
-        telemetry.addData(motorName, "Speed: %.2f", motor.getPower());
-        if (hasEncoder) {telemetry.addData(motorName, "Encoder Position: %d", motor.getCurrentPosition());}
+        if (hasEncoder) {telemetry.addData(motorName, "Speed: %.2f\n\tEncoder Position: %d", motor.getPower(), motor.getCurrentPosition());}
+        else {telemetry.addData(motorName, "Speed: %.2f", motor.getPower());}
     }
 
 }
