@@ -82,102 +82,49 @@ public class LinearOpModeMez extends LinearOpMode
 
         try
         {
-            driver.strafe(48, 1, 0.6, imuControl);
-            sleep(3000);
-            driver.strafe(48, -1, 0.6, imuControl);
-            sleep(3000);
+//            driver.strafe(48, 1, 0.6, imuControl);
+//            sleep(3000);
+//            driver.strafe(48, -1, 0.6, imuControl);
+//            sleep(3000);
 
-            driver.rotate(-30, imuControl);
+            driveStraightTest();
+            sleep(10000);
+
+            driver.rotate2(-30, imuControl);
             sleep(1000);
 
-            driver.rotate(-30, imuControl);
+            driver.rotate2(-30, imuControl);
             sleep(1000);
 
-            driver.rotate(-30, imuControl);
+            driver.rotate2(-30, imuControl);
             sleep(1000);
 
-            driver.rotate(-45, imuControl);
+            driver.rotate2(-45, imuControl);
             sleep(1000);
 
-            driver.rotate(-45, imuControl);
+            driver.rotate2(-45, imuControl);
             sleep(1000);
 
-            driver.rotate(-90, imuControl);
+            driver.rotate2(-90, imuControl);
             sleep(1000);
 
-            driver.rotate(-90, imuControl);
+            driver.rotate2(-90, imuControl);
             sleep(1000);
 
 
-//            driver.rotateLeft90(imuControl);
-//            sleep(1000);
-//            driver.rotateLeft90(imuControl);
-//            sleep(1000);
-//            driver.rotateLeft90(imuControl);
-//            sleep(1000);
 
-//            driver.rotateMez(90,1,imuControl);
-//            sleep(1000);
-//            driver.rotateMez(90,1,imuControl);
-//            sleep(1000);
-//            driver.rotateMez(90,1,imuControl);
-//            sleep(1000);
-//            driver.rotateMez(45,1,imuControl);
-//            sleep(1000);
-//            driver.rotateMez(45,1,imuControl);
-//            sleep(1000);
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
-//        aroundyTest();
-//
-//        try
-//        {
-//            driver.rotate(90,0.5,imuControl);
-//
-//            driver.rotationTest(imuControl);
-//            //rotateTest();
-//        }
-//        catch (IOException e)
-//        {
-//            e.printStackTrace();
-//        }
+
 
 
         //Drive forward 72 inches
 //        driver.strafe(24 * 3,1,0.3, new IMUControl(hardwareMap, telemetry));
 //        driver.forward(24 * 4, 1, 0.4);
 
-//        driver.forward(12 * 4,1,0.6);
-//        sleep(1000);
-//        driver.forward(12 * 4,-1,0.6);
-//        sleep(1000);
-//        driver.turn(180, -1, .5);
-
-
-//        driver.forward(12 * 2,1,0.3);
-//        sleep(1000);
-//        driver.turn(90, -1, .3);
-//        sleep(1000);
-//        driver.forward(12 * 1.8,1,.3);
-//        sleep(1000);
-//        driver.turn(90, 1, 1);
-//        sleep(1000);
-//        driver.forward(12 * 2,1,.3);
-//        sleep(1000);
-//        driver.turn(90, 1, 0.4);
-//        sleep(1000);
-//        driver.forward(12 * 1.8,1,0.3);
-//        sleep(1000);
-//        driver.turn(100, 1, 0.4);
-//        sleep(1000);
-//        driver.forward(12 * 4,1,0.3);
-//        sleep(1000);
-//        driver.forward(12 * 4,-1,0.3);
-
-//        imuControl.resetAngle();
 
 
 
@@ -196,6 +143,18 @@ public class LinearOpModeMez extends LinearOpMode
         }
     }
 
+
+    public void driveStraightTest()
+    {
+        driver.forward(24 * 4, 1, .6);
+        sleep(3000);
+        driver.forward(24 * 4, -1, .6);
+        sleep(8000);
+        driver.forward(24 * 4, 1, 1);
+        sleep(3000);
+        driver.forward(24 * 4, -1, 1);
+
+    }
 
     public void rotateTest() throws InterruptedException, IOException
     {
