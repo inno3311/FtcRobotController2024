@@ -24,36 +24,6 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
 
         sleep(1000);
         driveToTag.drive(7, zone.ordinal() + 1, 11, 0);
-
-//        try {
-//         planBeta(zone);
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        //  planAlpha();
-//        break;
-//        case RIGHT_SPIKE:
-//        try {
-//            blueStage.planBeta(zone);
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        break;
-//        case LEFT_SPIKE:
-//        try {
-//            blueStage.planBeta(zone);
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        break;
-//        default:
-//        try {
-//            blueStage.planBeta(zone);
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        break;
-//    }
     }
 
     /**
@@ -81,6 +51,19 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
         //Left and let AprilTag take over
         driver.rotate(-90, imuControl);
 
+
+      //Go left through truss
+//      driver.rotate(-35, imuControl);
+//      driver.forward(25, 1, 0.6);
+//
+//      //turn right
+//      driver.rotate(40, imuControl);
+//
+//      driver.forward(12, 1, 0.5);
+//
+//      driver.rotate(-35, imuControl);
+
+
     }
 
     /**
@@ -95,7 +78,7 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
             //Beta instance if object is in the middle
 //
             //Go forward 25 in
-            driver.forward(24.5, 1, 0.6);
+            driver.forward(24, 1, 0.6);
 
             sleep(1000);
             //Go backward 12 in for space to turn
@@ -114,30 +97,28 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
 
             //Turn left to go through truss
             //driver.turn(90, -1, 0.4);
-//            driver.rotate(-90, imuControl);
-//
-//            //Go through truss
-//            driver.forward(74, 1, 0.6);
-//
-//            sleep(1000);
-//
-//            //Turn left once through truss for next command
-//            //driver.turn(90, -1, 0.4);
-//            driver.rotate(-90, imuControl);
+            driver.rotate(-90, imuControl);
 
-            goThroughTrussAndFinish(false, false, true);
+            //Go through truss
+            driver.forward(74, 1, 0.6);
+
+            sleep(1000);
+
+            //Turn left once through truss for next command
+            //driver.turn(90, -1, 0.4);
+            driver.rotate(-90, imuControl);
 
             //Go forward into position
-//            driver.forward(17, 1, 0.8);
-//
-//            sleep(1000);
-//
-//            //Face right and let AprilTag take over
-//            //driver.turn(90, 1, 0.4);
-//            driver.rotate(90, imuControl);
-//
-//            //let apriltag
-//            driver.forward(3, 1, 0.4);
+            driver.forward(17, 1, 0.8);
+
+            sleep(1000);
+
+            //Face right and let AprilTag take over
+            //driver.turn(90, 1, 0.4);
+            driver.rotate(90, imuControl);
+
+            //let apriltag
+            driver.forward(3, 1, 0.4);
         }
 
         if(zone == SpikeLineEnum.LEFT_SPIKE)
@@ -158,7 +139,7 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
             sleep(1000);
 
             //Go backward after placing pixel
-            driver.forward(5, -1, 0.6);
+            driver.forward(4, -1, 0.6);
 
             sleep(1000);
 
@@ -167,18 +148,14 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
             driver.rotate(45, imuControl);
 
             //Drive forward (meant to go through the middle of the truss)
-            driver.forward(28, 1, 0.7);
+            driver.forward(24, 1, 0.7);
             sleep(1000);
             //Go through the middle of the truss
             //driver.turn(52, -1, 0.4);
-
-
-            goThroughTrussAndFinish(false, true, false);
-            //Turn left for next command
-            //driver.rotate(-45, imuControl);
-
-
-
+            driver.rotate(-90, imuControl);
+            sleep(1000);
+            driver.forward(46, 1, 0.7);
+            sleep(1000);
             //Turn left (position into backdrop)
 //            driver.turn(80, -1, 0.4);
 //            driver.forward(70, 1, 0.7);
@@ -192,60 +169,31 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
         {
             //Go forward just enough to turn
             driver.forward(2, 1, 0.6);
-            driver.rotate(30, imuControl);
+            driver.turn(30, 1, 0.4);
             //Push pixel into place
-            driver.forward(14, 1, 0.6);
+            driver.forward(12, 1, 0.6);
             //Go backward after placing pixel (for space only)
             driver.forward(3, -1, 0.6);
             sleep(3000);
 
             //Get out of the way of the pixel
-            driver.rotate(-25, imuControl);
-            driver.strafe(2, -1, 0.5, imuControl);
+            driver.turn(30, -1, 0.4);
             //Go to the middle
-            driver.forward(30, 1, 0.8);
-
+            driver.forward(17, 1, 0.8);
             sleep(3000);
 
-            goThroughTrussAndFinish(false, false, true);
+            //Go to the other side
+            driver.turn(90, -1, 0.4);
+            sleep(3000);
+            //Through the truss
+            driver.forward(20, 1, 0.7);
+            sleep(3000);
 
-
-//            //Go to the other side
-//            driver.turn(90, -1, 0.4);
-//            sleep(3000);
-//            //Through the truss
-//            driver.forward(20, 1, 0.7);
-//            sleep(3000);
-//
-//            //Turn left and go to backdrop
-//            driver.turn(90, -1, 0.4);
-//            driver.forward(15, 1, 0.6);
+            //Turn left and go to backdrop
+            driver.turn(90, -1, 0.4);
+            driver.forward(15, 1, 0.6);
 
         }
 
     }
-
-    public void goThroughTrussAndFinish(boolean center, boolean left, boolean right) throws IOException, InterruptedException {
-        int goThroughTrussDistance;
-
-        driver.rotate2(-90, imuControl);
-        sleep(1000);
-
-        //This goes to the other side
-        if(left){
-            goThroughTrussDistance = 70;
-        } else if(center){
-            goThroughTrussDistance = 80;
-        } else{
-            goThroughTrussDistance = 70;
-        }
-
-        driver.forward(goThroughTrussDistance, 1, 0.7);
-        sleep(1000);
-
-        //Strafe to position
-        driver.strafe(21, -1, 0.5, imuControl);
-
-    }
-
 }
