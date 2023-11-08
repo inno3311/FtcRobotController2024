@@ -100,7 +100,81 @@ public class BlueStageLeftLinearOpMode extends LeftRightSuper
      * There is always a plan B.  ;)
      */
     public void planGamma(SpikeLineEnum zone) throws IOException, InterruptedException {
-        planPurple(zone, false);
+
+
+        //...then calls one of the if statements
+
+        //If target is in the center...
+        if(zone == SpikeLineEnum.CENTER_SPIKE)
+        {
+
+            //Go forward to determine whether object is left/center/right
+            driver.forward(24, 1, 0.6);
+            //Go forward and place pixel
+            //driver.forward(4, 1, 0.5);
+
+            sleep(1000);
+
+            //Go backward into position
+            driver.forward(19, -1, 0.6);
+
+        }
+
+        //If target is on the left...
+        else if(zone == SpikeLineEnum.LEFT_SPIKE)
+        {
+
+            //Go forward just enough to turn
+            driver.forward(17, 1, 0.6);
+
+            //driver.turn(45, -1, 0.4);
+            driver.rotate(-45, imuControl);
+
+            //Push pixel into place
+            driver.forward(7, 1, 0.6);
+
+            sleep(1000);
+
+            //Go backward after placing pixel
+            driver.forward(7, -1, 0.6);
+
+            //Adjust
+            //driver.turn(45, 1, 0.4);
+            driver.rotate(45, imuControl);
+
+            driver.forward(15, -1, 0.5);
+
+        }
+
+        else if(zone == SpikeLineEnum.RIGHT_SPIKE){
+            //Go forward just enough to turn
+            driver.forward(17, 1, 0.6);
+
+            sleep(1000);
+
+            //driver.turn(45, -1, 0.4);
+            driver.rotate(45, imuControl);
+
+            sleep(1000);
+
+            //Push pixel into place
+            driver.forward(6, 1, 0.6);
+
+            sleep(1000);
+
+            //Go backward after placing pixel
+            driver.forward(6, -1, 0.6);
+
+            sleep(1000);
+
+            //Adjust
+            //driver.turn(45, 1, 0.4);
+            driver.rotate(-45, imuControl);
+
+            driver.forward(15, -1, 0.5);
+
+        }
+
 
 
     }

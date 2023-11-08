@@ -192,6 +192,8 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
         {
             //Go forward just enough to turn
             driver.forward(2, 1, 0.6);
+
+            //face target
             driver.rotate(30, imuControl);
             //Push pixel into place
             driver.forward(14, 1, 0.6);
@@ -199,9 +201,11 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
             driver.forward(3, -1, 0.6);
             sleep(3000);
 
-            //Get out of the way of the pixel
+            //Rotate for forward position
             driver.rotate(-25, imuControl);
-            driver.strafe(2, -1, 0.5, imuControl);
+            sleep(1000);
+            //strafe left out of the way
+            driver.strafe(5, -1, 0.5, imuControl);
             //Go to the middle
             driver.forward(30, 1, 0.8);
 
@@ -209,17 +213,6 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
 
             goThroughTrussAndFinish(false, false, true);
 
-
-//            //Go to the other side
-//            driver.turn(90, -1, 0.4);
-//            sleep(3000);
-//            //Through the truss
-//            driver.forward(20, 1, 0.7);
-//            sleep(3000);
-//
-//            //Turn left and go to backdrop
-//            driver.turn(90, -1, 0.4);
-//            driver.forward(15, 1, 0.6);
 
         }
 
@@ -244,8 +237,9 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
         sleep(1000);
 
         //Strafe to position
-        driver.strafe(21, -1, 0.5, imuControl);
+        driver.strafe(17, -1, 0.5, imuControl);
 
     }
+
 
 }
