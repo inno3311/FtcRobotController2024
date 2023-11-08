@@ -1,374 +1,245 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
-import org.firstinspires.ftc.teamcode.util.WebCamHardware;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import java.io.IOException;
 
 @Autonomous(name = "Blue Stage Right", group = "Group3311")
-public class BlueStageRightLinearOpMode extends LinearOpMode
+public class BlueStageRightLinearOpMode extends LeftRightSuper
 {
-    WebCamHardware webcam;
-
-    /** Drive control */
-    MecanumSynchronousDriver driver;
-    private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
-    private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
-    private boolean pixelInMiddle, pixelIsLeft, pixelIsRight;
-
-    zoneEnum zone;
-
- enum zoneEnum
-    {
-        center,
-        left,
-        right
-    }
-
-    /*
-    if (stuff right here to determine which zone it goes to)
-    {
-        zone current = zone.x; x = center, right, or left
-    }
-     switch(current)
-     {
-     case center:
-        planAlpha();
-        break;
-     case right:
-        pixelRight();
-        break;
-     case left:
-        pixelLeft();
-        break;
-    default:
-        planBeta(false,true,false);
-        break;
-    }*/
-
 
     @Override
     public void runOpMode() throws InterruptedException
     {
+        super.runOpMode();
 
         try
         {
-            driver = new MecanumSynchronousDriver(this.hardwareMap, this);
-            webcam = new WebCamHardware(this);
-        }
-        catch (IOException e)
+            planBeta(zone);
+        } catch (IOException e)
         {
             e.printStackTrace();
         }
 
-        webcam.initTfod();
+        sleep(1000);
+        driveToTag.drive(7, zone.ordinal() + 1, 11, 0);
 
-
-        Recognition rec = null;
-        while ((rec = webcam.findObject()) == null)
-        {
-            telemetry.addData("- Camera", "Looking for object");
-            telemetry.update();
-        }
-
-        double x = (rec.getLeft() + rec.getRight()) / 2 ;
-        double y = (rec.getTop()  + rec.getBottom()) / 2 ;
-
-        if(x > 50 && x < 150)
-        {
-            telemetry.addData("Left", x);
-            zone = zoneEnum.left;
-        }
-        else if(x > 160 && x < 450) {
-            telemetry.addData("Center", x);
-            zone = zoneEnum.center;
-        }
-        else if(x > 460 && x < 600){
-            telemetry.addData("Right", x);
-            zone = zoneEnum.right;
-        }
-        else telemetry.addData("OBJECT NOT DETECTED. ADJUST VALUES", "");
-
-        telemetry.addData(""," ");
-        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
-        telemetry.addData("- Position", "%.0f / %.0f", x, y);
-        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
-        telemetry.update();
-
-        waitForStart();
-        start();
-
-        //Change this to pixelIsLeft = true for left, pixelIsRight = true for right, or pixelInMiddle for middle
-        pixelIsLeft = true;
-
-        switch(zone) {
-            case center:
-                planAlpha();
-                break;
-            case right:
-                pixelRight();
-                break;
-            case left:
-                pixelLeft();
-                break;
-            default:
-                planBeta(false, true, false);
-                break;
-        }
-
-        /*
-        //Your code goes in this function.   You can make other plans as well.  (two shells are
-        //provided.
-        if(pixelInMiddle){
-            //Put planAlpha(); here
-            planAlpha();
-        }
-        if(pixelIsLeft){
-            //Put pixelLeft(); here
-            pixelLeft();
-        } else if (pixelIsRight){
-            pixelRight();
-        } else planBeta(false, true, false); //(I know putting all three instances as parameters isn't
-        //best practice, but [for now at least] I wanted to put all the beta instances in the same place)
-        //Only one parameter can be set to true.
-
-        //Sample Test Programs
-        //aroundyTest();
-        //rotateTest();
-*/
-        while (opModeIsActive())
-        {
-
-        }
+//        try {
+//         planBeta(zone);
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        //  planAlpha();
+//        break;
+//        case RIGHT_SPIKE:
+//        try {
+//            blueStage.planBeta(zone);
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        break;
+//        case LEFT_SPIKE:
+//        try {
+//            blueStage.planBeta(zone);
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        break;
+//        default:
+//        try {
+//            blueStage.planBeta(zone);
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        break;
+//    }
     }
 
-   /**
+    /**
      * Plan Alpha.  You will design different routes based on what intel the other team provides.
      * We don't want to run into their robot, so we need different plans.
      */
-    public void planAlpha()
+    public void planAlpha() throws IOException, InterruptedException
     {
+        planPurple(zone, false);
+        sleep(1000);
 
-       //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is), then go backward
-       driver.forward(25, 1, 0.6);
-       driver.forward(23, -1, 0.6);
-       //Turn left through the truss  
-       driver.turn(90, -1, 0.4);
-       driver.forward(80, 1, 0.9);
-       //Turn right  
-       driver.turn(90, 1, 0.4);
-       driver.forward(15, 1, 0.6);
-       //Turn left and go to backdrop 
-       driver.turn(90, -1, 0.4);
-       driver.forward(5, 1, 0.6);
+         //Turn left
+        driver.rotate(-90, imuControl);
+        sleep(1000);
 
-    }
-
-    public void pixelRight() {
-        //Go forward just enough to turn
-        driver.forward(2, 1, 0.6);
-        driver.turn(30, 1, 0.4);
-       // driver.rotateOd(30, .4);
-
-        //Push pixel into place
-        driver.forward(12, 1, 0.6);
-        //Go backward after placing pixel
-        driver.forward(13, -1, 0.6);
-        sleep(3000);
-
-        //To go through truss
-        driver.turn(25, -1, 0.4);
-        //Turn left through the truss
-        driver.turn(90, -1, 0.4);
-        //driver.rotateOd(-120, .4);
-        sleep(3000);
-        
-        //Go to the other side
-        driver.forward(80, 1, 0.9);
-        sleep(3000);
+        //Go through truss
+        driver.forward(60, 1, 0.6);
+        sleep(1000);
         //Turn right
-        driver.turn(90, 1, 0.4);
-        sleep(3000);
-        
-        //Turn left and go to backdrop
-        driver.turn(90, -1, 0.4);
-        driver.forward(15, 1, 0.6);
-        driver.turn(90, -1, 0.4);
-        driver.forward(5, 1, 0.5);
+        //driver.turn(90, 1, 0.4);
+        driver.rotate(90, imuControl);
 
-    }
+        driver.forward(16, 1, 0.5);
 
-    public void pixelLeft(){
+        //Left and let AprilTag take over
+        driver.rotate(-90, imuControl);
 
-        //Go forward just enough to turn
-        driver.forward(7, 1, 0.6);
-        driver.turn(30, -1, 0.4);
-        //Push pixel into place
-        driver.forward(12, 1, 0.6);
-        //Go backward after placing pixel
-        driver.forward(19, -1, 0.6);
-        sleep(3000);
-
-        //To go through truss
-        driver.turn(56, -1, 0.4);
-
-        //Turn left through the truss
-        //Go to the other side
-        driver.forward(60, 1, 0.9);
-        sleep(3000);
-        driver.turn(20, 1, 0.4);
-        driver.forward(20, 1, 0.9);
-
-        //Turn right
-        driver.turn(90, 1, 0.4);
-        sleep(3000);
-
-
-        driver.turn(30, 1, 0.4);
-        driver.forward(15, 1, 0.7);
     }
 
     /**
      * There is always a plan B.  ;)
      */
-    public void planBeta(boolean beta, boolean leftBeta, boolean rightBeta)
-    {
+    public void planBeta(SpikeLineEnum zone) throws IOException, InterruptedException {
 
-        /*THESE ARE PLAN BETA INSTANCES FOR ALL THREE INSTANCES. SET beta TO true FOR THE PLAN BETA
-          FOR THE MIDDLE INSTANCE (PIXEL IN MIDDLE). SET leftBeta TO true FOR THE PLAN BETA
-          LEFT INSTANCE. SET rightBeta TO true FOR THE PLAN  BETA RIGHT INSTANCE.
 
-          ONLY ONE INSTANCE CAN BE TRUE (This goes without saying, but I said it anyway (: )
+//        planPurple(zone, true);
 
-         */
-        if(beta){
-            //BETA INSTANCE IF PIXEL IS IN THE MIDDLE
-            //Go forward 24 inches at speed of .5  (24 is just a filler.  you need to figure out how far it is), then go backward
-            driver.forward(25, 1, 0.6);
-            driver.forward(23, -1, 0.6);
-            //Turn right (out of the way of the pixel)
-            driver.turn(90, 1, 0.4);
-            driver.forward(8, 1, 0.9);
-            //Turn left
-            driver.turn(90, -1, 0.4);
-            driver.forward(25, 1, 0.6);
-            //Turn left and go to backdrop
-            driver.turn(90, -1, 0.4);
-            driver.forward(40, 1, 0.6);
-            driver.turn(90, -1, 0.4);
-            driver.forward(15, 1, 0.8);
+        if(zone == SpikeLineEnum.CENTER_SPIKE){
+            //Beta instance if object is in the middle
+//
+            //Go forward 25 in
+            driver.forward(24.5, 1, 0.6);
 
+            sleep(1000);
+            //Go backward 12 in for space to turn
+            driver.forward(3, -1, 0.6);
+
+            sleep(1000);
+
+            driver.strafe(12, 1, 0.6, imuControl);
+
+            sleep(1000);
+
+            //Continue to go into position
+            driver.forward(28, 1, 0.6);
+
+            sleep(1000);
+
+            //Turn left to go through truss
+            //driver.turn(90, -1, 0.4);
+//            driver.rotate(-90, imuControl);
+//
+//            //Go through truss
+//            driver.forward(74, 1, 0.6);
+//
+//            sleep(1000);
+//
+//            //Turn left once through truss for next command
+//            //driver.turn(90, -1, 0.4);
+//            driver.rotate(-90, imuControl);
+
+            goThroughTrussAndFinish(false, false, true);
+
+            //Go forward into position
+//            driver.forward(17, 1, 0.8);
+//
+//            sleep(1000);
+//
+//            //Face right and let AprilTag take over
+//            //driver.turn(90, 1, 0.4);
+//            driver.rotate(90, imuControl);
+//
+//            //let apriltag
+//            driver.forward(3, 1, 0.4);
         }
 
-        if(leftBeta){
+        if(zone == SpikeLineEnum.LEFT_SPIKE)
+        {
             //Go forward just enough to turn
-            driver.forward(7, 1, 0.6);
-            driver.turn(30, -1, 0.4);
+            driver.forward(17, 1, 0.6);
+
+            sleep(1000);
+
+            //driver.turn(45, -1, 0.4);
+            driver.rotate(-45, imuControl);
+
+            sleep(1000);
+
             //Push pixel into place
-            driver.forward(12, 1, 0.6);
+            driver.forward(4, 1, 0.6);
+
+            sleep(1000);
+
             //Go backward after placing pixel
-            driver.forward(19, -1, 0.6);
+            driver.forward(5, -1, 0.6);
+
+            sleep(1000);
+
             //Adjust
-            driver.turn(25, 1, 0.4);
+            //driver.turn(45, 1, 0.4);
+            driver.rotate(45, imuControl);
 
             //Drive forward (meant to go through the middle of the truss)
-            driver.forward(50, 1, 0.7);
-            sleep(2000);
+            driver.forward(28, 1, 0.7);
+            sleep(1000);
             //Go through the middle of the truss
-            driver.turn(60, -1, 0.4);
-            driver.forward(46, 1, 0.7);
-            sleep(3000);
+            //driver.turn(52, -1, 0.4);
+
+
+            goThroughTrussAndFinish(false, true, false);
+            //Turn left for next command
+            //driver.rotate(-45, imuControl);
+
+
+
             //Turn left (position into backdrop)
-            driver.turn(80, -1, 0.4);
-            driver.forward(70, 1, 0.7);
+//            driver.turn(80, -1, 0.4);
+//            driver.forward(70, 1, 0.7);
 
             //Face right
-            driver.turn(60, 1, 0.4);
+//            driver.turn(60, 1, 0.4);
 
         }
 
-        if(rightBeta){
+        if(zone == SpikeLineEnum.RIGHT_SPIKE)
+        {
             //Go forward just enough to turn
             driver.forward(2, 1, 0.6);
-            driver.turn(30, 1, 0.4);
+
+            //face target
+            driver.rotate(30, imuControl);
             //Push pixel into place
-            driver.forward(12, 1, 0.6);
+            driver.forward(14, 1, 0.6);
             //Go backward after placing pixel (for space only)
             driver.forward(3, -1, 0.6);
             sleep(3000);
 
-            //Get out of the way of the pixel
-            driver.turn(30, -1, 0.4);
+            //Rotate for forward position
+            driver.rotate(-25, imuControl);
+            sleep(1000);
+            //strafe left out of the way
+            driver.strafe(5, -1, 0.5, imuControl);
             //Go to the middle
-            driver.forward(17, 1, 0.8);
+            driver.forward(30, 1, 0.8);
+
             sleep(3000);
 
-            //Go to the other side
-            driver.turn(90, -1, 0.4);
-            sleep(3000);
-            //Through the truss
-            driver.forward(20, 1, 0.7);
-            sleep(3000);
+            goThroughTrussAndFinish(false, false, true);
 
-            //Turn left and go to backdrop
-            driver.turn(90, -1, 0.4);
-            driver.forward(15, 1, 0.6);
 
         }
 
     }
 
-    /**
-     * This test rotates in place. Each step has a 3 second pause.
-     * 1.  Rotate right 90 degrees.
-     * 2.  Rotate left 90 degrees.
-     * 3.  Rotate left 180 degrees.
-     * 4.  Rotate right 360 degrees.
-     */
-    public void rotateTest()
-    {
-        double rotateSpeed = 0.5;
+    public void goThroughTrussAndFinish(boolean center, boolean left, boolean right) throws IOException, InterruptedException {
+        int goThroughTrussDistance;
 
-        sleep(3000);
-        driver.turn(90, 1, rotateSpeed);
+        driver.rotate2(-90, imuControl);
+        sleep(1000);
 
-        sleep(3000);
-        driver.turn(90, -1, rotateSpeed);
+        //This goes to the other side
+        if(left){
+            goThroughTrussDistance = 70;
+        } else if(center){
+            goThroughTrussDistance = 80;
+        } else{
+            goThroughTrussDistance = 70;
+        }
 
-        sleep(3000);
-        driver.turn(180, -1, rotateSpeed);
+        driver.forward(goThroughTrussDistance, 1, 0.7);
+        sleep(1000);
 
-        sleep(3000);
-        driver.turn(360, 1, rotateSpeed);
+        //Strafe to position
+        driver.strafe(17, -1, 0.5, imuControl);
+
     }
 
-    /**
-     * This is a sample run that drives in a "O" shape counter clockwise.
-     *
-     */
-    public void aroundyTest()
-    {
-        driver.forward(12 * 4,1,0.8);
-        sleep(100);
-        driver.turn(90, -1, .5);
-        sleep(100);
-        driver.forward(12 * 1.5,1,0.8);
-        sleep(100);
-        driver.turn(90, -1, .5);
-        sleep(100);
-        driver.forward(12 * 4,1,0.8);
-        sleep(100);
-        driver.turn(90, -1, .5);
-        sleep(100);
-        driver.forward(12 * 1.5,1,0.8);
-        sleep(100);
-        driver.turn(90, -1, .5);
-    }
 
 }
-
-

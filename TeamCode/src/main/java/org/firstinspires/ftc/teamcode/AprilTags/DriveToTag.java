@@ -27,15 +27,18 @@ public class DriveToTag
      * @param time The amount of time you want the robot to drive to tag
      * @param target The aprilTag you want to drive to
      * **/
-    public void drive(int time, int target)
+    public void drive(int time, int target, double range, double yaw)
     {
+        elapsedTime.reset();
+        elapsedTime.startTime();
+        while (!aprilTagMaster.aprilTagDetected() && elapsedTime.seconds() < time) {}
+
         if (aprilTagMaster.aprilTagDetected())
         {
-            elapsedTime.startTime();
             while (elapsedTime.seconds() < time)
             {
                 telemetry.addData("Time = ",elapsedTime.seconds() + " seconds");
-                aprilTagMaster.findTag(11, 0, target, telemetry);
+                aprilTagMaster.findTag(range, yaw, target, telemetry);
             }
         }
     }
