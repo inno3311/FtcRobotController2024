@@ -23,6 +23,9 @@ public class LeftRightSuper extends LinearOpMode {
     AprilTagMaster aprilTagMaster;
     InitAprilTags initAprilTags;
     DriveToTag driveToTag;
+    private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
+    private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
+
 
     SpikeLineEnum zone = SpikeLineEnum.UNKNOWN;
 
@@ -79,6 +82,12 @@ public class LeftRightSuper extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+
+        telemetry.addData(""," ");
+        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
+        telemetry.addData("- Position", "%.0f / %.0f", x, y);
+        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
+        telemetry.update();
 
         initAprilTags.initAprilTags(webcam, driver, hardwareMap, telemetry);
         aprilTagMaster = initAprilTags.getAprilTagMaster();

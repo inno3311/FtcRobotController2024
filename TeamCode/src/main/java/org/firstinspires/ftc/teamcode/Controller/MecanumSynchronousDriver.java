@@ -92,6 +92,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
        // Set PID proportional value to produce non-zero correction value when robot veers off
        // straight line. P value controls how sensitive the correction is.
        pidDrive = new PIDController(0.1, 0, 0.001);
+       pidDrive = new PIDController(0.01, 0, 0.001);
 
        pidStrafe = new PIDController(0.00001, 0, 0);
 
@@ -141,8 +142,9 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
 
         pidDrive.setSetpoint(0);
         pidDrive.setOutputRange(0, speed);
-        pidDrive.setInputRange(-5000, 5000);
-//        pidDrive.setTolerance(1.0);
+        pidDrive.setInputRange(0, 500);
+        pidDrive.setTolerance(1);
+//       pidDrive.setContinuous();
         pidDrive.enable();
 
         // Set up parameters for strafe correction.
@@ -162,13 +164,18 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
 
             while (mOpMode.opModeIsActive())
             {
-               int currPosTicks = this.lf.getCurrentPosition();
+               int frontLeftPos, frontRightPos;
+
+               frontLeftPos = this.lf.getCurrentPosition();
+               frontRightPos = this.rf.getCurrentPosition();
+
+               int currPosTicks = (frontLeftPos - frontRightPos) / 2 ;
 
 
                //if the number is positive the bot is slipping right
                //if the number is negative the bot is slipping left
                //lf and rf are added because rf is reverse of lf direction.
-               int wheelDifference = this.lf.getCurrentPosition() + this.rf.getCurrentPosition();
+               int wheelDifference = frontLeftPos + frontRightPos;
 
                // if the number is positive the bot strafed left
                // if the number is negative the bot strafed right
@@ -177,19 +184,29 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
                // Use PID with imu input to drive in a straight line.
                // pos is right turn, neg is left turn
                double correction = pidDrive.performPID(wheelDifference);
-               mOpMode.telemetry.addData("correction ", "correction: " + correction + " wheelDif: " + wheelDifference);
+//log                mOpMode.telemetry.addData("correction ", "correction: " + correction + " wheelDif: " + wheelDifference);
 
                double strafeCorrection = pidStrafe.performPID(strafeDifference);
-               mOpMode.telemetry.addData("strafeCorrection ", "correction: " + strafeCorrection + " strafeDifference: " + strafeDifference);
+//log                mOpMode.telemetry.addData("strafeCorrection ", "correction: " + strafeCorrection + " strafeDifference: " + strafeDifference);
 
                logger.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction);
 
                //this.driveMotors(speed, 0, 0, 1); //run with no PID
-               correction = correction * (speed * 0.33);
-               this.driveMotors(speed, correction * forward, -strafeCorrection, 1); // run with PID
+//               correction = correction * (speed * 0.33);
+               if (pidDrive.onTarget())
+               {
+                  correction = 0;
+               }
+               else
+               {
+                  correction = correction * (speed * 0.2);
+               }
+               this.driveMotors(speed, (correction * forward) + 0.01, -strafeCorrection, 1); // run with PID
 
-               mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
-               mOpMode.telemetry.update();
+//               this.driveMotors(speed, 0, 0, 1);
+
+//log                mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
+//log               mOpMode.telemetry.update();
 
                if (forward == 1)
                {
@@ -523,27 +540,27 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
          directionInt = -1;
       }
 
-      if (degrees == 30)
+//      if (degrees == 30)
+//      {
+//         pidRotateImu = new PIDController(.04, .0001, .067);   // 30 degrees
+//      }
+//      else if (degrees == 45)
+//      {
+//         pidRotateImu = new PIDController(.04, .0001, .067);   // 45 degrees
+//      }
+//      else if (degrees == 90)
+//      {
+//         pidRotateImu = new PIDController(.04, .0001, .11);   // 90 degrees
+//      }
+//      else
       {
-         pidRotateImu = new PIDController(.04, .0001, .067);   // 30 degrees
-      }
-      else if (degrees == 45)
-      {
-         pidRotateImu = new PIDController(.04, .0001, .067);   // 45 degrees
-      }
-      else if (degrees == 90)
-      {
-         pidRotateImu = new PIDController(.04, .0001, .11);   // 90 degrees
-      }
-      else
-      {
-         pidRotateImu = new PIDController(.04, .0001, .067);   // ?? degrees
+         pidRotateImu = new PIDController(.035, .0002, .067);   // ?? degrees
       }
 
       pidRotateImu.reset();
       pidRotateImu.setSetpoint(degrees);
-      pidRotateImu.setInputRange(0, degrees);
-      pidRotateImu.setOutputRange(0.0, 1);
+      pidRotateImu.setInputRange(0, degrees+10);
+      pidRotateImu.setOutputRange(0.15, 1);
       pidRotateImu.setTolerance(.4);
       pidRotateImu.enable();
 
@@ -563,13 +580,13 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
 
          power = pidRotateImu.performPID(Math.abs(currAngle)); // power will be + on left turn.
          this.driveMotors(0, power * directionInt, 0, 1);
-         Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
+//         Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
 
          if (pidRotateImu.onTarget())
          {
             onTargetCount++;
             onTargetCountTotal++;
-            Logging.log("onTargetCount %d", onTargetCount);
+//            Logging.log("onTargetCount %d", onTargetCount);
          }
          else
          {
@@ -581,7 +598,7 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
       while (mOpMode.opModeIsActive() && onTargetCount < 3 && counter < (degrees * 2));
 
       this.driveMotors(0, 0, 0, 1);
-      Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
+      Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f counter: %d", imuControl.getHeading(), power, imuControl.getAngle(),counter);
       Logging.log("completed rotate of angle %f", degrees);
       mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
       mOpMode.telemetry.update();
