@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.TeleOpFunctions.TeleOpFunctionsInheritanceTest;
 
-public class MotorControl extends TeleOpFunctionsInheritanceTest
+public class MotorControl
 {
     private DcMotor motor;
     private String motorName;
