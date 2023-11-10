@@ -23,9 +23,6 @@ public class AutonomousBase extends LinearOpMode {
     AprilTagMaster aprilTagMaster;
     InitAprilTags initAprilTags;
     DriveToTag driveToTag;
-    private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
-    private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
-
 
     SpikeLineEnum zone = SpikeLineEnum.UNKNOWN;
 
@@ -97,11 +94,6 @@ public class AutonomousBase extends LinearOpMode {
 
         //TODO We need to make this work for red side to because red uses targets (AprilTag Ids) 4-6
         //ordinal returns an int +1 because it starts counting at 0
- //       sleep(1000);
-
- //       telemetry.addData("Finished", "");
- //       telemetry.update();
-
     }
 
     public void goToPixel() {
@@ -121,8 +113,6 @@ public class AutonomousBase extends LinearOpMode {
          PlanAlpha or planBeta to follow.
          ***/
 
-        sleep(1000);
-
         //...then calls one of the if statements
 
         //If target is in the center...
@@ -132,10 +122,7 @@ public class AutonomousBase extends LinearOpMode {
             //Go forward to determine whether object is left/center/right
             driver.forward(24, 1, 0.6);
             //Go forward and place pixel
-            //driver.forward(4, 1, 0.5);
-
-            sleep(1000);
-
+            
             //Go backward into position
             driver.forward(19, -1, 0.6);
 
@@ -144,7 +131,6 @@ public class AutonomousBase extends LinearOpMode {
         //If target is on the left...
         else if(zone == SpikeLineEnum.LEFT_SPIKE)
         {
-
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
 
@@ -160,14 +146,14 @@ public class AutonomousBase extends LinearOpMode {
             driver.forward(7, -1, 0.6);
 
             //Adjust
-            //driver.turn(45, 1, 0.4);
             driver.rotate(45, imuControl);
 
             driver.forward(15, -1, 0.5);
 
         }
 
-        else if(zone == SpikeLineEnum.RIGHT_SPIKE){
+        else if(zone == SpikeLineEnum.RIGHT_SPIKE)
+        {
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
 
