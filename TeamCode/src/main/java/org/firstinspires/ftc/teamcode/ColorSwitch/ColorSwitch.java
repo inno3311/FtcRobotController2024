@@ -14,11 +14,18 @@ public class ColorSwitch
     }
 
     /**
-     * Blue team = true
-     * Red team = false
+     * Blue team = 1
+     * Red team = -1
      */
-    public boolean getTeam()
+    public int getTeam()
     {
-        return colorSwitch.getState();
+        if (colorSwitch.getState())
+        {
+            return 1;
+        }
+        else
+        {
+            return -1;
+        }
     }
 }
