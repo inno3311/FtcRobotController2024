@@ -134,7 +134,6 @@ public class AutonomousBase extends LinearOpMode {
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
 
-            //driver.turn(45, -1, 0.4);
             driver.rotate(-45, imuControl);
 
             //Push pixel into place
@@ -159,7 +158,6 @@ public class AutonomousBase extends LinearOpMode {
 
             sleep(1000);
 
-            //driver.turn(45, -1, 0.4);
             driver.rotate(45, imuControl);
 
             sleep(1000);
@@ -175,7 +173,6 @@ public class AutonomousBase extends LinearOpMode {
             sleep(1000);
 
             //Adjust
-            //driver.turn(45, 1, 0.4);
             driver.rotate(-45, imuControl);
 
             driver.forward(15, -1, 0.5);
