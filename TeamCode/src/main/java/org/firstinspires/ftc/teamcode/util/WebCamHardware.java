@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.util;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
-import org.firstinspires.ftc.teamcode.Autonomous.LeftRightSuper;
+import org.firstinspires.ftc.teamcode.Autonomous.AutonomousBase;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
@@ -203,10 +201,10 @@ public class WebCamHardware
       return null;
    }
 
-   public LeftRightSuper.SpikeLineEnum findTarget(double x)
+   public AutonomousBase.SpikeLineEnum findTarget(double x)
    {
       //This is supposed to find the target's position. (Made more sense than writing plain code.)
-      LeftRightSuper.SpikeLineEnum targetPosition = LeftRightSuper.SpikeLineEnum.UNKNOWN; //("targetPosition" means "position of the target", not "goal" position)
+      AutonomousBase.SpikeLineEnum targetPosition = AutonomousBase.SpikeLineEnum.UNKNOWN; //("targetPosition" means "position of the target", not "goal" position)
 
       int leftMaximum = 160;
       int centerMinimum = 161;
@@ -215,17 +213,17 @@ public class WebCamHardware
 
       if(x < leftMaximum)
       {   //Range for left 50-150
-         targetPosition = LeftRightSuper.SpikeLineEnum.LEFT_SPIKE;
+         targetPosition = AutonomousBase.SpikeLineEnum.LEFT_SPIKE;
 
       }
       else if(x > centerMinimum && x <= centerMaximum){
          //Range for the center 160 - 459
-         targetPosition = LeftRightSuper.SpikeLineEnum.CENTER_SPIKE;
+         targetPosition = AutonomousBase.SpikeLineEnum.CENTER_SPIKE;
       }
       else if(x >= rightMinimum)
       {
          //Range for the right
-         targetPosition = LeftRightSuper.SpikeLineEnum.RIGHT_SPIKE;
+         targetPosition = AutonomousBase.SpikeLineEnum.RIGHT_SPIKE;
       }
       else
       {

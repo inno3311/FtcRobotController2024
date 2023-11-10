@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 
 import java.io.IOException;
 
-public class LeftRightSuper extends LinearOpMode {
+public class AutonomousBase extends LinearOpMode {
 
     WebCamHardware webcam;
 
@@ -37,7 +37,7 @@ public class LeftRightSuper extends LinearOpMode {
         UNKNOWN
     }
 
-    public LeftRightSuper() {
+    public AutonomousBase() {
 
     }
 

@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import java.io.IOException;
 @Autonomous(name = "Plan Gamma", group = "Group3311")
-public class planGamma extends LeftRightSuper{
+public class PlanGamma extends AutonomousBase {
 
-    int isBlue = 1;
+    int isBlue = -1;
 
     int DELAY = 500;
 
@@ -24,7 +24,14 @@ public class planGamma extends LeftRightSuper{
         }
 
         sleep(1000);
-        driveToTag.drive(7, zone.ordinal() + 1, 11, 0);
+
+        int wallTarget = 0;
+        if (isBlue == -1)
+        {
+            wallTarget = 3;
+        }
+
+        driveToTag.drive(7, zone.ordinal() + 1 + wallTarget, 11, 0);
 
     }
 
@@ -133,11 +140,13 @@ public class planGamma extends LeftRightSuper{
     public void centerRoute(int isBlue) throws IOException, InterruptedException {
 
         //Go forward to determine whether object is left/center/right
-        driver.forward(24, 1, 0.6);
+        driver.forward(25, 1, 0.6);
         //Go forward and place pixel
         //driver.forward(4, 1, 0.5);
 
         sleep(DELAY);
+
+
 
         //Go backward into position
         driver.forward(3, -1, 0.6);
@@ -152,11 +161,50 @@ public class planGamma extends LeftRightSuper{
 
         sleep(DELAY);
 
-        driver.strafe(3,isBlue,1,imuControl);
+        driver.strafe(2, isBlue,1,imuControl);
+
+        driver.forward(5, 1, 0.3);
     }
 
-    public void wingRoute(int isBlue)
-    {
+    public void wingRoute(int isBlue) throws IOException, InterruptedException {
+        //Go forward just enough to turn
+        driver.forward(17, 1, 0.6);
+        sleep(DELAY);
+
+        //driver.turn(45, -1, 0.4);
+        driver.rotate2(45*isBlue, imuControl);
+
+
+        sleep(DELAY);
+        //Push pixel into place
+        driver.forward(2, 1, 0.6);
+
+        sleep(DELAY);
+
+        //Go backward after placing pixel
+        driver.forward(4, -1, 0.6);
+
+        sleep(DELAY);
+        //Adjust
+        //driver.turn(45, 1, 0.4);
+        driver.rotate2(-135*isBlue, imuControl);
+
+        sleep(DELAY);
+
+        driver.forward(15, 1, 0.5);
+        sleep(1000);
+
+        driver.strafe(12,1 * isBlue, 1, imuControl);
+        sleep(1000);
+
+//        driver.strafe(3, -isBlue,1,imuControl);
+//
+//        sleep(DELAY);
+//        driver.forward(17, 1, 0.5);
+//
+//        sleep(DELAY);
+//
+//        driver.strafe(3,isBlue,1,imuControl);
 
 
     }

@@ -1,20 +1,11 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.AprilTags.AprilTagMaster;
-import org.firstinspires.ftc.teamcode.AprilTags.DriveToTag;
-import org.firstinspires.ftc.teamcode.AprilTags.InitAprilTags;
-import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
-import org.firstinspires.ftc.teamcode.util.ImuHardware;
-import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 
 import java.io.IOException;
 
 @Autonomous(name = "Blue Stage Left", group = "Group3311")
-public class BlueStageLeftLinearOpMode extends LeftRightSuper
+public class BlueStageLeftLinearOpMode extends AutonomousBase
 {
 
     int isBlue = -1;

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import java.io.IOException;
 
 @Autonomous(name = "Blue Stage Right", group = "Group3311")
-public class BlueStageRightLinearOpMode extends LeftRightSuper
+public class BlueStageRightLinearOpMode extends AutonomousBase
 {
 
     @Override
@@ -25,35 +25,6 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
         sleep(1000);
         driveToTag.drive(7, zone.ordinal() + 1, 11, 0);
 
-//        try {
-//         planBeta(zone);
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        //  planAlpha();
-//        break;
-//        case RIGHT_SPIKE:
-//        try {
-//            blueStage.planBeta(zone);
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        break;
-//        case LEFT_SPIKE:
-//        try {
-//            blueStage.planBeta(zone);
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        break;
-//        default:
-//        try {
-//            blueStage.planBeta(zone);
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        break;
-//    }
     }
 
     /**
@@ -112,32 +83,9 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
 
             sleep(1000);
 
-            //Turn left to go through truss
-            //driver.turn(90, -1, 0.4);
-//            driver.rotate(-90, imuControl);
-//
-//            //Go through truss
-//            driver.forward(74, 1, 0.6);
-//
-//            sleep(1000);
-//
-//            //Turn left once through truss for next command
-//            //driver.turn(90, -1, 0.4);
-//            driver.rotate(-90, imuControl);
 
             goThroughTrussAndFinish(false, false, true);
 
-            //Go forward into position
-//            driver.forward(17, 1, 0.8);
-//
-//            sleep(1000);
-//
-//            //Face right and let AprilTag take over
-//            //driver.turn(90, 1, 0.4);
-//            driver.rotate(90, imuControl);
-//
-//            //let apriltag
-//            driver.forward(3, 1, 0.4);
         }
 
         if(zone == SpikeLineEnum.LEFT_SPIKE)
@@ -174,17 +122,7 @@ public class BlueStageRightLinearOpMode extends LeftRightSuper
 
 
             goThroughTrussAndFinish(false, true, false);
-            //Turn left for next command
-            //driver.rotate(-45, imuControl);
 
-
-
-            //Turn left (position into backdrop)
-//            driver.turn(80, -1, 0.4);
-//            driver.forward(70, 1, 0.7);
-
-            //Face right
-//            driver.turn(60, 1, 0.4);
 
         }
 
