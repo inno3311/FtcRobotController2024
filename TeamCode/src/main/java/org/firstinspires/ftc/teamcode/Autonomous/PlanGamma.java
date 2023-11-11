@@ -6,7 +6,7 @@ import java.io.IOException;
 @Autonomous(name = "Plan Gamma", group = "Group3311")
 public class PlanGamma extends AutonomousBase {
 
-    int isBlue = -1;
+    int isBlue = 1;
 
     int DELAY = 500;
 
@@ -53,48 +53,21 @@ public class PlanGamma extends AutonomousBase {
         //If target is on the left...
         else if(zone == SpikeLineEnum.LEFT_SPIKE)
         {
-
             if (isBlue == 1)
             {
                 stageRoute(isBlue);
             }
-            else
+
+        } else if (zone == SpikeLineEnum.RIGHT_SPIKE){
+            if(isBlue == 1)
             {
-                wingRoute(isBlue);
+                stageRoute(isBlue);
 
+           } else if  (isBlue == -1){
+                stageRoute(isBlue);
             }
-        }
-
-        else if(zone == SpikeLineEnum.RIGHT_SPIKE){
-            //Go forward just enough to turn
-            driver.forward(17, 1, 0.6);
-
-            sleep(1000);
-
-            //driver.turn(45, -1, 0.4);
-            driver.rotate(45, imuControl);
-
-            sleep(1000);
-
-            //Push pixel into place
-            driver.forward(6, 1, 0.6);
-
-            sleep(1000);
-
-            //Go backward after placing pixel
-            driver.forward(6, -1, 0.6);
-
-            sleep(1000);
-
-            //Adjust
-            //driver.turn(45, 1, 0.4);
-            driver.rotate(-45, imuControl);
-
-            driver.forward(15, -1, 0.5);
 
         }
-
-
 
     }
 
@@ -102,39 +75,35 @@ public class PlanGamma extends AutonomousBase {
     public void stageRoute(int isBlue) throws IOException, InterruptedException {
         //Go forward just enough to turn
         driver.forward(17, 1, 0.6);
-        sleep(DELAY);
 
-        //driver.turn(45, -1, 0.4);
+        sleep(DELAY);
+        //Turn to place pixel
         driver.rotate2(-45*isBlue, imuControl);
 
 
         sleep(DELAY);
         //Push pixel into place
-        driver.forward(2, 1, 0.6);
+        driver.forward(4, 1, 0.6);
 
         sleep(DELAY);
 
         //Go backward after placing pixel
-        driver.forward(2, -1, 0.6);
-
-
-
+        driver.forward(4, -1, 0.6);
 
         sleep(DELAY);
-        //Adjust
-        //driver.turn(45, 1, 0.4);
+        //Adjust (left)
         driver.rotate2(-45*isBlue, imuControl);
 
         sleep(DELAY);
 
-        driver.strafe(3,-isBlue,1,imuControl);
+        driver.strafe(4, -isBlue, 1, imuControl);
+
+        ///driver.forward(7, 1, 0.5);
+        //sleep(DELAY);
 
         sleep(DELAY);
         driver.forward(17, 1, 0.5);
 
-        sleep(DELAY);
-
-        driver.strafe(3,isBlue,1,imuControl);
     }
 
     public void centerRoute(int isBlue) throws IOException, InterruptedException {
@@ -177,7 +146,7 @@ public class PlanGamma extends AutonomousBase {
 
         sleep(DELAY);
         //Push pixel into place
-        driver.forward(2, 1, 0.6);
+        driver.forward(4, 1, 0.6);
 
         sleep(DELAY);
 

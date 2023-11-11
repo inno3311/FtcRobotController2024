@@ -118,7 +118,6 @@ public class BlueStageRightLinearOpMode extends AutonomousBase
             driver.forward(28, 1, 0.7);
             sleep(1000);
             //Go through the middle of the truss
-            //driver.turn(52, -1, 0.4);
 
 
             goThroughTrussAndFinish(false, true, false);

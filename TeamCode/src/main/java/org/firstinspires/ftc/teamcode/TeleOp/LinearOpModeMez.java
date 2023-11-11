@@ -82,10 +82,10 @@ public class LinearOpModeMez extends LinearOpMode
 
         try
         {
-//            driver.strafe(48, 1, 0.6, imuControl);
-//            sleep(3000);
-//            driver.strafe(48, -1, 0.6, imuControl);
-//            sleep(3000);
+            driver.strafe(48, 1, 0.6, imuControl);
+            sleep(3000);
+            driver.strafe(48, -1, 0.6, imuControl);
+            sleep(3000);
 
             driveStraightTest();
             sleep(10000);
