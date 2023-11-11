@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import java.io.IOException;
 
-@Autonomous(name = "Blue Stage Right", group = "Group3311")
-public class BlueStageRightLinearOpMode extends AutonomousBase
+@Autonomous(name = "Stage Right", group = "Group3311")
+public class StageRightLinearOpMode extends AutonomousBase
 {
 
     @Override
@@ -16,14 +16,19 @@ public class BlueStageRightLinearOpMode extends AutonomousBase
 
         try
         {
-            planBeta(zone);
+            planBeta(zone, isBlue);
         } catch (IOException e)
         {
             e.printStackTrace();
         }
+        int wallTarget = 0;
+        if (isBlue == -1)
+        {
+            wallTarget = 3; //originally 3
+        }
 
         sleep(1000);
-        driveToTag.drive(7, zone.ordinal() + 1, 11, 0);
+        driveToTag.drive(7, zone.ordinal() + 1 + wallTarget, 11, 0);
 
     }
 
@@ -33,7 +38,7 @@ public class BlueStageRightLinearOpMode extends AutonomousBase
      */
     public void planAlpha() throws IOException, InterruptedException
     {
-        planPurple(zone, false);
+        planPurple(zone, isBlue);
         sleep(1000);
 
          //Turn left
@@ -57,10 +62,10 @@ public class BlueStageRightLinearOpMode extends AutonomousBase
     /**
      * There is always a plan B.  ;)
      */
-    public void planBeta(SpikeLineEnum zone) throws IOException, InterruptedException {
+    public void planBeta(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException {
 
 
-//        planPurple(zone, true);
+        planPurple(zone, isBlue);
 
         if(zone == SpikeLineEnum.CENTER_SPIKE){
             //Beta instance if object is in the middle
@@ -74,7 +79,7 @@ public class BlueStageRightLinearOpMode extends AutonomousBase
 
             sleep(1000);
 
-            driver.strafe(12, 1, 0.6, imuControl);
+            driver.strafe(10, isBlue, 0.6, imuControl);
 
             sleep(1000);
 
@@ -84,7 +89,7 @@ public class BlueStageRightLinearOpMode extends AutonomousBase
             sleep(1000);
 
 
-            goThroughTrussAndFinish(false, false, true);
+            goThroughTrussAndFinish(true, false, false, isBlue);
 
         }
 
@@ -95,8 +100,8 @@ public class BlueStageRightLinearOpMode extends AutonomousBase
 
             sleep(1000);
 
-            //driver.turn(45, -1, 0.4);
-            driver.rotate(-45, imuControl);
+            //Turn left to face pixel
+            driver.rotate2(45*isBlue, imuControl);
 
             sleep(1000);
 
@@ -105,14 +110,18 @@ public class BlueStageRightLinearOpMode extends AutonomousBase
 
             sleep(1000);
 
+
             //Go backward after placing pixel
             driver.forward(5, -1, 0.6);
 
             sleep(1000);
 
-            //Adjust
-            //driver.turn(45, 1, 0.4);
-            driver.rotate(45, imuControl);
+            //Adjust (right)
+            driver.rotate(-45*isBlue, imuControl);
+
+
+            //Strafe barely so that robot doesn't run over pixel
+            driver.strafe(0.3, -isBlue, 0.4, imuControl);
 
             //Drive forward (meant to go through the middle of the truss)
             driver.forward(28, 1, 0.7);
@@ -120,45 +129,32 @@ public class BlueStageRightLinearOpMode extends AutonomousBase
             //Go through the middle of the truss
 
 
-            goThroughTrussAndFinish(false, true, false);
+            goThroughTrussAndFinish(false, true, false, isBlue);
 
 
         }
 
         if(zone == SpikeLineEnum.RIGHT_SPIKE)
         {
-            //Go forward just enough to turn
-            driver.forward(2, 1, 0.6);
 
-            //face target
-            driver.rotate(30, imuControl);
-            //Push pixel into place
-            driver.forward(14, 1, 0.6);
-            //Go backward after placing pixel (for space only)
-            driver.forward(3, -1, 0.6);
-            sleep(3000);
-
-            //Rotate for forward position
-            driver.rotate(-25, imuControl);
-            sleep(1000);
-            //strafe left out of the way
-            driver.strafe(5, -1, 0.5, imuControl);
+            //After planPurple code:
+            driver.strafe(5, isBlue, 0.5, imuControl);
             //Go to the middle
-            driver.forward(30, 1, 0.8);
+            driver.forward(26, 1, 0.8);
 
-            sleep(3000);
+            sleep(DELAY);
 
-            goThroughTrussAndFinish(false, false, true);
+            goThroughTrussAndFinish(false, false, true, isBlue);
 
 
         }
 
     }
 
-    public void goThroughTrussAndFinish(boolean center, boolean left, boolean right) throws IOException, InterruptedException {
+    public void goThroughTrussAndFinish(boolean center, boolean left, boolean right, int isBlue) throws IOException, InterruptedException {
         int goThroughTrussDistance;
 
-        driver.rotate2(-90, imuControl);
+        driver.rotate2(-90*isBlue, imuControl);
         sleep(1000);
 
         //This goes to the other side
@@ -167,14 +163,15 @@ public class BlueStageRightLinearOpMode extends AutonomousBase
         } else if(center){
             goThroughTrussDistance = 80;
         } else{
-            goThroughTrussDistance = 70;
+            goThroughTrussDistance = 75;
         }
 
         driver.forward(goThroughTrussDistance, 1, 0.7);
         sleep(1000);
 
         //Strafe to position
-        driver.strafe(17, -1, 0.5, imuControl);
+        driver.strafe(23, -isBlue, 0.5, imuControl);
+
 
     }
 

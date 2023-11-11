@@ -14,6 +14,10 @@ import java.io.IOException;
 
 public class AutonomousBase extends LinearOpMode {
 
+    public int isBlue = -1; //Red is negative!
+
+    public int DELAY = 500;
+
     WebCamHardware webcam;
 
     ImuHardware imuControl;
@@ -97,7 +101,7 @@ public class AutonomousBase extends LinearOpMode {
     }
 
     public void goToPixel() {
-        BlueStageRightLinearOpMode blueStage = new BlueStageRightLinearOpMode();
+        StageRightLinearOpMode blueStage = new StageRightLinearOpMode();
         switch (zone) {
             case CENTER_SPIKE:
                 telemetry.addData("Center detected", "");
@@ -105,8 +109,10 @@ public class AutonomousBase extends LinearOpMode {
         }
     }
 
+
+
     //This is code for controlling what happens if obj
-    public void planPurple(SpikeLineEnum zone, boolean beta) throws IOException, InterruptedException
+    public void planPurple(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException
     {
         /***
          This is the starting code for if the object is on the left/center/right.
@@ -134,7 +140,7 @@ public class AutonomousBase extends LinearOpMode {
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
 
-            driver.rotate(-45, imuControl);
+            driver.rotate2(-45*isBlue, imuControl);
 
             //Push pixel into place
             driver.forward(7, 1, 0.6);
@@ -145,7 +151,7 @@ public class AutonomousBase extends LinearOpMode {
             driver.forward(7, -1, 0.6);
 
             //Adjust
-            driver.rotate(45, imuControl);
+            driver.rotate2(45*isBlue, imuControl);
 
             driver.forward(15, -1, 0.5);
 
@@ -158,7 +164,7 @@ public class AutonomousBase extends LinearOpMode {
 
             sleep(1000);
 
-            driver.rotate(45, imuControl);
+            driver.rotate2(-45*isBlue, imuControl);
 
             sleep(1000);
 
@@ -172,16 +178,13 @@ public class AutonomousBase extends LinearOpMode {
 
             sleep(1000);
 
-            //Adjust
-            driver.rotate(-45, imuControl);
+            //Adjust (left)
+            driver.rotate2(45*isBlue, imuControl);
 
-            driver.forward(15, -1, 0.5);
 
-        }
-
-        if (beta){
 
         }
+
         //Wait for next command...
         sleep(1000);
 

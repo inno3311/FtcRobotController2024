@@ -6,9 +6,7 @@ import java.io.IOException;
 @Autonomous(name = "Plan Gamma", group = "Group3311")
 public class PlanGamma extends AutonomousBase {
 
-    int isBlue = 1;
 
-    int DELAY = 500;
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -57,13 +55,19 @@ public class PlanGamma extends AutonomousBase {
             {
                 stageRoute(isBlue);
             }
-
-        } else if (zone == SpikeLineEnum.RIGHT_SPIKE){
+            else if (isBlue == -1)
+            {
+                wingRoute(isBlue);
+            }
+        }
+        else if (zone == SpikeLineEnum.RIGHT_SPIKE)
+        {
             if(isBlue == 1)
             {
-                stageRoute(isBlue);
-
-           } else if  (isBlue == -1){
+                wingRoute(isBlue);
+            }
+            else if  (isBlue == -1)
+            {
                 stageRoute(isBlue);
             }
 
