@@ -68,17 +68,9 @@ public class StageRightLinearOpMode extends AutonomousBase
         planPurple(zone, isBlue);
 
         if(zone == SpikeLineEnum.CENTER_SPIKE){
-            //Beta instance if object is in the middle
-//
-            //Go forward 25 in
-            driver.forward(24.5, 1, 0.6);
-
+            //After planPurple...
             sleep(1000);
-            //Go backward 12 in for space to turn
-            driver.forward(3, -1, 0.6);
-
-            sleep(1000);
-
+            
             driver.strafe(10, isBlue, 0.6, imuControl);
 
             sleep(1000);
@@ -95,9 +87,7 @@ public class StageRightLinearOpMode extends AutonomousBase
 
         if(zone == SpikeLineEnum.LEFT_SPIKE)
         {
-            //Go forward just enough to turn
-            driver.forward(17, 1, 0.6);
-
+            //After planPurple...
             sleep(1000);
 
             //Turn left to face pixel
