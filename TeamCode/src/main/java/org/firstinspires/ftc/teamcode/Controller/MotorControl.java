@@ -86,8 +86,8 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
 
         if (Math.abs(motorPower) > 0)
         {
-            if (motor.getCurrentPosition() > upperBound && motorPower > 0) {motorBreak();}
-            else if (motor.getCurrentPosition() < lowerBound && motorPower < 0) {motorBreak();}
+            if (transnumerate(motor.getCurrentPosition()) > transnumerate(upperBound) && motorPower > 0) {telemetry.addData("Upper bound break", "");motorBreak();}
+            else if (transnumerate(motor.getCurrentPosition()) < transnumerate(lowerBound) && motorPower < 0) {telemetry.addData("Lower9++ bound break", "");motorBreak();}
             else
             {
                 motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -96,9 +96,9 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
         }
         else if (advanceBreak && motor.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)
         {
-//            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor.setTargetPosition(motor.getCurrentPosition());
-            motor.setPower(1);
+            motor.setPower(0.3);
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
         else if (advanceBreak && motor.getMode() == DcMotor.RunMode.RUN_TO_POSITION) {}
@@ -196,8 +196,16 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
      */
     protected void telemetry()
     {
-        if (hasEncoder) {telemetry.addData(motorName, "Speed: %.2f\n\tEncoder Position: %d", motor.getPower(), motor.getCurrentPosition());}
+        if (hasEncoder) {telemetry.addData(motorName, "Speed: %.2f\nEncoder Position: %d", motor.getPower(), motor.getCurrentPosition());}
         else {telemetry.addData(motorName, "Speed: %.2f", motor.getPower());}
     }
 
+    private int transnumerate(int num)
+    {
+        if (num < 0)
+        {
+            num *= -1;
+        }
+        return 100 + num;
+    }
 }

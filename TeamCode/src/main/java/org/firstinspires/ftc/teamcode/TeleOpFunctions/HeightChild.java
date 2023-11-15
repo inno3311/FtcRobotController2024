@@ -5,14 +5,14 @@ import org.firstinspires.ftc.teamcode.Controller.MotorControl;
 
 public class HeightChild extends MotorControl
 {
-    private final int pixelsOne = -1685;
-    private final int pixelsTwo = -1632;
-    private final int pixelsThree = -1590;
-    private final int pixelsFour = -1537;
-    private final int pixelsFive = -1522;
+    private final int pixelsOne = -2553;
+    private final int pixelsTwo = -2370;
+    private final int pixelsThree = -2310;
+    private final int pixelsFour = -2250;
+    private final int pixelsFive = -2190;
 
-    private final int lowerBound = -1800;
-    private final int upperBound = -10;
+    private final int lowerBound = -1230;
+    private final int upperBound = -2560;
 
     //Constructor calls parent constructor using hardcoded input
     public HeightChild(OpMode opmode)
@@ -30,7 +30,7 @@ public class HeightChild extends MotorControl
 
     private void analogControl()
     {
-        super.analogControl(1, -gamepad2.left_stick_y, lowerBound, upperBound, false);
+        super.analogControl(1, gamepad2.left_stick_y, lowerBound, upperBound, false);
     }
 
     private void encoderDrive()

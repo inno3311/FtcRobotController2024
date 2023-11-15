@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 import java.io.IOException;
 
 @Autonomous(name = "Mez test", group = "Mez")
+@Disabled
 public class LinearOpModeMez extends LinearOpMode
 {
 

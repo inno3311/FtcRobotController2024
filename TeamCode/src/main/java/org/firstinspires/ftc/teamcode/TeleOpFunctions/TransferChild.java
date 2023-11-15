@@ -13,7 +13,7 @@ public class TransferChild extends ServoControl
     }
     Position position;
 
-    private double deliverPosition = 0; // TODO needs assigned
+    private double deliverPosition = 1; // TODO needs assigned
     private double pickupPosition = 0;
 
 
@@ -31,26 +31,8 @@ public class TransferChild extends ServoControl
 
     private void managePosition()
     {
-        if (gamepad2.right_bumper)
-        {
-            if (position == Position.pickup)
-            {
-                position = Position.deliver;
-            }
-            else
-            {
-                position = Position.pickup;
-            }
-        }
-        if (position == Position.pickup)
-        {
-            driveServo(pickupPosition);
-        }
-        else if (position == Position.deliver)
-        {
-            driveServo(deliverPosition);
-        }
-
+        driveServo(1, gamepad2.a);
+        driveServo(0, gamepad2.x);
     }
 
     @Override
