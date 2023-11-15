@@ -36,26 +36,58 @@ public class StageRightLinearOpMode extends AutonomousBase
      * Plan Alpha.  You will design different routes based on what intel the other team provides.
      * We don't want to run into their robot, so we need different plans.
      */
-    public void planAlpha() throws IOException, InterruptedException
+    public void planAlpha(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException
     {
         planPurple(zone, isBlue);
+
+        if(zone == SpikeLineEnum.CENTER_SPIKE){
+            sleep(DELAY);
+
+            //Turn left to go through truss
+            driver.rotate2(90*isBlue, imuControl);
+
+            //Go through truss
+            driver.forward(70, 1, 0.8);
+
+            //Strafe to let AprilTag take over
+            driver.strafe(15, isBlue, 0.5);
+            
+        
+            
+        } else if (zone == SpikeLineEnum.LEFT_SPIKE){
+            
         sleep(1000);
 
          //Turn left
-        driver.rotate(-90, imuControl);
+        driver.rotate2(90 * isBlue, imuControl);
         sleep(1000);
 
         //Go through truss
         driver.forward(60, 1, 0.6);
-        sleep(1000);
-        //Turn right
-        //driver.turn(90, 1, 0.4);
-        driver.rotate(90, imuControl);
+        sleep(DELAY);
+        //Turn right        
+        driver.rotate2(-90 * isBlue, imuControl);
 
         driver.forward(16, 1, 0.5);
 
         //Left and let AprilTag take over
         driver.rotate(-90, imuControl);
+        } else if (zone == SpikeLineEnum.RIGHT_SPIKE){
+            sleep(DELAY);
+
+             //Turn left to go through truss
+            driver.rotate2(90*isBlue, imuControl);
+
+            //Go through truss
+            driver.forward(70, 1, 0.8);
+
+            //Strafe to let AprilTag take over
+            driver.strafe(15, isBlue, 0.5);
+            
+            
+        }
+        
+        
 
     }
 
