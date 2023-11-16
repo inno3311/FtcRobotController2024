@@ -6,21 +6,10 @@ import org.firstinspires.ftc.teamcode.Controller.ServoControl;
 
 public class TransferChild extends ServoControl
 {
-    private enum Position
-    {
-        deliver,
-        pickup
-    }
-    Position position;
-
-    private double deliverPosition = 1; // TODO needs assigned
-    private double pickupPosition = 0;
-
 
     public TransferChild(OpMode opMode)
     {
         super("transfer", Integer.MIN_VALUE, Integer.MAX_VALUE, opMode);
-        position = Position.deliver;
     }
 
     public void transferDrive()

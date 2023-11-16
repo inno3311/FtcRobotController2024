@@ -42,6 +42,19 @@ public class HeightChild extends MotorControl
         encoderControl(pixelsFive, 1, gamepad2.dpad_up);
     }
 
+
+    public void heightDriveSimple()
+    {
+        this.analogControlSimple();
+        this.telemetry();
+    }
+
+    private void analogControlSimple()
+    {
+        super.analogControl(1, gamepad2.left_stick_y);
+    }
+
+
     @Override
     protected void telemetry()
     {
