@@ -206,7 +206,7 @@ public class WebCamHardware
       //This is supposed to find the target's position. (Made more sense than writing plain code.)
       AutonomousBase.SpikeLineEnum targetPosition = AutonomousBase.SpikeLineEnum.UNKNOWN; //("targetPosition" means "position of the target", not "goal" position)
 
-      int leftMaximum = 160;
+      int leftMaximum = 220;
       int centerMinimum = 161;
       int centerMaximum = 459;
       int rightMinimum = 460;
@@ -217,7 +217,7 @@ public class WebCamHardware
 
       }
       else if(x > centerMinimum && x <= centerMaximum){
-         //Range for the center 160 - 459
+         //Range for the center 200 - 459
          targetPosition = AutonomousBase.SpikeLineEnum.CENTER_SPIKE;
       }
       else if(x >= rightMinimum)

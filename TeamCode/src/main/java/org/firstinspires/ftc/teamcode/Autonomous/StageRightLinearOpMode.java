@@ -16,7 +16,7 @@ public class StageRightLinearOpMode extends AutonomousBase
 
         try
         {
-            planBeta(zone, isBlue);
+            planAlpha(zone, isBlue);
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -44,45 +44,49 @@ public class StageRightLinearOpMode extends AutonomousBase
             sleep(DELAY);
 
             //Turn left to go through truss
-            driver.rotate2(90*isBlue, imuControl);
+            driver.rotate2(-90*isBlue, imuControl);
 
             //Go through truss
             driver.forward(70, 1, 0.8);
 
+            sleep(DELAY);
+
             //Strafe to let AprilTag take over
-            driver.strafe(15, isBlue, 0.5);
+            driver.strafe(20, isBlue, 0.5, imuControl);
             
         
             
-        } else if (zone == SpikeLineEnum.LEFT_SPIKE){
+        }
+        else if (zone == SpikeLineEnum.LEFT_SPIKE){
             
         sleep(1000);
 
          //Turn left
-        driver.rotate2(90 * isBlue, imuControl);
-        sleep(1000);
+        driver.rotate2(-90 * isBlue, imuControl);
+        sleep(DELAY);
 
         //Go through truss
-        driver.forward(60, 1, 0.6);
+        driver.forward(70, 1, 0.6);
         sleep(DELAY);
-        //Turn right        
-        driver.rotate2(-90 * isBlue, imuControl);
 
-        driver.forward(16, 1, 0.5);
-
-        //Left and let AprilTag take over
-        driver.rotate(-90, imuControl);
-        } else if (zone == SpikeLineEnum.RIGHT_SPIKE){
+        //Strafe to let AprilTag take over
+        driver.strafe(18, isBlue, 0.5, imuControl);
+        }
+        else if (zone == SpikeLineEnum.RIGHT_SPIKE){
             sleep(DELAY);
 
              //Turn left to go through truss
-            driver.rotate2(90*isBlue, imuControl);
+            driver.rotate2(-90*isBlue, imuControl);
+
+            sleep(DELAY);
 
             //Go through truss
             driver.forward(70, 1, 0.8);
 
+            sleep(DELAY);
+
             //Strafe to let AprilTag take over
-            driver.strafe(15, isBlue, 0.5);
+            driver.strafe(24, isBlue, 0.5,  imuControl);
             
             
         }

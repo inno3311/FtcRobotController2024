@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class AutonomousBase extends LinearOpMode {
 
-    public int isBlue = -1; //Red is negative!
+    public int isBlue = 1; //Red is negative!
 
     public int DELAY = 500;
 
@@ -126,11 +126,11 @@ public class AutonomousBase extends LinearOpMode {
         {
 
             //Go forward to determine whether object is left/center/right
-            driver.forward(24, 1, 0.6);
+            driver.forward(26, 1, 0.6);
             //Go forward and place pixel
             
             //Go backward into position
-            driver.forward(19, -1, 0.6);
+            driver.forward(21, -1, 0.6);
 
         }
 
@@ -140,20 +140,26 @@ public class AutonomousBase extends LinearOpMode {
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
 
+            sleep(DELAY);
+
             driver.rotate2(-45*isBlue, imuControl);
 
             //Push pixel into place
-            driver.forward(7, 1, 0.6);
+            driver.forward(5, 1, 0.6);
 
             sleep(1000);
 
             //Go backward after placing pixel
-            driver.forward(7, -1, 0.6);
+            driver.forward(5, -1, 0.6);
+            sleep(DELAY);
 
-            //Adjust
+
+            //Adjust (right)
             driver.rotate2(45*isBlue, imuControl);
 
-            driver.forward(15, -1, 0.5);
+            sleep(DELAY);
+
+            driver.forward(17, -1, 0.6);
 
         }
 
@@ -164,7 +170,7 @@ public class AutonomousBase extends LinearOpMode {
 
             sleep(1000);
 
-            driver.rotate2(-45*isBlue, imuControl);
+            driver.rotate2(45*isBlue, imuControl);
 
             sleep(1000);
 
@@ -179,7 +185,10 @@ public class AutonomousBase extends LinearOpMode {
             sleep(1000);
 
             //Adjust (left)
-            driver.rotate2(45*isBlue, imuControl);
+            driver.rotate2(-45*isBlue, imuControl);
+
+            //Go back
+            driver.forward(17, -1, 0.6);
 
 
 

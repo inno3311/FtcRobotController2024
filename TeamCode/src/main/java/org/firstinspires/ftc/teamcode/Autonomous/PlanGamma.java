@@ -6,7 +6,9 @@ import java.io.IOException;
 @Autonomous(name = "Plan Gamma", group = "Group3311")
 public class PlanGamma extends AutonomousBase {
 
+    int isBlue = 1;
 
+    int DELAY = 500;
 
     @Override
     public void runOpMode() throws InterruptedException
