@@ -15,7 +15,7 @@ import java.io.IOException;
 public class AutonomousBase extends LinearOpMode {
     final int blue = 1;
     final int red = -1;
-    public int isBlue = blue; //Red is negative!
+    public int isBlue = red; //Red is negative!
 
     public final int DELAY = 500;
 
@@ -198,16 +198,21 @@ public class AutonomousBase extends LinearOpMode {
 
     }
 
-    public void parkRobot(int isBlue) throws IOException, InterruptedException
+    public void parkRobot(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException
     {
 
 
-        driver.strafe(15, -isBlue, 0.6, imuControl, 5);
-//        if(stage) driver.strafe(15, -isBlue, 0.6, imuControl);
-//        else if(center) driver.strafe(24, -isBlue, 0.6, imuControl);
-//        else if (wing)  driver.strafe(26, -isBlue, 0.6, imuControl);
-//
-        driver.forward(4, 1, 0.6, 5);
+        driver.forward(2, -1, 0.6, 5);
+        if(zone == SpikeLineEnum.RIGHT_SPIKE) {
+            if(isBlue == 1) driver.strafe(27, -isBlue, 0.6, imuControl);
+            else if (isBlue == -1) driver.strafe(32, isBlue, 0.6, imuControl, 5);
+        }
+        else if(zone == SpikeLineEnum.CENTER_SPIKE) {
+            driver.strafe(24, -isBlue, 0.6, imuControl);
+        }
+        else if (zone == SpikeLineEnum.LEFT_SPIKE)  driver.strafe(16, -isBlue, 0.6, imuControl);
+
+        driver.forward(8, 1, 0.6, 5);
 
     }
 
