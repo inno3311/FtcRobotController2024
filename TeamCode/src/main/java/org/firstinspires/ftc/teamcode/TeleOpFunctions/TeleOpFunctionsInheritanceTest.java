@@ -9,7 +9,8 @@ public class TeleOpFunctionsInheritanceTest extends OpMode
 {
     MechanicalDriveBase mechanicalDriveBase;
     LinerSlideChild linerSlideChild;
-    TransferChild transferChild;
+    TransferRight transferRight;
+    TransferLeft transferleft;
     HeightChild heightChild;
     IntakeChild intakeChild;
 
@@ -18,7 +19,8 @@ public class TeleOpFunctionsInheritanceTest extends OpMode
     {
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
         linerSlideChild = new LinerSlideChild(this);
-        transferChild = new TransferChild(this);
+        transferRight = new TransferRight(this);
+        transferleft = new TransferLeft(this);
         heightChild = new HeightChild(this);
         intakeChild = new IntakeChild(this);
     }
@@ -27,7 +29,8 @@ public class TeleOpFunctionsInheritanceTest extends OpMode
     public void loop()
     {
         mechanicalDriveBase.gamepadController(gamepad1);
-        transferChild.transferDrive();
+        transferRight.transferDrive();
+        transferleft.transferDrive();
         linerSlideChild.linerSlideDrive();
         heightChild.heightDrive();
         intakeChild.IntakeDrive();
