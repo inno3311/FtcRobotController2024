@@ -159,7 +159,7 @@ public class AutonomousBase extends LinearOpMode {
             driver.rotate2(45*isBlue, imuControl);
 
             sleep(DELAY);
-
+            //Go backward into position
             driver.forward(17, -1, 0.6);
 
         }
