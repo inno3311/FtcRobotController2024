@@ -13,10 +13,11 @@ import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 import java.io.IOException;
 
 public class AutonomousBase extends LinearOpMode {
+    final int blue = 1;
+    final int red = -1;
+    public int isBlue = blue; //Red is negative!
 
-    public int isBlue = 1; //Red is negative!
-
-    public int DELAY = 500;
+    public final int DELAY = 500;
 
     WebCamHardware webcam;
 
@@ -101,7 +102,7 @@ public class AutonomousBase extends LinearOpMode {
     }
 
     public void goToPixel() {
-        StageRightLinearOpMode blueStage = new StageRightLinearOpMode();
+        PlanAlpha blueStage = new PlanAlpha();
         switch (zone) {
             case CENTER_SPIKE:
                 telemetry.addData("Center detected", "");
@@ -126,11 +127,11 @@ public class AutonomousBase extends LinearOpMode {
         {
 
             //Go forward to determine whether object is left/center/right
-            driver.forward(26, 1, 0.6);
+            driver.forward(27, 1, 0.6);
             //Go forward and place pixel
             
             //Go backward into position
-            driver.forward(21, -1, 0.6);
+            driver.forward(22, -1, 0.6);
 
         }
 
@@ -143,7 +144,7 @@ public class AutonomousBase extends LinearOpMode {
 
             sleep(DELAY);
 
-            driver.rotate2(-45*isBlue, imuControl);
+            driver.rotate2(45 * isBlue, imuControl);
 
             //Push pixel into place
             driver.forward(5, 1, 0.6);
@@ -156,7 +157,7 @@ public class AutonomousBase extends LinearOpMode {
 
 
             //Adjust (right)
-            driver.rotate2(45*isBlue, imuControl);
+            driver.rotate2(-45*isBlue, imuControl);
 
             sleep(DELAY);
             //Go backward into position
@@ -169,9 +170,9 @@ public class AutonomousBase extends LinearOpMode {
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
 
-            sleep(1000);
+            sleep(DELAY);
 
-            driver.rotate2(45*isBlue, imuControl);
+            driver.rotate2(-45*isBlue, imuControl);
 
             sleep(1000);
 
@@ -186,17 +187,27 @@ public class AutonomousBase extends LinearOpMode {
             sleep(1000);
 
             //Adjust (left)
-            driver.rotate2(-45*isBlue, imuControl);
+            driver.rotate2(45*isBlue, imuControl);
 
             //Go back
             driver.forward(17, -1, 0.6);
-
-
-
         }
 
         //Wait for next command...
         sleep(1000);
+
+    }
+
+    public void parkRobot(int isBlue) throws IOException, InterruptedException
+    {
+
+
+        driver.strafe(15, -isBlue, 0.6, imuControl, 5);
+//        if(stage) driver.strafe(15, -isBlue, 0.6, imuControl);
+//        else if(center) driver.strafe(24, -isBlue, 0.6, imuControl);
+//        else if (wing)  driver.strafe(26, -isBlue, 0.6, imuControl);
+//
+        driver.forward(4, 1, 0.6, 5);
 
     }
 

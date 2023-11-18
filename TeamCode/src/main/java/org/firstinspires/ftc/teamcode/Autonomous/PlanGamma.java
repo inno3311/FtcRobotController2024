@@ -6,9 +6,12 @@ import java.io.IOException;
 @Autonomous(name = "Plan Gamma", group = "Group3311")
 public class PlanGamma extends AutonomousBase {
 
-    int isBlue = 1;
 
-    int DELAY = 500;
+        boolean wing, center, stage;
+
+//    int isBlue = red;
+//
+//    int DELAY = 500;
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -32,6 +35,14 @@ public class PlanGamma extends AutonomousBase {
         }
 
         driveToTag.drive(7, zone.ordinal() + 1 + wallTarget, 11, 0);
+
+
+        //Park robot
+        try {
+            parkRobot(isBlue);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -108,7 +119,7 @@ public class PlanGamma extends AutonomousBase {
         //sleep(DELAY);
 
         sleep(DELAY);
-        driver.forward(17, 1, 0.5);
+        driver.forward(20, 1, 0.5);
 
     }
 
@@ -119,26 +130,26 @@ public class PlanGamma extends AutonomousBase {
         //Go forward and place pixel
         //driver.forward(4, 1, 0.5);
 
-        sleep(DELAY);
+     //   sleep(DELAY);
 
 
 
         //Go backward into position
         driver.forward(3, -1, 0.6);
 
-        sleep(DELAY);
+       // sleep(DELAY);
 
         driver.rotate2(-90 * isBlue,imuControl);
 
-        sleep(DELAY);
+       // sleep(DELAY);
 
-        driver.forward(20,1,0.6);
+        driver.forward(25,1,0.6);
 
-        sleep(DELAY);
+        //sleep(DELAY);
 
-        driver.strafe(2, isBlue,1,imuControl);
+        driver.strafe(3, isBlue,1, imuControl);
 
-        driver.forward(5, 1, 0.3);
+        driver.forward(7, 1, 0.3);
     }
 
     public void wingRoute(int isBlue) throws IOException, InterruptedException {
