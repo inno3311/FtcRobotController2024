@@ -201,17 +201,19 @@ public class AutonomousBase extends LinearOpMode {
     public void parkRobot(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException
     {
 
-
+        //TODO maybe: Add variables for adding/subtracting for more reusable code
         driver.forward(2, -1, 0.6, 5);
         if(zone == SpikeLineEnum.RIGHT_SPIKE) {
             if(isBlue == 1) driver.strafe(27, -isBlue, 0.6, imuControl);
-            else if (isBlue == -1) driver.strafe(32, isBlue, 0.6, imuControl, 5);
+            else if (isBlue == -1) driver.strafe(32, -isBlue, 0.6, imuControl, 5);
         }
         else if(zone == SpikeLineEnum.CENTER_SPIKE) {
-            driver.strafe(24, -isBlue, 0.6, imuControl);
+            driver.strafe(24, -isBlue, 0.6, imuControl);                
         }
-        else if (zone == SpikeLineEnum.LEFT_SPIKE)  driver.strafe(16, -isBlue, 0.6, imuControl);
-
+        else if (zone == SpikeLineEnum.LEFT_SPIKE){ 
+            if(isBlue == 1) driver.strafe(16, -isBlue, 0.6, imuControl, 5);
+            else if(isBlue == -1) driver.strafe(28, -isBlue, 0.6, imuControl, 5);
+        }
         driver.forward(8, 1, 0.6, 5);
 
     }
