@@ -40,32 +40,18 @@ public class ServoControl
 
     protected void driveServo(double target)
     {
-
-        target = Range.clip(target, minPosition, maxPosition);
-        if (servo.getPosition() != target)
-        {
+        if (servo.getPosition() != target) {
             servo.setPosition(target);
-        }
-        else
-        {
+        } else {
             servo.setPosition(servo.getPosition());
         }
-
     }
 
     protected void driveServo(double target, boolean argument)
     {
         if (argument)
         {
-            target = Range.clip(target, minPosition, maxPosition);
-            if (servo.getPosition() != target)
-            {
-                servo.setPosition(target);
-            }
-            else
-            {
-                servo.setPosition(servo.getPosition());
-            }
+            driveServo(target);
         }
     }
 
@@ -73,21 +59,14 @@ public class ServoControl
     {
         if (argument > 0.25)
         {
-            target = Range.clip(target, minPosition, maxPosition);
-            if (servo.getPosition() != target)
-            {
-                servo.setPosition(target);
-            }
-            else
-            {
-                servo.setPosition(servo.getPosition());
-            }
+            driveServo(target);
         }
     }
 
     protected void telemetry()
     {
-        telemetry.addData(servoName, "minPosition: %.2f\n\tmaxPosition: %.2f", minPosition, maxPosition);
+        telemetry.addData(servoName, "minPosition: %.2f\n" +
+                "\tmaxPosition: %.2f", minPosition, maxPosition);
     }
 
 }
