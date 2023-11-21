@@ -4,13 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Controller.ServoControl;
 
-public class TransferChild extends ServoControl
+public class TransferRight extends ServoControl
 {
 
-    public TransferChild(OpMode opMode)
+    public TransferRight(OpMode opMode)
     {
-        super("transfer", Integer.MIN_VALUE
-                , Integer.MAX_VALUE, opMode);
+        super("transferRight", 0, 0, opMode);
     }
 
     public void transferDrive()
@@ -21,8 +20,8 @@ public class TransferChild extends ServoControl
 
     private void managePosition()
     {
-        driveServo(1, gamepad2.a);
-        driveServo(0, gamepad2.x);
+        driveServo(0, gamepad2.a);
+        driveServo(1, gamepad2.x);
     }
 
     @Override

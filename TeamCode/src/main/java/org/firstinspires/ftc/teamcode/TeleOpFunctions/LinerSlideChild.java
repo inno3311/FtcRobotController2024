@@ -8,14 +8,13 @@ public class LinerSlideChild extends MotorControl
     private final int resetPosition = -10;
     private final int upperPosition = -1000;
 
-    private final int lowerBounds = -10;
+    private final int lowerBounds = 0;
     private final int upperBounds = -1700;
 
     //Constructor calls parent constructor using hardcoded input
     public LinerSlideChild(OpMode opMode)
     {
-        super("slide", true,
-                true, opMode);
+        super("slide", true, true, opMode);
     }
     //Calls all methods and then is called in the OpMode loop
     public void linerSlideDrive()
@@ -24,18 +23,18 @@ public class LinerSlideChild extends MotorControl
         this.analogControl();
         this.telemetry();
     }
+
     private void analogControl()
     {
-        super.analogControl(0.7, gamepad2.right_stick_y,
-                lowerBounds, upperBounds, false);
+        super.analogControl(0.7, gamepad2.right_stick_y, lowerBounds, upperBounds, true);
     }
+
     private void encoderDrive()
     {
         encoderControl(resetPosition, 0.5, gamepad2.b);
         encoderControl(upperPosition, 0.5, gamepad2.y);
     }
-    @Override
-    protected void telemetry() {super.telemetry();}
+
 
     public void linerSlideDriveSimple()
     {
@@ -48,5 +47,11 @@ public class LinerSlideChild extends MotorControl
         super.analogControl(0.7, gamepad2.right_stick_y);
     }
 
+
+    @Override
+    protected void telemetry()
+    {
+        super.telemetry();
+    }
 
 }
