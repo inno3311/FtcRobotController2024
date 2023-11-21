@@ -9,7 +9,8 @@ public class TransferChild extends ServoControl
 
     public TransferChild(OpMode opMode)
     {
-        super("transfer", Integer.MIN_VALUE, Integer.MAX_VALUE, opMode);
+        super("transfer", Integer.MIN_VALUE
+                , Integer.MAX_VALUE, opMode);
     }
 
     public void transferDrive()

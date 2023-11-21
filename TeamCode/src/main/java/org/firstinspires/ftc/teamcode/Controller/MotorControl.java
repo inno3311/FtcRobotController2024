@@ -76,10 +76,13 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
      *
      * @param speedLimit Put's restriction on how fast the motor can spin
      * @param input which gamepad float value that will mak this spin
-     * @param lowerBound Motor will not spin past this bound at negative power (must have encoder to use this feature)
-     * @param upperBound Motor will not spin past this bound at positive power(must have encoder to use this feature)
+     * @param lowerBound Motor will not spin past this bound at
+     *                   negative power (must have encoder to use this feature)
+     * @param upperBound Motor will not spin past this bound at
+     *                   positive power(must have encoder to use this feature)
      */
-    protected void analogControl(double speedLimit, double input, int lowerBound, int upperBound, boolean advanceBreak)
+    protected void analogControl(double speedLimit, double input, int lowerBound,
+                                 int upperBound, boolean advanceBreak)
     {
         double motorPower = input;
         motorPower = Range.clip(motorPower, -speedLimit, speedLimit);
@@ -116,12 +119,12 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
         if (argument1)
         {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motor.setPower(speed);
+            run(speed);
         }
         else if (argument2)
         {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motor.setPower(-speed);
+            run(-speed);
         }
         else {motorBreak();}
     }
@@ -136,10 +139,7 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
     {
         if (argument)
         {
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motor.setTargetPosition(target);
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motor.setPower(speed);
+            encoderControl(target, speed);
         }
     }
 
@@ -152,10 +152,7 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
     {
         if (Math.abs(argument) > 0.2)
         {
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motor.setTargetPosition(target);
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motor.setPower(speed);
+            encoderControl(target, speed);
         }
     }
 
@@ -163,7 +160,7 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
      * @param target Target location that the motor will move to
      * @param speed The speed at which the motor will spin
      */
-    protected void encoderControlAutonomous(int target, double speed)
+    protected void encoderControl(int target, double speed)
     {
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setTargetPosition(target);
@@ -172,7 +169,7 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
     }
 
     /**
-     * Used for autonomous motors that just need to spin call break to stop
+     * for motors that just need to spin call break to stop
      * @param speed
      */
     protected void run(double speed)
@@ -196,8 +193,11 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
      */
     protected void telemetry()
     {
-        if (hasEncoder) {telemetry.addData(motorName, "Speed: %.2f\nEncoder Position: %d", motor.getPower(), motor.getCurrentPosition());}
-        else {telemetry.addData(motorName, "Speed: %.2f", motor.getPower());}
+        if (hasEncoder) {telemetry.addData(motorName,
+                "Speed: %.2f\nEncoder Position: %d",
+                motor.getPower(), motor.getCurrentPosition());}
+        else {telemetry.addData(motorName,
+                "Speed: %.2f", motor.getPower());}
     }
 
     private int transnumerate(int num)
