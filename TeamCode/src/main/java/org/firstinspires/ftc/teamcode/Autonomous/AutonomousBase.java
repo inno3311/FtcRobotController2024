@@ -19,8 +19,6 @@ public class AutonomousBase extends LinearOpMode {
 
     public final int DELAY = 500;
 
-    public boolean aprilTagDetected;
-
     WebCamHardware webcam;
 
     ImuHardware imuControl;
@@ -234,24 +232,24 @@ public class AutonomousBase extends LinearOpMode {
         if(zone == SpikeLineEnum.CENTER_SPIKE)
         {
             if(isBlue == 1) {
-                if(aprilTagDetected) driver.forward(8, 1, defaultSpeed, defaultWaitTime);
-                else driver.forward(11, 1, defaultSpeed, defaultWaitTime);
+                // driver.forward(8, 1, defaultSpeed, defaultWaitTime);
+                 driver.forward(11, 1, defaultSpeed, defaultWaitTime);
             }
             else if (isBlue == -1)
             {
-                if(aprilTagDetected) driver.forward(8, 1, defaultSpeed, defaultWaitTime);
-                else driver.forward(12, 1, defaultSpeed, defaultWaitTime);
+               // driver.forward(8, 1, defaultSpeed, defaultWaitTime);
+                 driver.forward(12, 1, defaultSpeed, defaultWaitTime);
             }
 
         } else if(zone == SpikeLineEnum.LEFT_SPIKE){
 
             if(isBlue == 1){
-                if(aprilTagDetected) driver.forward(8, 1, defaultSpeed, defaultWaitTime);
-                else driver.forward(10, 1, defaultSpeed, defaultWaitTime);
+                // driver.forward(8, 1, defaultSpeed, defaultWaitTime);
+                 driver.forward(10, 1, defaultSpeed, defaultWaitTime);
             }
             else if(isBlue == -1){
-                if(aprilTagDetected) driver.forward(8, 1, defaultSpeed, defaultWaitTime);
-                else driver.forward(11, 1, defaultSpeed, defaultWaitTime);
+                // driver.forward(8, 1, defaultSpeed, defaultWaitTime);
+                 driver.forward(11, 1, defaultSpeed, defaultWaitTime);
             }
 
         } else if(zone == SpikeLineEnum.RIGHT_SPIKE){

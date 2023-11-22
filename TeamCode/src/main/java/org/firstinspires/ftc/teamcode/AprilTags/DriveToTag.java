@@ -37,7 +37,6 @@ public class DriveToTag
 
         if (aprilTagMaster.aprilTagDetected())
         {
-            autonomousBase.aprilTagDetected = true;
             telemetry.addData("AprilTag detected", "AprilTag");
             while (elapsedTime.seconds() < time)
             {
