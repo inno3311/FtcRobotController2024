@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.AprilTags;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Autonomous.AutonomousBase;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 
 //Further tuning in AprilTagMaster.java to come, I sure of it
 public class DriveToTag
 {
+    AutonomousBase autonomousBase;
     HardwareMap hardwareMap;
     Telemetry telemetry;
     ElapsedTime elapsedTime;
@@ -35,6 +37,8 @@ public class DriveToTag
 
         if (aprilTagMaster.aprilTagDetected())
         {
+            autonomousBase.aprilTagDetected = true;
+            telemetry.addData("AprilTag detected", "AprilTag");
             while (elapsedTime.seconds() < time)
             {
                 telemetry.addData("Time = ",elapsedTime.seconds() + " seconds");

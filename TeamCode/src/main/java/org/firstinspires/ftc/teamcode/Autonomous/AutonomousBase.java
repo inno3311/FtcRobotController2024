@@ -19,6 +19,8 @@ public class AutonomousBase extends LinearOpMode {
 
     public final int DELAY = 500;
 
+    public boolean aprilTagDetected;
+
     WebCamHardware webcam;
 
     ImuHardware imuControl;
@@ -201,20 +203,62 @@ public class AutonomousBase extends LinearOpMode {
     public void parkRobot(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException
     {
 
+        double defaultSpeed = 0.6;
+        int defaultWaitTime = 5;
+
         //TODO maybe: Add variables for adding/subtracting for more reusable code
-        driver.forward(2, -1, 0.6, 5);
-        if(zone == SpikeLineEnum.RIGHT_SPIKE) {
-            if(isBlue == 1) driver.strafe(27, -isBlue, 0.6, imuControl);
-            else if (isBlue == -1) driver.strafe(32, -isBlue, 0.6, imuControl, 5);
+        driver.forward(2, -1, defaultSpeed, 5);
+        if(zone == SpikeLineEnum.RIGHT_SPIKE)
+        {
+
+            if(isBlue == 1) driver.strafe(27, -isBlue, defaultSpeed, imuControl);
+            else if (isBlue == -1) driver.strafe(32, isBlue, defaultSpeed, imuControl, 5);
+
         }
         else if(zone == SpikeLineEnum.CENTER_SPIKE) {
-            driver.strafe(24, -isBlue, 0.6, imuControl);                
+            //if(isBlue == 1)
+                if(blue ==1) driver.strafe(25, -isBlue, defaultSpeed, imuControl);
+                else if (isBlue == -1){
+                    driver.strafe(24, -isBlue, defaultSpeed, imuControl);
+                    driver.rotate2(5, imuControl, 3);
+                }
         }
-        else if (zone == SpikeLineEnum.LEFT_SPIKE){ 
-            if(isBlue == 1) driver.strafe(16, -isBlue, 0.6, imuControl, 5);
-            else if(isBlue == -1) driver.strafe(28, -isBlue, 0.6, imuControl, 5);
+        else if (zone == SpikeLineEnum.LEFT_SPIKE)
+        {
+
+            if(isBlue == 1) driver.strafe(16, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
+            else if(isBlue == -1) driver.strafe(28, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
+
         }
-        driver.forward(8, 1, 0.6, 5);
+
+        if(zone == SpikeLineEnum.CENTER_SPIKE)
+        {
+            if(isBlue == 1) {
+                if(aprilTagDetected) driver.forward(8, 1, defaultSpeed, defaultWaitTime);
+                else driver.forward(11, 1, defaultSpeed, defaultWaitTime);
+            }
+            else if (isBlue == -1)
+            {
+                if(aprilTagDetected) driver.forward(8, 1, defaultSpeed, defaultWaitTime);
+                else driver.forward(12, 1, defaultSpeed, defaultWaitTime);
+            }
+
+        } else if(zone == SpikeLineEnum.LEFT_SPIKE){
+
+            if(isBlue == 1){
+                if(aprilTagDetected) driver.forward(8, 1, defaultSpeed, defaultWaitTime);
+                else driver.forward(10, 1, defaultSpeed, defaultWaitTime);
+            }
+            else if(isBlue == -1){
+                if(aprilTagDetected) driver.forward(8, 1, defaultSpeed, defaultWaitTime);
+                else driver.forward(11, 1, defaultSpeed, defaultWaitTime);
+            }
+
+        } else if(zone == SpikeLineEnum.RIGHT_SPIKE){
+
+            if(isBlue == 1) driver.forward(10, 1, defaultSpeed, defaultWaitTime);
+
+        }else driver.forward(8, 1, defaultSpeed, defaultWaitTime);
 
     }
 
