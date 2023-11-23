@@ -206,4 +206,9 @@ public class MotorControl extends TeleOpFunctionsInheritanceTest
     {
         return motor.getCurrentPosition();
     }
+
+    protected boolean isBusy()
+    {
+        return motor.isBusy();
+    }
 }
