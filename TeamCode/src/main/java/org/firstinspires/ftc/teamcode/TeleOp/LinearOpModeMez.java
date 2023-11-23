@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.AprilTags.AprilTagMaster;
@@ -14,10 +13,8 @@ import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 import org.firstinspires.ftc.teamcode.IMU.IMUControl;
 import org.firstinspires.ftc.teamcode.util.ImuHardware;
-import org.firstinspires.ftc.teamcode.util.Logging;
 import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-
 import java.io.IOException;
 import java.lang.annotation.ElementType;
 
