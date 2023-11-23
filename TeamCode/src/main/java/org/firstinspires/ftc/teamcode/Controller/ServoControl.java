@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class ServoControl
 {
-    Servo servo;
+    private Servo servo;
     private String servoName;
     double minPosition, maxPosition;
 
@@ -40,9 +40,12 @@ public class ServoControl
 
     protected void driveServo(double target)
     {
-        if (servo.getPosition() != target) {
+        if (servo.getPosition() != target)
+        {
             servo.setPosition(target);
-        } else {
+        }
+        else
+        {
             servo.setPosition(servo.getPosition());
         }
     }

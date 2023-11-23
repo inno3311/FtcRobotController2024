@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.Controller.MotorControl;
 public class HeightChild extends MotorControl
 {
 
-    private final int lowerBound = -1230;
+    private final int lowerBound = -1500;
     private final int upperBound = -2555;
 
     //Constructor calls parent constructor using hardcoded input
@@ -25,7 +25,7 @@ public class HeightChild extends MotorControl
 
     private void analogControl()
     {
-        super.analogControl(1, gamepad2.left_stick_y, lowerBound, upperBound, false);
+        super.analogControl(1, gamepad2.left_stick_y, false, lowerBound, upperBound);
     }
 
     private void encoderDrive()
@@ -41,9 +41,8 @@ public class HeightChild extends MotorControl
 
     private void analogControlSimple()
     {
-        super.analogControl(1, gamepad2.left_stick_y);
+        super.analogControl(1, gamepad2.left_stick_y,false);
     }
-
 
     @Override
     protected void telemetry()
@@ -51,4 +50,9 @@ public class HeightChild extends MotorControl
         super.telemetry();
     }
 
+    @Override
+    protected int getMotorPosition()
+    {
+        return super.getMotorPosition();
+    }
 }
