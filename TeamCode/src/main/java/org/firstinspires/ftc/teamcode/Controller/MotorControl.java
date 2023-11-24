@@ -57,16 +57,24 @@ public class MotorControl
      * @param speedLimit Put's restriction on how fast the motor can spin
      * @param input which gamepad float value that will mak this spin
      */
-    protected void analogControl(double speedLimit, double input)
+    protected void analogControl(double speedLimit, double input, boolean advanceBreak)
     {
-        double slidePower = input;
-        Range.clip(slidePower, -speedLimit, speedLimit);
+        double motorPower = input;
+        motorPower = Range.clip(motorPower, -speedLimit, speedLimit);
 
-        if (Math.abs(slidePower) > 0)
+        if (Math.abs(motorPower) > 0)
         {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motor.setPower(slidePower);
+            motor.setPower(motorPower);
         }
+        else if (advanceBreak && motor.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)
+        {
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor.setTargetPosition(motor.getCurrentPosition());
+            motor.setPower(0.3);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+        else if (advanceBreak && motor.getMode() == DcMotor.RunMode.RUN_TO_POSITION) {}
         else {motorBreak();}
 
     }
@@ -79,26 +87,26 @@ public class MotorControl
      * @param lowerBound Motor will not spin past this bound at negative power (must have encoder to use this feature)
      * @param upperBound Motor will not spin past this bound at positive power(must have encoder to use this feature)
      */
-    protected void analogControl(double speedLimit, double input, int lowerBound, int upperBound, boolean advanceBreak)
+    protected void analogControl(double speedLimit, double input, boolean advanceBreak, int lowerBound, int upperBound)
     {
-        double slidePower = input;
-        Range.clip(slidePower, -speedLimit, speedLimit);
+        double motorPower = input;
+        motorPower = Range.clip(motorPower, -speedLimit, speedLimit);
 
-        if (Math.abs(slidePower) > 0)
+        if (Math.abs(motorPower) > 0)
         {
-            if (motor.getCurrentPosition() > upperBound && slidePower > 0) {motorBreak();}
-            else if (motor.getCurrentPosition() < lowerBound && slidePower < 0) {motorBreak();}
+            if (100 + Math.abs(motor.getCurrentPosition()) > 100 + Math.abs(upperBound) && motorPower > 0) {telemetry.addData("Upper bound break", "");motorBreak();}
+            else if (100 + Math.abs(motor.getCurrentPosition()) < 100 + Math.abs(lowerBound) && motorPower < 0) {telemetry.addData("Lower bound break", "");motorBreak();}
             else
             {
                 motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                motor.setPower(slidePower);
+                motor.setPower(motorPower);
             }
         }
         else if (advanceBreak && motor.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)
         {
-//            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor.setTargetPosition(motor.getCurrentPosition());
-            motor.setPower(1);
+            motor.setPower(0.3);
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
         else if (advanceBreak && motor.getMode() == DcMotor.RunMode.RUN_TO_POSITION) {}
@@ -116,12 +124,12 @@ public class MotorControl
         if (argument1)
         {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motor.setPower(speed);
+            run(speed);
         }
         else if (argument2)
         {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motor.setPower(-speed);
+            run(-speed);
         }
         else {motorBreak();}
     }
@@ -136,10 +144,7 @@ public class MotorControl
     {
         if (argument)
         {
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motor.setTargetPosition(target);
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motor.setPower(speed);
+            encoderControl(target, speed);
         }
     }
 
@@ -152,10 +157,7 @@ public class MotorControl
     {
         if (Math.abs(argument) > 0.2)
         {
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motor.setTargetPosition(target);
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motor.setPower(speed);
+            encoderControl(target, speed);
         }
     }
 
@@ -163,7 +165,7 @@ public class MotorControl
      * @param target Target location that the motor will move to
      * @param speed The speed at which the motor will spin
      */
-    protected void encoderControlAutonomous(int target, double speed)
+    protected void encoderControl(int target, double speed)
     {
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setTargetPosition(target);
@@ -172,8 +174,8 @@ public class MotorControl
     }
 
     /**
-     * Used for autonomous motors that just need to spin call break to stop
-     * @param speed
+     * for motors that just need to spin call break to stop
+     * @param speed speed you want the motor to spin
      */
     protected void run(double speed)
     {
@@ -196,8 +198,17 @@ public class MotorControl
      */
     protected void telemetry()
     {
-        telemetry.addData(motorName, "Speed: %.2f", motor.getPower());
-        if (hasEncoder) {telemetry.addData(motorName, "Encoder Position: %d", motor.getCurrentPosition());}
+        if (hasEncoder) {telemetry.addData(motorName, "Speed: %.2f\n\tEncoder Position: %d", motor.getPower(), motor.getCurrentPosition());}
+        else {telemetry.addData(motorName, "Speed: %.2f", motor.getPower());}
     }
 
+    protected int getMotorPosition()
+    {
+        return motor.getCurrentPosition();
+    }
+
+    protected boolean isBusy()
+    {
+        return motor.isBusy();
+    }
 }

@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  * MecanumSynchronousDriver serves as an interface to the drive motors giving the user directional
  * methods to command the bot.  The movements are backed up by PID controller to ensure the bot
- * stays on cource.  This class is intended to be used by autonomous programs.
+ * stays on course.  This class is intended to be used by autonomous programs.
  */
 public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
 {

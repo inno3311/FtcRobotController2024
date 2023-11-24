@@ -2,15 +2,16 @@ package org.firstinspires.ftc.teamcode.TeleOpFunctions;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 
-@TeleOp(name = "TeleOp", group = "TeleOp")
-public class TeleOpFunctionsInheritanceTest extends OpMode
+@TeleOp(name = "Simple TeleOp", group = "TeleOp")
+public class TeleOpSimple extends OpMode
 {
     MechanicalDriveBase mechanicalDriveBase;
     LinerSlideChild linerSlideChild;
     TransferRight transferRight;
-    TransferLeft transferleft;
+    TransferLeft transferLeft;
     HeightChild heightChild;
     IntakeChild intakeChild;
 
@@ -20,7 +21,7 @@ public class TeleOpFunctionsInheritanceTest extends OpMode
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
         linerSlideChild = new LinerSlideChild(this);
         transferRight = new TransferRight(this);
-        transferleft = new TransferLeft(this);
+        transferLeft = new TransferLeft(this);
         heightChild = new HeightChild(this);
         intakeChild = new IntakeChild(this);
     }
@@ -29,11 +30,10 @@ public class TeleOpFunctionsInheritanceTest extends OpMode
     public void loop()
     {
         mechanicalDriveBase.gamepadController(gamepad1);
+        linerSlideChild.linerSlideDriveSimple();
         transferRight.transferDrive();
-        transferleft.transferDrive();
-        linerSlideChild.linerSlideDrive();
-        heightChild.heightDrive();
+        transferLeft.transferDrive();
+        heightChild.heightDriveSimple();
         intakeChild.IntakeDrive();
     }
-
 }
