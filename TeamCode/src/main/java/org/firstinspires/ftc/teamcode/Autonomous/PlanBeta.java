@@ -35,14 +35,9 @@ public class PlanBeta extends AutonomousBase{
      */
     public void planBeta(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException {
 
-
-        //planPurple(zone, isBlue);
-
         if (zone == SpikeLineEnum.CENTER_SPIKE) {
             //Go forward and place pixel
             driver.forward(26, 1, 0.6);
-
-            
 
             //Go back so that robot lets go of pixel
             driver.forward(4, -1, 0.5);
@@ -50,47 +45,36 @@ public class PlanBeta extends AutonomousBase{
             //Strafe to left
             driver.strafe(10, isBlue, 0.6, imuControl);
 
-              
-
             //Continue to go into position
             driver.forward(29, 1, 0.6);
-            
 
             goThroughTrussAndFinish(true, false, false, isBlue);
 
         }
-
         if (zone == SpikeLineEnum.LEFT_SPIKE) {
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
-
             
             //Turn left to face pixel
             driver.rotate2(45 * isBlue, imuControl);
 
-            
             //Push pixel into place
             driver.forward(4, 1, 0.6);
 
-            
             //Go backward after placing pixel
             driver.forward(5, -1, 0.6);
-            
 
             //Adjust (right)
             driver.rotate(-45 * isBlue, imuControl);
-
 
             //Strafe barely so that robot doesn't run over pixel
             driver.strafe(0.3, -isBlue, 0.4, imuControl);
 
             //Drive forward (meant to go through the middle of the truss)
             driver.forward(27.5, 1, 0.7);
-
             
             //Go through the middle of the truss
             goThroughTrussAndFinish(false, true, false, isBlue);
-
 
         }
 
@@ -98,15 +82,12 @@ public class PlanBeta extends AutonomousBase{
 
             //Go forward
             driver.forward(17, 1, 0.6);
-
            
             //Turn (right) to place pixel
             driver.rotate2(-45 * isBlue, imuControl);
-
           
             //Place pixel
             driver.forward(5, 1, 0.6);
-          
 
             //Go back
             driver.forward(5, -1, 0.6);
@@ -119,7 +100,6 @@ public class PlanBeta extends AutonomousBase{
 
             //Go to the middle
             driver.forward(25.5, 1, 0.8);
-             
 
             goThroughTrussAndFinish(false, false, true, isBlue);
 
