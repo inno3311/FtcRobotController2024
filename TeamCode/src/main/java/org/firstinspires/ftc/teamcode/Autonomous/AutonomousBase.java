@@ -24,7 +24,7 @@ public class AutonomousBase extends LinearOpMode {
     ImuHardware imuControl;
 
     /** Drive control */
-    MecanumSynchronousDriver driver;
+    protected MecanumSynchronousDriver driver;
     AprilTagMaster aprilTagMaster;
     InitAprilTags initAprilTags;
     DriveToTag driveToTag;

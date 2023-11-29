@@ -130,7 +130,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
 
        pidRotateOd = new PIDController(.0003, .0000002, .000);  // 180 ok... kinda
 
-       Logging.setup();
+//       Logging.setup();
        Logging.log("Starting MecanumSynchronousDriver Logging");
     }
 
@@ -219,12 +219,12 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
 
                if (forward == 1)
                {
-                  if (currPosTicks > leftFrontPos)
+                  if (currPosTicks < leftFrontPos)
                      break;
                }
                else
                {
-                  if (currPosTicks < leftFrontPos)
+                  if (currPosTicks > leftFrontPos)
                      break;
                }
             }
@@ -245,7 +245,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
      */
     public void forward(double target, int forward, double speed)
     {
-        time.startTime();
+//        time.startTime();
 
         this.resetEncoders();
         resetRunMode();
@@ -294,10 +294,10 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
                 // Use PID with imu input to drive in a straight line.
                 // pos is right turn, neg is left turn
                 double correction = pidDrive.performPID(wheelDifference);
-//log                mOpMode.telemetry.addData("correction ", "correction: " + correction + " wheelDif: " + wheelDifference);
+                mOpMode.telemetry.addData("correction ", "correction: " + correction + " wheelDif: " + wheelDifference);
 
                 double strafeCorrection = pidStrafe.performPID(strafeDifference);
-//log                mOpMode.telemetry.addData("strafeCorrection ", "correction: " + strafeCorrection + " strafeDifference: " + strafeDifference);
+                //mOpMode.telemetry.addData("strafeCorrection ", "correction: " + strafeCorrection + " strafeDifference: " + strafeDifference);
 
                 logger.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction);
 
@@ -315,8 +315,8 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
 
 //               this.driveMotors(speed, 0, 0, 1);
 
-//log                mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
-//log               mOpMode.telemetry.update();
+                mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
+               mOpMode.telemetry.update();
 
                 if (forward == 1)
                 {

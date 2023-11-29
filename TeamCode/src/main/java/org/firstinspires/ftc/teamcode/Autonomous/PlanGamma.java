@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.util.Logging;
+
 import java.io.IOException;
-@Autonomous(name = "Plan Gamma", group = "Group3311")
+@Autonomous(name = "PlanGamma2", group = "Group3311")
 public class PlanGamma extends AutonomousBase {
 
 
@@ -16,6 +18,14 @@ public class PlanGamma extends AutonomousBase {
     @Override
     public void runOpMode() throws InterruptedException
     {
+
+        try {
+            Logging.setup();
+            Logging.log("Starting Logging for PlanGamma2");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         super.runOpMode();
 
         try
