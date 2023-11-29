@@ -8,8 +8,7 @@ import java.io.IOException;
 @Autonomous(name = "PlanGamma2", group = "Group3311")
 public class PlanGamma extends AutonomousBase {
 
-
-        boolean wing, center, stage;
+      boolean wing, center, stage;
 
 //    int isBlue = red;
 //
@@ -36,7 +35,6 @@ public class PlanGamma extends AutonomousBase {
             e.printStackTrace();
         }
 
-        sleep(1000);
 
         int wallTarget = 0;
         if (isBlue == -1)
@@ -60,9 +58,6 @@ public class PlanGamma extends AutonomousBase {
      * There is always a plan B.  ;)
      */
     public void planGamma(SpikeLineEnum zone) throws IOException, InterruptedException {
-
-
-        //...then calls one of the if statements
 
         //If target is in the center...
         if(zone == SpikeLineEnum.CENTER_SPIKE)
@@ -98,98 +93,70 @@ public class PlanGamma extends AutonomousBase {
 
     }
 
-//Left
+    //Left
     public void stageRoute(int isBlue) throws IOException, InterruptedException {
         //Go forward just enough to turn
         driver.forward(17, 1, 0.6);
-
-        sleep(DELAY);
+           
         //Turn to place pixel
         driver.rotate2(-45*isBlue, imuControl);
 
-
-        sleep(DELAY);
         //Push pixel into place
         driver.forward(4, 1, 0.6);
-
-        sleep(DELAY);
 
         //Go backward after placing pixel
         driver.forward(4, -1, 0.6);
 
-        sleep(DELAY);
         //Adjust (left)
         driver.rotate2(-45*isBlue, imuControl);
 
-        sleep(DELAY);
-
-
-
         ///driver.forward(7, 1, 0.5);
-        //sleep(DELAY);
-
-        sleep(DELAY);
         driver.forward(23, 1, 0.5);
 
     }
 
     public void centerRoute(int isBlue) throws IOException, InterruptedException {
 
-
+        //Go forward to place pixel
         driver.forward(25, 1, 0.6);
-        //Go forward and place pixel
-        //driver.forward(4, 1, 0.5);
-
-        sleep(DELAY);
-
-
 
         //Go backward into position
         driver.forward(3, -1, 0.6);
 
-        sleep(DELAY);
-
+        //Face right (left for blue)
         driver.rotate2(-90 * isBlue,imuControl);
 
-        sleep(DELAY);
-
+        //Go to AprilTag
         driver.forward(19,1,0.6);
 
-        sleep(DELAY);
-
+        //Strafe so that camera detects AprilTag 5 (or 2)
         driver.strafe(3, isBlue,1, imuControl);
 
+        //Go forward so that camera detects AprilTag
         driver.forward(5, 1, 0.3);
+
     }
 
     public void wingRoute(int isBlue) throws IOException, InterruptedException {
         //Go forward just enough to turn
         driver.forward(17, 1, 0.6);
-        sleep(DELAY);
 
-        //driver.turn(45, -1, 0.4);
+        //Face right to place pixel
         driver.rotate2(45*isBlue, imuControl);
 
-
-        sleep(DELAY);
         //Push pixel into place
         driver.forward(4, 1, 0.6);
-
-        sleep(DELAY);
 
         //Go backward after placing pixel
         driver.forward(4, -1, 0.6);
 
-        sleep(DELAY);
-        //Adjust
+        //Turn around to face backboard
         driver.rotate2(-135*isBlue, imuControl);
 
-        sleep(DELAY);
-
+        //Drive forward to detect pixel
         driver.forward(23, 1, 0.5);
 
-        sleep(1000);
-
+        //Strafe in front of AprilTag 4 (or 1) so that camera detects it
         driver.strafe(8, isBlue, 0.5, imuControl);
 
     }
