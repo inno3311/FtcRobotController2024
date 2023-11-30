@@ -20,8 +20,8 @@ public class TransferRight extends ServoControl
 
     private void managePosition()
     {
-        driveServo(0, gamepad2.a);
-        driveServo(1, gamepad2.x);
+        driveServo(0, gamepad2.y);
+        driveServo(1, gamepad2.a);
     }
 
     @Override
