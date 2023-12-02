@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.AprilTags.AprilTagMaster;
@@ -23,10 +25,12 @@ public class AutonomousBase extends LinearOpMode
     final int blue = 1;
     final int red = -1;
     public int isBlue = red; //Red is negative!
-
     public final int DELAY = 500;
 
+    public boolean robotIsMoving = true;
+
     WebCamHardware webcam;
+
 
     protected ImuHardware imuControl;
 
@@ -35,6 +39,7 @@ public class AutonomousBase extends LinearOpMode
     AprilTagMaster aprilTagMaster;
     InitAprilTags initAprilTags;
     DriveToTag driveToTag;
+
 
     LinerSlideChild linerSlideChild;
     TransferRight transferRight;
@@ -52,9 +57,6 @@ public class AutonomousBase extends LinearOpMode
         UNKNOWN
     }
 
-    public AutonomousBase() {
-    }
-
     protected void initMembers()
     {
         try
@@ -65,16 +67,17 @@ public class AutonomousBase extends LinearOpMode
             initAprilTags = new InitAprilTags();
 
 
+
             linerSlideChild = new LinerSlideChild(this);
-            sleep(1000);
+            sleep(DELAY);
             transferRight = new TransferRight(this);
-            sleep(1000);
+            sleep(DELAY);
             transferleft = new TransferLeft(this);
-            sleep(1000);
+            sleep(DELAY);
             heightChild = new HeightChild(this);
-            sleep(1000);
+            sleep(DELAY);
             intakeChild = new IntakeChild(this);
-            sleep(1000);
+            sleep(DELAY);
 
         }
         catch (IOException e)
@@ -89,6 +92,7 @@ public class AutonomousBase extends LinearOpMode
         initMembers();
 
         webcam.initTfod();
+
 
         Recognition rec = null;
         while ((rec = webcam.findObject()) == null)
@@ -120,6 +124,7 @@ public class AutonomousBase extends LinearOpMode
         aprilTagMaster = initAprilTags.getAprilTagMaster();
         driveToTag = initAprilTags.getDriveToTag();
 
+
         start();
 
         //TODO We need to make this work for red side to because red uses targets (AprilTag Ids) 4-6
@@ -137,6 +142,7 @@ public class AutonomousBase extends LinearOpMode
 
 
 
+
     //This is code for controlling what happens if obj
     public void planPurple(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException
     {
@@ -150,7 +156,6 @@ public class AutonomousBase extends LinearOpMode
         //If target is in the center...
         if(zone == SpikeLineEnum.CENTER_SPIKE)
         {
-
             //Go forward to determine whether object is left/center/right
             driver.forward(27, 1, 0.6);
             //Go forward and place pixel
@@ -174,7 +179,7 @@ public class AutonomousBase extends LinearOpMode
             //Push pixel into place
             driver.forward(5, 1, 0.6);
 
-            sleep(1000);
+            sleep(DELAY);
 
             //Go backward after placing pixel
             driver.forward(5, -1, 0.6);
@@ -199,17 +204,17 @@ public class AutonomousBase extends LinearOpMode
 
             driver.rotate2(-45*isBlue, imuControl);
 
-            sleep(1000);
+            sleep(DELAY);
 
             //Push pixel into place
             driver.forward(6, 1, 0.6);
 
-            sleep(1000);
+            sleep(DELAY);
 
             //Go backward after placing pixel
             driver.forward(6, -1, 0.6);
 
-            sleep(1000);
+            sleep(DELAY);
 
             //Adjust (left)
             driver.rotate2(45*isBlue, imuControl);
@@ -219,7 +224,7 @@ public class AutonomousBase extends LinearOpMode
         }
 
         //Wait for next command...
-        sleep(1000);
+        sleep(DELAY);
 
     }
 
