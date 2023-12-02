@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Controller.ServoControl;
 
+// Expansion hub servo 2 "transferRight"
 public class TransferRight extends ServoControl
 {
 
@@ -22,6 +23,18 @@ public class TransferRight extends ServoControl
     {
         driveServo(0, gamepad2.y);
         driveServo(1, gamepad2.a);
+    }
+
+    public void autonomousControl(boolean up)
+    {
+        if (up)
+        {
+            driveServo(0);
+        }
+        else
+        {
+            driveServo(1);
+        }
     }
 
     @Override

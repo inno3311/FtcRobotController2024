@@ -80,12 +80,13 @@ public class LinearOpModeMez extends AutonomousBase
 
 //        try
  //       {
-//            driver.strafe(48, 1, 0.6, imuControl);
-//            sleep(3000);
-//            driver.strafe(48, -1, 0.6, imuControl);
-//            sleep(3000);
+        //driver.strafe();
+            driver.strafe(24, 1, 0.5, imuControl);
+            sleep(3000);
+            driver.strafe(24, -1, 0.5, imuControl);
+            sleep(3000);
 
-            driveStraightTest();
+//            driveStraightTest();
             sleep(10000);
 
 //            driver.rotate2(-30, imuControl);
@@ -145,13 +146,15 @@ public class LinearOpModeMez extends AutonomousBase
     public void driveStraightTest()
     {
 
-        driver.forward(24 * 4, 1, .6);
-        sleep(3000);
-        driver.forward(24 * 4, -1, .6);
-        sleep(8000);
-        driver.forward(24 * 4, 1, 1);
-        sleep(3000);
-        driver.forward(24 * 4, -1, 1);
+        driver.forward(24, 1, .3);
+
+
+//        sleep(3000);
+//        driver.forward(24 * 4, -1, .6);
+//        sleep(8000);
+//        driver.forward(24 * 4, 1, 1);
+//        sleep(3000);
+//        driver.forward(24 * 4, -1, 1);
 
     }
 

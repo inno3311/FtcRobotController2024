@@ -7,12 +7,19 @@ import org.firstinspires.ftc.teamcode.AprilTags.AprilTagMaster;
 import org.firstinspires.ftc.teamcode.AprilTags.DriveToTag;
 import org.firstinspires.ftc.teamcode.AprilTags.InitAprilTags;
 import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
+import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.HeightChild;
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.IntakeChild;
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.LinerSlideChild;
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.TransferLeft;
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.TransferRight;
 import org.firstinspires.ftc.teamcode.util.ImuHardware;
 import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 
 import java.io.IOException;
 
-public class AutonomousBase extends LinearOpMode {
+public class AutonomousBase extends LinearOpMode
+{
     final int blue = 1;
     final int red = -1;
     public int isBlue = red; //Red is negative!
@@ -21,13 +28,19 @@ public class AutonomousBase extends LinearOpMode {
 
     WebCamHardware webcam;
 
-    ImuHardware imuControl;
+    protected ImuHardware imuControl;
 
     /** Drive control */
     protected MecanumSynchronousDriver driver;
     AprilTagMaster aprilTagMaster;
     InitAprilTags initAprilTags;
     DriveToTag driveToTag;
+
+    LinerSlideChild linerSlideChild;
+    TransferRight transferRight;
+    TransferLeft transferleft;
+    HeightChild heightChild;
+    IntakeChild intakeChild;
 
     SpikeLineEnum zone = SpikeLineEnum.UNKNOWN;
 
@@ -40,7 +53,6 @@ public class AutonomousBase extends LinearOpMode {
     }
 
     public AutonomousBase() {
-
     }
 
     protected void initMembers()
@@ -51,6 +63,19 @@ public class AutonomousBase extends LinearOpMode {
             webcam = new WebCamHardware(this);
             imuControl = new ImuHardware(this);
             initAprilTags = new InitAprilTags();
+
+
+            linerSlideChild = new LinerSlideChild(this);
+            sleep(1000);
+            transferRight = new TransferRight(this);
+            sleep(1000);
+            transferleft = new TransferLeft(this);
+            sleep(1000);
+            heightChild = new HeightChild(this);
+            sleep(1000);
+            intakeChild = new IntakeChild(this);
+            sleep(1000);
+
         }
         catch (IOException e)
         {
@@ -85,11 +110,11 @@ public class AutonomousBase extends LinearOpMode {
 
         waitForStart();
 
-        telemetry.addData(""," ");
-        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
-        telemetry.addData("- Position", "%.0f / %.0f", x, y);
-        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
-        telemetry.update();
+//        telemetry.addData(""," ");
+//        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
+//        telemetry.addData("- Position", "%.0f / %.0f", x, y);
+//        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
+//        telemetry.update();
 
         initAprilTags.initAprilTags(webcam, driver, hardwareMap, telemetry);
         aprilTagMaster = initAprilTags.getAprilTagMaster();
