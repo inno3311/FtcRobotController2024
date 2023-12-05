@@ -30,7 +30,7 @@ public class HeightChild extends MotorControl
 
     private void encoderDrive()
     {
-        encoderControl(lowerBound, 1, gamepad2.left_bumper);
+        encoderControl(lowerBound, 1, gamepad2.back);
     }
 
     public void heightDriveSimple()

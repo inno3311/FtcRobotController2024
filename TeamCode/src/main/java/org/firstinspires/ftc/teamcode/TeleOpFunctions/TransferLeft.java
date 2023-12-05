@@ -20,8 +20,10 @@ public class TransferLeft extends ServoControl
 
     private void managePosition()
     {
-        driveServo(1, gamepad2.y);
-        driveServo(0, gamepad2.a);
+        driveServo(1, gamepad2.left_bumper || gamepad2.y);
+        driveServo(0, gamepad2.left_trigger > 0.5 || gamepad2.a);
+
+
     }
 
     @Override
