@@ -418,14 +418,15 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
         this.resetRunMode();
 
         //control the error of forward and backwards motion
-        pidDrive = new PIDController(0.0001, 0, 0.000);
+//        pidDrive = new PIDController(0.0001, 0, 0.000);
+        pidDrive = new PIDController(0.0005, 0, 0.000);
         //control the error of heading
         pidRotateImu = new PIDController(.04, .000, .000);
 
         // Set up parameters for turn correction.
         pidDrive.reset();
         pidDrive.setSetpoint(0);
-        pidDrive.setOutputRange(0, .19);
+        pidDrive.setOutputRange(0, 1);
         pidDrive.setInputRange(0, 5000);
         pidDrive.enable();
 
@@ -468,16 +469,17 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
             // pos is right turn, neg is left turn
             double forwardCorrection = pidDrive.performPID(yDifference);
             mOpMode.telemetry.addData("correction ", "correction: " + forwardCorrection + " wheelDif: " + yDifference);
-            Logging.log("correction: " + forwardCorrection + " wheelDif: " + yDifference);
+            Logging.log("correction: " + forwardCorrection + " yDifference: " + yDifference);
 
             double strafeCorrection = pidStrafe.performPID(strafeDifference);
             mOpMode.telemetry.addData("strafeCorrection ", "correction: " + strafeCorrection + " strafeDifference: " + strafeDifference);
 
             double headingError = pidRotateImu.performPID(angle);
 
-            this.driveMotors(forwardCorrection, (-headingError), speed, 1); // run with PID
+           this.driveMotors(0, (-headingError), speed, 1); // run with PID
+            //this.driveMotors(forwardCorrection, (-headingError), speed, 1); // run with PID
             Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, headingError);
-            //logger.log("left Encoder = %d, Right Encoder = %d ", this.lf.getCurrentPosition(), this.rf.getCurrentPosition());
+            Logging.log("forwardCorrection = %f, speed = %f ", -forwardCorrection, speed);
             mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
             mOpMode.telemetry.update();
         }
