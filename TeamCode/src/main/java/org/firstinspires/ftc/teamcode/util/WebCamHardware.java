@@ -19,6 +19,7 @@ public class WebCamHardware
 
    //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/red_rev1.tflite";
    private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/Red_10-27.tflite";
+   //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/RedBlue11_25.tflite";
 
    AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
    private WebcamName webcam1, webcam2;
