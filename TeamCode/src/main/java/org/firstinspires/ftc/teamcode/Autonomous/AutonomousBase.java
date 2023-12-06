@@ -140,9 +140,6 @@ public class AutonomousBase extends LinearOpMode
         }
     }
 
-
-
-
     //This is code for controlling what happens if obj
     public void planPurple(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException
     {
