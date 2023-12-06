@@ -44,24 +44,32 @@ public class PlanGamma extends AutonomousBase
             wallTarget = 3;
         }
 
-        linerSlideChild.encoderControl(-400, 0.5);
+        linerSlideChild.encoderControl(-300, 0.5);
+
+
+        transferRight.autonomousControl(false);
+        transferleft.autonomousControl(false);
         transferRight.autonomousControl(true);
         transferleft.autonomousControl(true);
 
-        //driveToTag.drive(7, zone.ordinal() + 1 + wallTarget, 11, 0);
-        driveToTag.drive(7, 5, 2, 0);
 
+        sleep(3000);
+        //driveToTag.drive(7, zone.ordinal() + 1 + wallTarget, 11, 0);
+        driveToTag.drive(7, 6, 4, 0);
+
+        sleep(500);
         transferRight.autonomousControl(false);
         transferleft.autonomousControl(false);
 
 
-        sleep(3000);
+        sleep(1000);
         //Park robot
         try {
             parkRobot(zone, isBlue);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        sleep(1000);
     }
 
     /**

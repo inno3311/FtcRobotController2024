@@ -212,7 +212,7 @@ public class AutonomousBase extends LinearOpMode
             sleep(DELAY);
 
             //Adjust (left)
-            driver.rotate2(45*isBlue, imuControl);
+            driver.rotate2(45 * isBlue, imuControl);
 
             //Go back
             driver.forward(17, -1, 0.6);
@@ -229,14 +229,15 @@ public class AutonomousBase extends LinearOpMode
         double defaultSpeed = 0.6;
         int defaultWaitTime = 5;
 
+        sleep(DELAY);
         //TODO maybe: Add variables for adding/subtracting for more reusable code
-        driver.forward(2, -1, defaultSpeed, 5);
-        driver.forward(2, -1, defaultSpeed, 5);
+        driver.forward(10, -1, defaultSpeed);
+
 
         if(zone == SpikeLineEnum.CENTER_SPIKE){
             //Center
             if(isBlue == blue) driver.strafe(14, isBlue, defaultSpeed, imuControl, defaultWaitTime);
-            else if(isBlue == red) driver.strafe(14, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
+            else if(isBlue == red) driver.strafe(18, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
 
         } else if(zone == SpikeLineEnum.LEFT_SPIKE){
             //Left

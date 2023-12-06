@@ -133,7 +133,7 @@ public class WebCamHardware
 
       // Set the camera (webcam vs. built-in RC phone camera).
       if (USE_WEBCAM) {
-         builder.setCamera(mOpMode.hardwareMap.get(WebcamName.class, "Bottom"));
+         builder.setCamera(mOpMode.hardwareMap.get(WebcamName.class, "Top"));
       } else {
          builder.setCamera(BuiltinCameraDirection.BACK);
       }
