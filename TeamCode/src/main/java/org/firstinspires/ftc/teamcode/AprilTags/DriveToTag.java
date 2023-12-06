@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.AprilTags;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -18,15 +19,17 @@ public class DriveToTag
     HardwareMap hardwareMap;
     Telemetry telemetry;
     ElapsedTime elapsedTime;
-    MechanicalDriveBase mechanicalDriveBase;
+    ElapsedTime elapsedTime2;
     AprilTagMaster aprilTagMaster;
+    private int target = 1;
+    private double lastChanged = 0;
 
-    public DriveToTag(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime elapsedTime, MechanicalDriveBase mechanicalDriveBase, AprilTagMaster aprilTagMaster)
+    public DriveToTag(HardwareMap hardwareMap, Telemetry telemetry, ElapsedTime elapsedTime, ElapsedTime elapsedTime2, AprilTagMaster aprilTagMaster)
     {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.elapsedTime = elapsedTime;
-        this.mechanicalDriveBase = mechanicalDriveBase;
+        this.elapsedTime2 = elapsedTime2;
         this.aprilTagMaster = aprilTagMaster;
     }
 
@@ -41,10 +44,32 @@ public class DriveToTag
             elapsedTime.startTime();
             while (elapsedTime.seconds() < time)
             {
-                telemetry.addData("Time = ",elapsedTime.seconds() + " seconds");
+                telemetry.addData("Time = ", elapsedTime.seconds() + " seconds");
                 aprilTagMaster.findTag(11, 0, 2, telemetry);
             }
         }
+    }
+
+    public void targetLocator(Gamepad gamepad)
+    {
+        elapsedTime2.startTime();
+
+        if (gamepad.dpad_up && target < 10 && lastChanged < elapsedTime2.seconds())
+        {
+            lastChanged = elapsedTime2.seconds() + 0.25;
+            target++;
+        }
+        else if (gamepad.dpad_down && target > 1 && lastChanged < elapsedTime2.seconds())
+        {
+            lastChanged = elapsedTime2.seconds() + 0.25;
+            target--;
+        }
+        else if (gamepad.left_trigger > 0.5 || gamepad.left_bumper)
+        {
+            telemetry.addData("Homing", "");
+            aprilTagMaster.findTag(11, 0, target, telemetry);
+        }
+        telemetry.addData("Current Target", target);
     }
 
 }

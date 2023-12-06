@@ -173,9 +173,7 @@ public class MecanumSynchronousDriver extends MechanicalDriveBase
 //        pidDrive.setOutputRange(0, .19);
 //        pidDrive.setInputRange(-5000, 5000);
 //        pidDrive.enable();
-//
-//        // Set up parameters for strafe correction.
-//        pidStrafe.setSetpoint(0);
+
 //        pidStrafe.setOutputRange(0, .15);
 //        pidStrafe.setInputRange(-5000, 5000);
 //        pidStrafe.enable();
