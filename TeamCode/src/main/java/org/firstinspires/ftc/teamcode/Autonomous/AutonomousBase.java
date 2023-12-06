@@ -135,9 +135,7 @@ public class AutonomousBase extends LinearOpMode
         PlanAlpha blueStage = new PlanAlpha();
         switch (zone) {
             case CENTER_SPIKE:
-                telemetry.addData("Center detected", "");
-
-        }
+                telemetry.addData("Center detected", "");        }
     }
 
     //This is code for controlling what happens if obj
