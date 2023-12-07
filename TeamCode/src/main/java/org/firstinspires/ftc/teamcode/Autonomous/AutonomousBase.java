@@ -93,24 +93,25 @@ public class AutonomousBase extends LinearOpMode
 
         webcam.initTfod();
 
+        this.findTeamProp();
 
-        Recognition rec = null;
-        while ((rec = webcam.findObject()) == null)
-        {
-            telemetry.addData("- Camera", "Looking for object");
-            telemetry.update();
-        }
+//        Recognition rec = null;
+//        while ((rec = webcam.findObject()) == null)
+//        {
+//            telemetry.addData("- Camera", "Looking for object");
+//            telemetry.update();
+//        }
+//
+//        double x = (rec.getLeft() + rec.getRight()) / 2 ;
+//        double y = (rec.getTop()  + rec.getBottom()) / 2 ;
+//
+//        zone = webcam.findTarget(x);
 
-        double x = (rec.getLeft() + rec.getRight()) / 2 ;
-        double y = (rec.getTop()  + rec.getBottom()) / 2 ;
-
-        zone = webcam.findTarget(x);
-
-        telemetry.addData(""," ");
-        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
-        telemetry.addData("- Position", "%.0f / %.0f", x, y);
-        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
-        telemetry.update();
+//        telemetry.addData(""," ");
+//        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
+//        telemetry.addData("- Position", "%.0f / %.0f", x, y);
+//        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
+//        telemetry.update();
 
         waitForStart();
 
@@ -129,6 +130,28 @@ public class AutonomousBase extends LinearOpMode
 
         //TODO We need to make this work for red side to because red uses targets (AprilTag Ids) 4-6
         //ordinal returns an int +1 because it starts counting at 0
+    }
+
+    protected void findTeamProp()
+    {
+        Recognition rec = null;
+        while ((rec = webcam.findObject()) == null)
+        {
+            telemetry.addData("- Camera", "Looking for object");
+            telemetry.update();
+        }
+
+        double x = (rec.getLeft() + rec.getRight()) / 2 ;
+        double y = (rec.getTop()  + rec.getBottom()) / 2 ;
+
+        zone = webcam.findTarget(x);
+
+        telemetry.addData(""," ");
+        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
+        telemetry.addData("- Position", "%.0f / %.0f", x, y);
+        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
+        telemetry.update();
+
     }
 
     public void goToPixel() {
