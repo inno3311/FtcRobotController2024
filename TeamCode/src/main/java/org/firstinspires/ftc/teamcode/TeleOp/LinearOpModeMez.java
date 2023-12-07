@@ -49,8 +49,10 @@ public class LinearOpModeMez extends AutonomousBase
         waitForStart();
         start();
 
-
-
+        driver.forward(24 * 1, 1, 0.4);
+        sleep(3000);
+        driver.forward(24 * 1, -1, 0.4);
+        sleep(3000);
 //        try
  //       {
         //driver.strafe();

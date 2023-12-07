@@ -252,7 +252,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
                 frontLeftPos = this.lf.getCurrentPosition();
                 frontRightPos = this.rf.getCurrentPosition();
 
-                double currPosTicks = (frontLeftPos + frontRightPos) / 2 ;
+                double currPosTicks = (frontLeftPos + frontRightPos) / 2;
 
 
                 //if the number is positive the bot is slipping right
@@ -426,7 +426,7 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
         // Set up parameters for turn correction.
         pidDrive.reset();
         pidDrive.setSetpoint(0);
-        pidDrive.setOutputRange(0, 1);
+        pidDrive.setOutputRange(0, 0.2);
         pidDrive.setInputRange(0, 5000);
         pidDrive.enable();
 
@@ -476,8 +476,8 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
 
             double headingError = pidRotateImu.performPID(angle);
 
-           this.driveMotors(0, (-headingError), speed, 1); // run with PID
-            //this.driveMotors(forwardCorrection, (-headingError), speed, 1); // run with PID
+           //this.driveMotors(0, (-headingError), speed, 1); // run with PID
+            this.driveMotors(-forwardCorrection, (-headingError), speed, 1); // run with PID
             Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, headingError);
             Logging.log("forwardCorrection = %f, speed = %f ", -forwardCorrection, speed);
             mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
