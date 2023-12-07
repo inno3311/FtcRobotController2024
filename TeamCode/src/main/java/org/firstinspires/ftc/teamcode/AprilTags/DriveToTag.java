@@ -45,7 +45,7 @@ public class DriveToTag
             while (elapsedTime.seconds() < time)
             {
                 telemetry.addData("Time = ", elapsedTime.seconds() + " seconds");
-                aprilTagMaster.findTag(11, 0, 2, telemetry);
+                aprilTagMaster.findTag(4, 0, 2, telemetry);
             }
         }
     }
@@ -54,12 +54,12 @@ public class DriveToTag
     {
         elapsedTime2.startTime();
 
-        if (gamepad.dpad_up && target < 10 && lastChanged < elapsedTime2.seconds())
+        if (gamepad.y && target < 10 && lastChanged < elapsedTime2.seconds())
         {
             lastChanged = elapsedTime2.seconds() + 0.25;
             target++;
         }
-        else if (gamepad.dpad_down && target > 1 && lastChanged < elapsedTime2.seconds())
+        else if (gamepad.a && target > 1 && lastChanged < elapsedTime2.seconds())
         {
             lastChanged = elapsedTime2.seconds() + 0.25;
             target--;
@@ -67,7 +67,7 @@ public class DriveToTag
         else if (gamepad.left_trigger > 0.5 || gamepad.left_bumper)
         {
             telemetry.addData("Homing", "");
-            aprilTagMaster.findTag(11, 0, target, telemetry);
+            aprilTagMaster.findTag(4, 0, target, telemetry);
         }
         telemetry.addData("Current Target", target);
     }
