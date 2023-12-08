@@ -32,7 +32,7 @@ public class BlueStageLeftLinearOpMode extends AutonomousBase
     {
         driver.forward(24,1,0.6);
         sleep(500);
-        driver.turn(30,1,0.4);
+//        driver.turn(30,1,0.4);
         sleep(500);
         driver.forward(2,1,0.6);
         sleep(500);

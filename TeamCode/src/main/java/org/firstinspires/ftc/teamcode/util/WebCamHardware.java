@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import android.util.Size;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -18,8 +20,8 @@ public class WebCamHardware
    private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
    //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/red_rev1.tflite";
-   private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/Red_10-27.tflite";
-   //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/RedBlue11_25.tflite";
+   //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/Red_10-27.tflite";
+   private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/RedBlue11_25.tflite";
 
    AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
    private WebcamName webcam1, webcam2;
@@ -84,7 +86,7 @@ public class WebCamHardware
       }
 
       // Choose a camera resolution. Not all cameras support all resolutions.
-      //builder.setCameraResolution(new Size(640, 480));
+      builder.setCameraResolution(new Size(640, 480));
 
       // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
       //builder.enableCameraMonitoring(true);
@@ -113,7 +115,10 @@ public class WebCamHardware
       // Disable or re-enable the TFOD processor at any time.
       //visionPortal.setProcessorEnabled(tfod, true);
 
-      tfod.setZoom(1.2);
+      tfod.setClippingMargins(0, 100, 0, 100);
+
+      //tfod.setZoom(1.2);
+      //tfod.setZoom(100);
 
 
 
@@ -176,6 +181,9 @@ public class WebCamHardware
 
    public Recognition findObject()
    {
+      Recognition bestRecognition = null;
+      Recognition currentRecognition = null;
+
       List<Recognition> currentRecognitions = tfod.getRecognitions();
       mOpMode.telemetry.addData("# Objects Detected", currentRecognitions.size());
 
@@ -185,21 +193,43 @@ public class WebCamHardware
          double x = (recognition.getLeft() + recognition.getRight()) / 2;
          double y = (recognition.getTop() + recognition.getBottom()) / 2;
 
-         mOpMode.telemetry.addData("", " ");
-         mOpMode.telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-         mOpMode.telemetry.addData("- Position", "%.0f / %.0f", x, y);
-         mOpMode.telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+         if (bestRecognition == null)
+         {
+            bestRecognition = recognition;
+         }
+         else
+         {
+            if (bestRecognition.getConfidence() < recognition.getConfidence())
+            {
+               bestRecognition = recognition;
+            }
+            else
+            {
+
+            }
+         }
+
+
 
          if (!(currentRecognitions.isEmpty()))
          {
-            return currentRecognitions.get(0);
+            mOpMode.telemetry.addData("", " ");
+            mOpMode.telemetry.addData("Image", "%s (%.0f %% Conf.)", bestRecognition.getLabel(), bestRecognition.getConfidence() * 100);
+             x = (bestRecognition.getLeft() + bestRecognition.getRight()) / 2;
+             y = (bestRecognition.getTop() + bestRecognition.getBottom()) / 2;
+            mOpMode.telemetry.addData("- Position", "%.0f / %.0f", x, y);
+            mOpMode.telemetry.addData("- Size", "%.0f x %.0f", bestRecognition.getWidth(), bestRecognition.getHeight());
+
+            return bestRecognition;
          }
          else
          {
             return null;
          }
       }
+
       return null;
+
    }
 
    public AutonomousBase.SpikeLineEnum findTarget(double x)
@@ -208,7 +238,7 @@ public class WebCamHardware
       AutonomousBase.SpikeLineEnum targetPosition = AutonomousBase.SpikeLineEnum.UNKNOWN; //("targetPosition" means "position of the target", not "goal" position)
 
       int leftMaximum = 220;
-      int centerMinimum = 161;
+      int centerMinimum = 221;
       int centerMaximum = 459;
       int rightMinimum = 460;
 

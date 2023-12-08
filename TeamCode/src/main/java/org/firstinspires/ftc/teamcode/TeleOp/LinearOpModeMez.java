@@ -241,21 +241,21 @@ public class LinearOpModeMez extends AutonomousBase
     public void aroundyTest()
     {
         double speed = 0.7;
-        driver.forward(12 * 4,1,speed);
-        sleep(100);
-        driver.turn(90, -1, .5);
-        sleep(100);
-        driver.forward(12 * 1.5,1,speed);
-        sleep(100);
-        driver.turn(90, -1, .5);
-        sleep(100);
-        driver.forward(12 * 4,1,speed);
-        sleep(100);
-        driver.turn(90, -1, .5);
-        sleep(100);
-        driver.forward(12 * 1.5,1,speed);
-        sleep(100);
-        driver.turn(90, -1, .5);
+//        driver.forward(12 * 4,1,speed);
+//        sleep(100);
+//        driver.turn(90, -1, .5);
+//        sleep(100);
+//        driver.forward(12 * 1.5,1,speed);
+//        sleep(100);
+//        driver.turn(90, -1, .5);
+//        sleep(100);
+//        driver.forward(12 * 4,1,speed);
+//        sleep(100);
+//        driver.turn(90, -1, .5);
+//        sleep(100);
+//        driver.forward(12 * 1.5,1,speed);
+//        sleep(100);
+//        driver.turn(90, -1, .5);
     }
 
 

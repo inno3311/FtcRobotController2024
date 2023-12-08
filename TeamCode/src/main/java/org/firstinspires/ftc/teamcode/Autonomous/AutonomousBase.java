@@ -24,7 +24,7 @@ public class AutonomousBase extends LinearOpMode
 {
     final int blue = 1;
     final int red = -1;
-    public int isBlue = red; //Red is negative!
+    public int isBlue = blue; //Red is negative!
     public final int DELAY = 500;
 
     public boolean robotIsMoving = true;
@@ -240,23 +240,55 @@ public class AutonomousBase extends LinearOpMode
         driver.forward(10, -1, defaultSpeed);
 
 
-        if(zone == SpikeLineEnum.CENTER_SPIKE){
+        if(zone == SpikeLineEnum.CENTER_SPIKE)
+        {
             //Center
-            if(isBlue == blue) driver.strafe(14, isBlue, defaultSpeed, imuControl, defaultWaitTime);
-            else if(isBlue == red) driver.strafe(18, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
+            if(isBlue == blue)
+            {
+                //driver.strafe(20, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
+                driver.strafe(20, -1, defaultSpeed,imuControl);
 
-        } else if(zone == SpikeLineEnum.LEFT_SPIKE){
+                //driver.forward(5, 1, defaultSpeed);
+            }
+            else if(isBlue == red)
+            {
+                driver.strafe(20, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
+
+                //driver.forward(5, 1, defaultSpeed);
+            }
+
+        }
+        else if(zone == SpikeLineEnum.LEFT_SPIKE)
+        {
             //Left
-            if(isBlue == blue) driver.strafe(7, isBlue, defaultSpeed, imuControl, defaultWaitTime);
-            else if(isBlue == red) driver.strafe(20, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
-        } else if(zone == SpikeLineEnum.RIGHT_SPIKE){
+            if(isBlue == blue)
+            {
+                driver.strafe(7, -1, defaultSpeed, imuControl, defaultWaitTime);
+
+                //driver.forward(5, 1, defaultSpeed);
+            }
+            else if(isBlue == red)
+            {
+                driver.strafe(20, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
+            }
+        }
+        else if(zone == SpikeLineEnum.RIGHT_SPIKE)
+        {
             //Right
-            if(isBlue == blue) driver.strafe(20, isBlue, defaultSpeed, imuControl, defaultWaitTime);
-            else if(isBlue == red) driver.strafe(7, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
+            if(isBlue == blue)
+            {
+                driver.strafe(20, -1, defaultSpeed, imuControl, defaultWaitTime);
+
+
+            }
+            else if (isBlue == red)
+            {
+                driver.strafe(7, 1, defaultSpeed, imuControl, defaultWaitTime);
+            }
 
         }
 
-
+        driver.forward(5, 1, defaultSpeed);
     }
 
 
