@@ -14,7 +14,7 @@ public class DroneLauncher extends ServoControl
 
     public  void launcherControl()
     {
-        super.driveServo(1, gamepad1.dpad_left && gamepad1.b);
-        super.driveServo(0, gamepad1.x);
+        super.driveServo(0, gamepad1.dpad_left && gamepad1.b);
+        super.driveServo(1, gamepad1.x);
     }
 }
