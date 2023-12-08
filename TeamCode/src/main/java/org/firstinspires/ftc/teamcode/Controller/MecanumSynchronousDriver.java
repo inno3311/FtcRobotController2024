@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Controller;
 import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -404,7 +403,7 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
     /**
      * Drives the bot right or backward in a straight line.
      * @param target distance in inches to travel.
-     * @param right indicates direction of travel.  -1 is right 1 is backwards?
+     * @param right indicates direction of travel.  1 is right -1 is left
      * @param speed double value indicating the speed from 0 to 1.
      */
     public void strafe(double target, int right, double speed, ImuHardware imuControl)
@@ -418,8 +417,8 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
         this.resetRunMode();
 
         //control the error of forward and backwards motion
-//        pidDrive = new PIDController(0.0001, 0, 0.000);
-        pidDrive = new PIDController(0.0005, 0, 0.000);
+        pidDrive = new PIDController(0.0001, 0, 0.000);
+        //pidDrive = new PIDController(0.0005, 0, 0.000);
         //control the error of heading
         pidRotateImu = new PIDController(.04, .000, .000);
 
@@ -445,15 +444,15 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
         pidRotateImu.enable();
 
         speed *= right;
-        int rightFrontPos = this.rb.getCurrentPosition();
+        int strafeTargetPos = this.rb.getCurrentPosition();
+        strafeTargetPos += target * ticksPerInch;
 
-        rightFrontPos += target * ticksPerInch;
-        while ((Math.abs(this.rb.getCurrentPosition()) <= rightFrontPos) && mOpMode.opModeIsActive())
+        while ((Math.abs(this.rb.getCurrentPosition()) <= strafeTargetPos) && mOpMode.opModeIsActive())
         {
             //if the number is positive the bot is slipping forward
             //if the number is negative the bot is slipping backwards
             //lf and rf are added because rf is reverse of lf direction.
-            int yDifference = Math.abs((this.lf.getCurrentPosition() - this.rf.getCurrentPosition()) / 2);
+            int yDifference = ((this.lf.getCurrentPosition() + this.rf.getCurrentPosition()) / 2);
 
             int direction = 1;
             if (yDifference < 0)
@@ -478,7 +477,7 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
 
            //this.driveMotors(0, (-headingError), speed, 1); // run with PID
             this.driveMotors(-forwardCorrection, (-headingError), speed, 1); // run with PID
-            Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, headingError);
+//            Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, headingError);
             Logging.log("forwardCorrection = %f, speed = %f ", -forwardCorrection, speed);
             mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
             mOpMode.telemetry.update();

@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.IMU.IMUControl;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "IMUTest", group = "IMU")
+@Disabled
 public class IMUTestMaster extends LinearOpMode
 {
     IMUControl imuControl;

@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import java.io.IOException;
 
 @Autonomous(name = "Blue Stage Left", group = "Group3311")
+@Disabled
 public class BlueStageLeftLinearOpMode extends AutonomousBase
 {
 

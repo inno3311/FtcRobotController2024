@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous.NoCrash;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 import org.firstinspires.ftc.teamcode.IMU.IMUControl;
 
 @Autonomous(name = "No Crash", group = "No Crash")
+@Disabled
 public class NoCrashMaster extends OpMode
 {
     MechanicalDriveBase mechanicalDriveBase;

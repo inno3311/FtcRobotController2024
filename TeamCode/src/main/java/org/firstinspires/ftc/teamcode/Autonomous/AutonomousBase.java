@@ -95,23 +95,6 @@ public class AutonomousBase extends LinearOpMode
 
         this.findTeamProp();
 
-//        Recognition rec = null;
-//        while ((rec = webcam.findObject()) == null)
-//        {
-//            telemetry.addData("- Camera", "Looking for object");
-//            telemetry.update();
-//        }
-//
-//        double x = (rec.getLeft() + rec.getRight()) / 2 ;
-//        double y = (rec.getTop()  + rec.getBottom()) / 2 ;
-//
-//        zone = webcam.findTarget(x);
-
-//        telemetry.addData(""," ");
-//        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
-//        telemetry.addData("- Position", "%.0f / %.0f", x, y);
-//        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
-//        telemetry.update();
 
         waitForStart();
 

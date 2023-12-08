@@ -49,10 +49,10 @@ public class LinearOpModeMez extends AutonomousBase
         waitForStart();
         start();
 
-        driver.forward(24 * 1, 1, 0.4);
-        sleep(3000);
-        driver.forward(24 * 1, -1, 0.4);
-        sleep(3000);
+//        driver.forward(3 * 1, 1, 0.4);
+//        sleep(3000);
+//        driver.forward(3 * 1, -1, 0.4);
+//        sleep(3000);
 //        try
  //       {
         //driver.strafe();
@@ -99,9 +99,9 @@ public class LinearOpModeMez extends AutonomousBase
         while (opModeIsActive())
         {
 
-            testDeadWheels();
+            //testDeadWheels();
 
-            //strafeTest();
+            strafeTest();
 
             //driveStraightTest();
 
@@ -119,7 +119,7 @@ public class LinearOpModeMez extends AutonomousBase
 //            driver.rotate(90,1, imuControl);
 //            driver.rotate(90,1, imuControl);
 
-            sleep(2000);
+//            sleep(2000);
 //            webcam.telemetryTfod();
 //            telemetry.addData("encoder", "left: " + driver.lf.getCurrentPosition() + " right: " + driver.rf.getCurrentPosition());
 //            telemetry.update();
@@ -141,9 +141,9 @@ public class LinearOpModeMez extends AutonomousBase
 
     public void strafeTest()
     {
-        driver.strafe(24, 1, 0.5, imuControl);
+        driver.strafe(24*2, 1, 0.8, imuControl);
         sleep(3000);
-        driver.strafe(24, -1, 0.5, imuControl);
+        driver.strafe(24*2, -1, 0.8, imuControl);
         sleep(3000);
     }
 
