@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Controller;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -58,12 +57,19 @@ public class MechanicalDriveBase
      * We tend to set all the motor modes at once, so break it out using "extract Method" under the
      * refactor menu
      */
-    private void resetRunMode()
+    protected void resetRunMode()
     {
         lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    protected void resetEncoders()
+    {
+        lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     //make the robot stop
@@ -98,10 +104,10 @@ public class MechanicalDriveBase
      */
       public void driveMotors(double drive, double turn, double strafe, double speed)
       {
-          leftPowerFront  = (drive - turn + strafe);
-          rightPowerFront = (drive + turn - strafe);
-          leftPowerBack   = (drive - turn - strafe);
-          rightPowerBack  = (drive + turn + strafe);
+          leftPowerFront  = (drive + turn + strafe);
+          rightPowerFront = (drive - turn - strafe);
+          leftPowerBack   = (drive + turn - strafe);
+          rightPowerBack  = (drive - turn + strafe);
 
           // This code is awful.
           double maxAbsVal = maxAbsVal(leftPowerFront, leftPowerBack,
@@ -147,110 +153,7 @@ public class MechanicalDriveBase
      */
     public void driveBaseTelemetry(Telemetry telemetry)
     {
-        telemetry.addData("Motors", "lf(%.2f), rf(%.2f), lb(%.2f), rb(%.2f)", leftPowerFront, rightPowerFront, leftPowerBack, rightPowerBack);
+        telemetry.addData("Motors", "lf: %.2f rf: %.2f lb: %.2f rb: %.2f", leftPowerFront, rightPowerFront, leftPowerBack, rightPowerBack);
         telemetry.addData("Speed control", speed);
-    }
-
-      /**======================================== Autonomous Code ===============================================**/
-      //LF encoder for left side
-      //RF encoder for right side
-      //LB for turning and strafing
-      //Bore encoders ticks per rotation 8192
-
-      /*
-        static final double  COUNTS_PER_INCH =
-          (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-          (WHEEL_DIAMETER_INCHES * 3.1415);
-          For our drive base 1,303.835747254496 drives an inch
-      */
-
-      //                                 How far do you want which way do you  How fast do
-      //                                 to drive in inches   want to drive   you want to go
-      //                                   positives only   true is forward   positive only
-      public void driveForwardWithEncoders(double distance, boolean direction, double speed)
-      {
-            if (direction)
-            {
-                distance += Math.abs(lf.getCurrentPosition());
-                driveMotors(-1,0,0, speed);
-                while (Math.abs(lf.getCurrentPosition()) < distance) {}
-                driveMotors(0,0,0,0);
-            }
-            else
-            {
-                distance -= Math.abs(lf.getCurrentPosition());
-                driveMotors(1,0,0, speed);
-                while (Math.abs(lf.getCurrentPosition()) > distance) {}
-                driveMotors(0,0,0,0);
-            }
-      }
-
-    //                               How far do you want  which way do you  How fast do
-    //                               to drive in inches    want to drive   you want to go
-    //                                  positives only     true is right    positive only
-    public void strafeWithEncoders(double distance, boolean direction, double speed)
-    {
-        heading = imuControl.getAngle();
-
-        if (direction)
-        {
-            distance += Math.abs(lb.getCurrentPosition());
-            driveMotors(0,1,0, speed);
-            while (Math.abs(lb.getCurrentPosition()) < distance)
-            {
-                strafeCorrectionRight();
-            }
-            driveMotors(0,0,0,0);
-        }
-        else
-        {
-            distance -= Math.abs(lb.getCurrentPosition());
-            driveMotors(0,-1,0, speed);
-            while (Math.abs(lb.getCurrentPosition()) > distance)
-            {
-                strafeCorrectionLeft();
-            }
-            driveMotors(0,0,0,0);
-        }
-    }
-
-    private void strafeCorrectionRight()
-    {
-        if (imuControl.getAngle() < heading)
-        {
-            while (imuControl.getAngle() < heading)
-            {
-                lf.setPower(lf.getPower() + 0.1);
-                rf.setPower(rf.getPower() - 0.1);
-            }
-        }
-        else if (imuControl.getAngle() > heading)
-        {
-            while (imuControl.getAngle() > heading)
-            {
-                lb.setPower(lf.getPower() - 0.1);
-                rb.setPower(rf.getPower() + 0.1);
-            }
-        }
-    }
-
-    private void strafeCorrectionLeft()
-    {
-        if (imuControl.getAngle() < heading)
-        {
-            while (imuControl.getAngle() < heading)
-            {
-                lf.setPower(lf.getPower() - 0.1);
-                rf.setPower(rf.getPower() + 0.1);
-            }
-        }
-        else if (imuControl.getAngle() > heading)
-        {
-            while (imuControl.getAngle() > heading)
-            {
-                lb.setPower(lf.getPower() + 0.1);
-                rb.setPower(rf.getPower() - 0.1);
-            }
-        }
     }
 }

@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.AprilTags;
 
-import static java.lang.Thread.getDefaultUncaughtExceptionHandler;
-import static java.lang.Thread.sleep;
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -34,19 +31,20 @@ public class AprilTagMaster
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private static  int desiredTagID = -1;// Choose the tag you want to approach or set to -1 for ANY tag.
 
-    private VisionPortal visionPortal;               // Used to manage the video source.
+//    private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     private MechanicalDriveBase mechanicalDriveBase;
+    WebcamName webcamName;
     private double rangeError = 0 ;
     private double headingError = 0;
     private double yawError = 0;
 
 
-    public AprilTagMaster(MechanicalDriveBase mechanicalDriveBase, HardwareMap hardwareMap)
+    public AprilTagMaster(MechanicalDriveBase mechanicalDriveBase, AprilTagProcessor aprilTag)
     {
         this.mechanicalDriveBase = mechanicalDriveBase;
-        initAprilTag(hardwareMap);
+        this.aprilTag = aprilTag;
     }
 
     public void tagsTelemetry(Telemetry telemetry)
@@ -58,7 +56,7 @@ public class AprilTagMaster
 
     public void findTag(double range, double yaw, int target, Telemetry telemetry)
     {
-        desiredDistance = range;
+        desiredDistance = range + 1;
         strafeDif = yaw;
         boolean targetFound = false;    // Set to true when an AprilTag target is detected
         double  drive = 0;        // Desired forward power/speed (-1 to +1)
@@ -232,30 +230,30 @@ public class AprilTagMaster
         return false;
     }
 
-    public void closeAprilTags()
-    {
-        visionPortal.close();
-    }
-
-    /**
-     * Initialize the AprilTag processor.
-     */
-    private void initAprilTag(HardwareMap hardwareMap)
-    {
-        // Create the AprilTag processor by using a builder.
-        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
-
-        // Create the vision portal the easy way.
-        if (USE_WEBCAM)
-        {
-            visionPortal = VisionPortal.easyCreateWithDefaults(
-                    hardwareMap.get(WebcamName.class, "Top"), aprilTag);
-        }
-        else
-        {
-            visionPortal = VisionPortal.easyCreateWithDefaults(
-                    BuiltinCameraDirection.BACK, aprilTag);
-        }
-    }
+//    public void closeAprilTags()
+//    {
+////        visionPortal.close();
+//    }
+//
+//    /**
+//     * Initialize the AprilTag processor.
+//     */
+//    private void initAprilTag(HardwareMap hardwareMap)
+//    {
+//        // Create the AprilTag processor by using a builder.
+//        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
+//
+//        // Create the vision portal the easy way.
+//        if (USE_WEBCAM)
+//        {
+//            visionPortal = VisionPortal.easyCreateWithDefaults(
+//                    hardwareMap.get(WebcamName.class, "Bottom"), aprilTag);
+//        }
+//        else
+//        {
+//            visionPortal = VisionPortal.easyCreateWithDefaults(
+//                    BuiltinCameraDirection.BACK, aprilTag);
+//        }
+//    }
 
 }

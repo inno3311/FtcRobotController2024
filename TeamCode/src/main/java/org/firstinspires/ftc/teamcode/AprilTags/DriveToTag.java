@@ -4,18 +4,13 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Autonomous.AutonomousBase;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import java.util.List;
 
 //Further tuning in AprilTagMaster.java to come, I sure of it
 public class DriveToTag
 {
+    AutonomousBase autonomousBase;
     HardwareMap hardwareMap;
     Telemetry telemetry;
     ElapsedTime elapsedTime;
@@ -37,15 +32,19 @@ public class DriveToTag
      * @param time The amount of time you want the robot to drive to tag
      * @param target The aprilTag you want to drive to
      * **/
-    public void drive(int time, int target)
+    public void drive(int time, int target, double range, double yaw)
     {
+        elapsedTime.reset();
+        elapsedTime.startTime();
+        while (!aprilTagMaster.aprilTagDetected() && elapsedTime.seconds() < time) {}
+
         if (aprilTagMaster.aprilTagDetected())
         {
-            elapsedTime.startTime();
+            telemetry.addData("AprilTag detected", "AprilTag");
             while (elapsedTime.seconds() < time)
             {
-                telemetry.addData("Time = ", elapsedTime.seconds() + " seconds");
-                aprilTagMaster.findTag(4, 0, 2, telemetry);
+                telemetry.addData("Time = ",elapsedTime.seconds() + " seconds");
+                aprilTagMaster.findTag(range, yaw, target, telemetry);
             }
         }
     }
