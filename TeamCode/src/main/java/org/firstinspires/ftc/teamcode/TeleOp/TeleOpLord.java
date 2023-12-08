@@ -20,7 +20,6 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 public class TeleOpLord extends OpMode
 {
     MechanicalDriveBase mechanicalDriveBase;
-    AprilTagProcessor aprilTagProcessor;
     DriveToTag driveToTag;
     LinerSlideChild linerSlideChild;
     TransferRight transferRight;
@@ -34,7 +33,9 @@ public class TeleOpLord extends OpMode
     public void init()
     {
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
-        driveToTag = new DriveToTag(hardwareMap, telemetry, new ElapsedTime(), new ElapsedTime(), new AprilTagMaster(mechanicalDriveBase, aprilTagProcessor));
+
+        driveToTag = new DriveToTag(hardwareMap, telemetry, new ElapsedTime(), new ElapsedTime(), new AprilTagMaster(mechanicalDriveBase, hardwareMap));
+
         linerSlideChild = new LinerSlideChild(this);
         transferRight = new TransferRight(this);
         transferleft = new TransferLeft(this);
