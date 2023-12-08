@@ -407,6 +407,7 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
      * @param right indicates direction of travel.  -1 is right 1 is backwards?
      * @param speed double value indicating the speed from 0 to 1.
      */
+
     public void strafe(double target, int right, double speed, ImuHardware imuControl)
     {
         //Init the starting angle
