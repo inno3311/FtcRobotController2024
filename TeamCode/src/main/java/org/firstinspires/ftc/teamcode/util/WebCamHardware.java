@@ -19,6 +19,7 @@ public class WebCamHardware
 
    //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/red_rev1.tflite";
    private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/Red_10-27.tflite";
+   //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/RedBlue11_25.tflite";
 
    AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
    private WebcamName webcam1, webcam2;
@@ -132,7 +133,7 @@ public class WebCamHardware
 
       // Set the camera (webcam vs. built-in RC phone camera).
       if (USE_WEBCAM) {
-         builder.setCamera(mOpMode.hardwareMap.get(WebcamName.class, "Bottom"));
+         builder.setCamera(mOpMode.hardwareMap.get(WebcamName.class, "Top"));
       } else {
          builder.setCamera(BuiltinCameraDirection.BACK);
       }

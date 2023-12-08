@@ -5,10 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.util.Logging;
 
 import java.io.IOException;
-@Autonomous(name = "PlanGamma2", group = "Group3311")
-public class PlanGamma extends AutonomousBase {
-
-      boolean wing, center, stage;
+@Autonomous(name = "Plan Gamma", group = "Group3311")
+public class PlanGamma extends AutonomousBase
+{
 
 //    int isBlue = red;
 //
@@ -17,11 +16,13 @@ public class PlanGamma extends AutonomousBase {
     @Override
     public void runOpMode() throws InterruptedException
     {
-
-        try {
+        try
+        {
             Logging.setup();
-            Logging.log("Starting Logging for PlanGamma2");
-        } catch (IOException e) {
+            Logging.log("Starting Logging for Plan Gamma");
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
 
@@ -30,7 +31,8 @@ public class PlanGamma extends AutonomousBase {
         try
         {
             planGamma(zone);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -42,16 +44,32 @@ public class PlanGamma extends AutonomousBase {
             wallTarget = 3;
         }
 
-        driveToTag.drive(7, zone.ordinal() + 1 + wallTarget, 11, 0);
+        linerSlideChild.encoderControl(-300, 0.5);
 
 
+        transferRight.autonomousControl(false);
+        transferleft.autonomousControl(false);
+        transferRight.autonomousControl(true);
+        transferleft.autonomousControl(true);
+
+
+        sleep(3000);
+        //driveToTag.drive(7, zone.ordinal() + 1 + wallTarget, 11, 0);
+        driveToTag.drive(7, 6, 4, 0);
+
+        sleep(500);
+        transferRight.autonomousControl(false);
+        transferleft.autonomousControl(false);
+
+
+        sleep(1000);
         //Park robot
         try {
             parkRobot(zone, isBlue);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        sleep(1000);
     }
 
     /**
@@ -62,13 +80,13 @@ public class PlanGamma extends AutonomousBase {
         //If target is in the center...
         if(zone == SpikeLineEnum.CENTER_SPIKE)
         {
+            Logging.log("Spike Line is CENTER_SPIKE");
             centerRoute(isBlue);
-
         }
-
         //If target is on the left...
         else if(zone == SpikeLineEnum.LEFT_SPIKE)
         {
+            Logging.log("Spike Line is LEFT_SPIKE");
             if (isBlue == 1)
             {
                 stageRoute(isBlue);
@@ -80,6 +98,7 @@ public class PlanGamma extends AutonomousBase {
         }
         else if (zone == SpikeLineEnum.RIGHT_SPIKE)
         {
+            Logging.log("Spike Line is RIGHT_SPIKE");
             if(isBlue == 1)
             {
                 wingRoute(isBlue);
@@ -88,9 +107,7 @@ public class PlanGamma extends AutonomousBase {
             {
                 stageRoute(isBlue);
             }
-
         }
-
     }
 
     //Left

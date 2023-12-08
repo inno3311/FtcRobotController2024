@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Controller;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -7,7 +9,10 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.TeleOpFunctions.TeleOpFunctionsInheritanceTest;
+import org.firstinspires.ftc.teamcode.util.Logging;
+
+
+
 
 public class MotorControl
 {
@@ -40,14 +45,30 @@ public class MotorControl
 
         this.motorName = motorName;
         this.hasEncoder = hasEncoder;
-        motor = this.hardwareMap.get(DcMotor.class, motorName);
+        try
+        {
+            motor = this.hardwareMap.get(DcMotor.class, motorName);
 
-        if (direction) {motor.setDirection(DcMotorSimple.Direction.FORWARD);}
+            if (direction) {motor.setDirection(DcMotorSimple.Direction.FORWARD);}
             else {motor.setDirection(DcMotorSimple.Direction.REVERSE);}
 
-        if (hasEncoder) {motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
+            if (hasEncoder) {motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
 
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        }
+        catch (IllegalArgumentException e)
+        {
+            Logging.log("%s not found in Hardware Map",motorName);
+            telemetry.addData("Exception:", "%s not found in Hardware Map",motorName);
+            telemetry.update();
+
+            //sleep(1000);
+
+        }
+
+
+
     }
 
 
@@ -140,7 +161,7 @@ public class MotorControl
      * @param speed The speed at which the motor will spin
      * @param argument The Gamepad bool input that will make it move
      */
-    protected void encoderControl(int target, double speed, boolean argument)
+    public void encoderControl(int target, double speed, boolean argument)
     {
         if (argument)
         {
@@ -153,7 +174,7 @@ public class MotorControl
      * @param speed The speed at which the motor will spin
      * @param argument The Gamepad analog input that will make it move if its value is greater than 0.2
      */
-    protected void encoderControl(int target, double speed, double argument)
+    public void encoderControl(int target, double speed, double argument)
     {
         if (Math.abs(argument) > 0.2)
         {
@@ -165,7 +186,7 @@ public class MotorControl
      * @param target Target location that the motor will move to
      * @param speed The speed at which the motor will spin
      */
-    protected void encoderControl(int target, double speed)
+    public void encoderControl(int target, double speed)
     {
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setTargetPosition(target);

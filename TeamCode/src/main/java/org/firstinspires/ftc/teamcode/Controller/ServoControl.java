@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.util.Logging;
 
 public class ServoControl
 {
@@ -31,11 +32,21 @@ public class ServoControl
     {
         this(opMode);
 
-        this.servoName = servoName;
-        servo = hardwareMap.servo.get(servoName);
+        try
+        {
+            this.servoName = servoName;
+            servo = hardwareMap.servo.get(servoName);
 
-        this.minPosition = minPosition;
-        this.maxPosition = maxPosition;
+            this.minPosition = minPosition;
+            this.maxPosition = maxPosition;
+        }
+        catch (IllegalArgumentException e)
+        {
+            Logging.log("%s not found in Hardware Map",servoName);
+            telemetry.addData("Exception:", "%s not found in Hardware Map",servoName);
+            telemetry.update();
+        }
+
     }
 
     protected void driveServo(double target)

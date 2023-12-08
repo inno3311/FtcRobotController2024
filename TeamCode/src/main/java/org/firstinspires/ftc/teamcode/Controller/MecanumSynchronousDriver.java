@@ -84,20 +84,16 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
 
        time = new ElapsedTime();
 
-       logger.setup();
+       //logger.setup();
        logger.log("Starting MecanumSynchronousDriver");
 
        mOpMode = opMode;
        opMode.telemetry.update();
 
-//       imuControl = new IMUControl(this.mOpMode.hardwareMap, this.mOpMode.telemetry);
-
-
        //The input can be a large value, therefore the values of Kp needs to be small to compensate.
        //
        // Set PID proportional value to produce non-zero correction value when robot veers off
        // straight line. P value controls how sensitive the correction is.
-       pidDrive = new PIDController(0.1, 0, 0.001);
        pidDrive = new PIDController(0.01, 0, 0.001);
 
        pidStrafe = new PIDController(0.00001, 0, 0);
@@ -105,28 +101,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
        // Set PID proportional value to start reducing power at about 50 degrees of rotation.
        // P by itself may stall before turn completed so we add a bit of I (integral) which
        // causes the PID controller to gently increase power if the turn is not completed.
-       pidRotateImu = new PIDController(.003, .00003, 0);
-       pidRotateImu = new PIDController(.02, .001, 0);  //works pretty good
-       pidRotateImu = new PIDController(.03, .003, 0);  //low bat
        pidRotateImu = new PIDController(.02, .003, .001);
-
-                                                                     //target 17797.357950
-       //pidRotateOd = new PIDController(.0005, 0, 0);  //overshoot
-       //pidRotateOd = new PIDController(.00025, 0, 0); //undershoot
-       //pidRotateOd = new PIDController(.00025, .000001, 0); //overshoot 18442
-       //pidRotateOd = new PIDController(.00025, .00000001, 0); // under 17064
-//       pidRotateOd = new PIDController(.00025, .0000005, 0);  // slight 17984
-//      pidRotateOd = new PIDController(.00025, .000001, 0); // 17836 17862  //works well for .5 power
-
-//       pidRotateOd = new PIDController(.00025, .00001, 0);
-
-       pidRotateOd = new PIDController(.00025, .0000001, .001);  // slight 17984
-       pidRotateOd = new PIDController(.00025, .0000002, .001);  // works for 90
-
-       pidRotateOd = new PIDController(.00025, .0000001, .003);  // 180 shutters too much
-       pidRotateOd = new PIDController(.00025, .0000001, .002);  // 180 ok... kinda
-
-       pidRotateOd = new PIDController(.00025, .0000002, .000);  // 180 ok... kinda
 
        pidRotateOd = new PIDController(.0003, .0000002, .000);  // 180 ok... kinda
 
@@ -137,7 +112,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
    /**
     * Drives the bot forward or backward in a straight line.
     * @param target distance in inches to travel.
-    * @param forward indicates directipn of travel.  -1 is forward 1 is backwards?
+    * @param forward indicates direction of travel.  -1 is forward 1 is backwards?
     * @param speed double value indicating the speed from 0 to 1.
     * @param seconds Will stop running to position if time exceeds this time
     */
@@ -240,12 +215,11 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
     /**
      * Drives the bot forward or backward in a straight line.
      * @param target distance in inches to travel.
-     * @param forward indicates directipn of travel.  -1 is forward 1 is backwards?
+     * @param forward indicates direction of travel.  -1 is forward 1 is backwards?
      * @param speed double value indicating the speed from 0 to 1.
      */
     public void forward(double target, int forward, double speed)
     {
-//        time.startTime();
 
         this.resetEncoders();
         resetRunMode();
@@ -265,8 +239,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
 
         speed *= forward;
         int leftFrontPos = this.lf.getCurrentPosition();
-//        if (forward == 1)
-        {
+
             if (forward == 1)
                 leftFrontPos += target * ticksPerInch;
             else
@@ -279,13 +252,13 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
                 frontLeftPos = this.lf.getCurrentPosition();
                 frontRightPos = this.rf.getCurrentPosition();
 
-                int currPosTicks = (frontLeftPos - frontRightPos) / 2 ;
+                double currPosTicks = (frontLeftPos + frontRightPos) / 2;
 
 
                 //if the number is positive the bot is slipping right
                 //if the number is negative the bot is slipping left
                 //lf and rf are added because rf is reverse of lf direction.
-                int wheelDifference = frontLeftPos + frontRightPos;
+                int wheelDifference = frontLeftPos - frontRightPos;
 
                 // if the number is positive the bot strafed left
                 // if the number is negative the bot strafed right
@@ -299,10 +272,11 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
                 double strafeCorrection = pidStrafe.performPID(strafeDifference);
                 //mOpMode.telemetry.addData("strafeCorrection ", "correction: " + strafeCorrection + " strafeDifference: " + strafeDifference);
 
-                logger.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction);
+               //Logging.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f currPosTicks = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction,currPosTicks);
+               Logging.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d" , frontLeftPos, frontRightPos, wheelDifference);
 
                 //this.driveMotors(speed, 0, 0, 1); //run with no PID
-//               correction = correction * (speed * 0.33);
+
                 if (pidDrive.onTarget())
                 {
                     correction = 0;
@@ -318,18 +292,24 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
                 mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
                mOpMode.telemetry.update();
 
-                if (forward == 1)
-                {
-                    if (currPosTicks > leftFrontPos)
-                        break;
-                }
-                else
-                {
-                    if (currPosTicks < leftFrontPos)
-                        break;
-                }
+               Logging.log("currPosTicks = %f, leftFrontPos = %d" , currPosTicks, leftFrontPos);
+
+               if (Math.abs(currPosTicks) > Math.abs(leftFrontPos))
+               {
+                  break;
+               }
+//               if (forward == 1)
+//                {
+//                    if (currPosTicks > leftFrontPos)
+//                        break;
+//                }
+//                else
+//                {
+//                    if (currPosTicks < leftFrontPos)
+//                        break;
+//                }
             }
-        }
+
 
         this.driveMotors(0, 0, 0, 0);
 
@@ -393,7 +373,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
                 //if the number is positive the bot is slipping forward
                 //if the number is negative the bot is slipping backwards
                 //lf and rf are added because rf is reverse of lf direction.
-                int yDifference = (this.lf.getCurrentPosition() - this.rf.getCurrentPosition()) / 2;
+                int yDifference = (this.lf.getCurrentPosition() + this.rf.getCurrentPosition()) / 2;
 
                 // if the number is positive the bot strafed left
                 // if the number is negative the bot strafed right
@@ -438,14 +418,15 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
         this.resetRunMode();
 
         //control the error of forward and backwards motion
-        pidDrive = new PIDController(0.0001, 0, 0.000);
+//        pidDrive = new PIDController(0.0001, 0, 0.000);
+        pidDrive = new PIDController(0.0005, 0, 0.000);
         //control the error of heading
         pidRotateImu = new PIDController(.04, .000, .000);
 
         // Set up parameters for turn correction.
         pidDrive.reset();
         pidDrive.setSetpoint(0);
-        pidDrive.setOutputRange(0, .19);
+        pidDrive.setOutputRange(0, 0.2);
         pidDrive.setInputRange(0, 5000);
         pidDrive.enable();
 
@@ -472,7 +453,11 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
             //if the number is positive the bot is slipping forward
             //if the number is negative the bot is slipping backwards
             //lf and rf are added because rf is reverse of lf direction.
-            int yDifference = (this.lf.getCurrentPosition() - this.rf.getCurrentPosition()) / 2;
+            int yDifference = Math.abs((this.lf.getCurrentPosition() - this.rf.getCurrentPosition()) / 2);
+
+            int direction = 1;
+            if (yDifference < 0)
+               direction = direction * -1;
 
             // if the number is positive the bot strafed left
             // if the number is negative the bot strafed right
@@ -484,16 +469,17 @@ Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, heading
             // pos is right turn, neg is left turn
             double forwardCorrection = pidDrive.performPID(yDifference);
             mOpMode.telemetry.addData("correction ", "correction: " + forwardCorrection + " wheelDif: " + yDifference);
-            Logging.log("correction: " + forwardCorrection + " wheelDif: " + yDifference);
+            Logging.log("correction: " + forwardCorrection + " yDifference: " + yDifference);
 
             double strafeCorrection = pidStrafe.performPID(strafeDifference);
             mOpMode.telemetry.addData("strafeCorrection ", "correction: " + strafeCorrection + " strafeDifference: " + strafeDifference);
 
             double headingError = pidRotateImu.performPID(angle);
 
-            this.driveMotors(forwardCorrection, (-headingError), speed, 1); // run with PID
+           //this.driveMotors(0, (-headingError), speed, 1); // run with PID
+            this.driveMotors(-forwardCorrection, (-headingError), speed, 1); // run with PID
             Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, headingError);
-            //logger.log("left Encoder = %d, Right Encoder = %d ", this.lf.getCurrentPosition(), this.rf.getCurrentPosition());
+            Logging.log("forwardCorrection = %f, speed = %f ", -forwardCorrection, speed);
             mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
             mOpMode.telemetry.update();
         }
