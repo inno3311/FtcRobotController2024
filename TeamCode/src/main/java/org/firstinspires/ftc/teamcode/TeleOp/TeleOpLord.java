@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.AprilTags.AprilTagMaster;
 import org.firstinspires.ftc.teamcode.AprilTags.DriveToTag;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.DroneLauncher;
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.DronePosition;
 import org.firstinspires.ftc.teamcode.TeleOpFunctions.HeightChild;
 import org.firstinspires.ftc.teamcode.TeleOpFunctions.IntakeChild;
 import org.firstinspires.ftc.teamcode.TeleOpFunctions.LinerSlideChild;
@@ -25,29 +27,35 @@ public class TeleOpLord extends OpMode
     TransferLeft transferleft;
     HeightChild heightChild;
     IntakeChild intakeChild;
+    DronePosition dronePosition;
+    DroneLauncher droneLauncher;
 
     @Override
     public void init()
     {
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
-        driveToTag = new DriveToTag(hardwareMap, telemetry, new ElapsedTime(), mechanicalDriveBase, new AprilTagMaster(mechanicalDriveBase, aprilTagProcessor));
+        driveToTag = new DriveToTag(hardwareMap, telemetry, new ElapsedTime(), new ElapsedTime(), new AprilTagMaster(mechanicalDriveBase, aprilTagProcessor));
         linerSlideChild = new LinerSlideChild(this);
         transferRight = new TransferRight(this);
         transferleft = new TransferLeft(this);
         heightChild = new HeightChild(this);
         intakeChild = new IntakeChild(this);
+        dronePosition = new DronePosition(this);
+        droneLauncher = new DroneLauncher(this);
     }
 
     @Override
     public void loop()
     {
         mechanicalDriveBase.gamepadController(gamepad1);
-        driveToTag.
+        driveToTag.targetLocator(gamepad1);
         transferRight.transferDrive();
         transferleft.transferDrive();
         linerSlideChild.linerSlideDrive();
         heightChild.heightDrive();
         intakeChild.IntakeDrive();
+        droneLauncher.launcherControl();
+        dronePosition.PositionControl();
     }
 
 }
