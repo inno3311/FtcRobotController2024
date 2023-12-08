@@ -28,9 +28,15 @@ public class HeightChild extends MotorControl
         super.analogControl(1, gamepad2.left_stick_y, false, lowerBound, upperBound);
     }
 
+    private void resetDrive()
+    {
+        super.simpleDrive(1, gamepad1.back, false);
+    }
+
     private void encoderDrive()
     {
-        encoderControl(lowerBound, 1, gamepad2.left_bumper);
+        encoderControl(lowerBound, 1, gamepad2.dpad_down);
+        encoderControl(-2000, 1, gamepad2.dpad_up);
     }
 
     public void heightDriveSimple()

@@ -28,8 +28,8 @@ public class LinerSlideChild extends MotorControl
 
     private void encoderDrive()
     {
-        encoderControl(resetPosition, 0.5, gamepad2.a && !gamepad2.start);
-        encoderControl(upperPosition, 0.5, gamepad2.y);
+        encoderControl(upperPosition, 1, gamepad2.left_bumper);
+        encoderControl(resetPosition, 0.75, gamepad2.left_trigger);
     }
 
 

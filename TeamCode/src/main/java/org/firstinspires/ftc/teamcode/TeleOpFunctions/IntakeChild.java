@@ -21,7 +21,7 @@ public class IntakeChild extends MotorControl
 
     private void simpleDrive()
     {
-        super.simpleDrive(1, gamepad2.right_bumper, gamepad2.back);
+        super.simpleDrive(1, gamepad2.right_bumper, gamepad2.right_trigger > 0.5);
     }
 
     @Override

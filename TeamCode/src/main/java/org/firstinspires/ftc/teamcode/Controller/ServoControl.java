@@ -58,13 +58,6 @@ public class ServoControl
         }
     }
 
-    protected void driveServo(double target, double argument)
-    {
-        if (argument > 0.25)
-        {
-            driveServo(target);
-        }
-    }
 
     protected void telemetry()
     {
