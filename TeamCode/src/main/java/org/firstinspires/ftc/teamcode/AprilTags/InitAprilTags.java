@@ -19,7 +19,9 @@ public class InitAprilTags
         webcam.initAprilTag();
         elapsedTime = new ElapsedTime();
         aprilTagProcessor = webcam.getAprilTagProcessor();//initAprilTags.initAprilTags(hardwareMap);
+
         aprilTagMaster = new AprilTagMaster(driver, hardwareMap);
+
         driveToTag = new DriveToTag(hardwareMap, telemetry, elapsedTime, new ElapsedTime(), aprilTagMaster);
     }
 

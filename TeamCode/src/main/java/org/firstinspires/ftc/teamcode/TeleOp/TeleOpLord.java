@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.AprilTags.AprilTagMaster;
 import org.firstinspires.ftc.teamcode.AprilTags.DriveToTag;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.DroneLauncher;
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.DronePosition;
 import org.firstinspires.ftc.teamcode.TeleOpFunctions.HeightChild;
 import org.firstinspires.ftc.teamcode.TeleOpFunctions.IntakeChild;
 import org.firstinspires.ftc.teamcode.TeleOpFunctions.LinerSlideChild;
@@ -24,17 +26,23 @@ public class TeleOpLord extends OpMode
     TransferLeft transferleft;
     HeightChild heightChild;
     IntakeChild intakeChild;
+    DronePosition dronePosition;
+    DroneLauncher droneLauncher;
 
     @Override
     public void init()
     {
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
+
         driveToTag = new DriveToTag(hardwareMap, telemetry, new ElapsedTime(), new ElapsedTime(), new AprilTagMaster(mechanicalDriveBase, hardwareMap));
+
         linerSlideChild = new LinerSlideChild(this);
         transferRight = new TransferRight(this);
         transferleft = new TransferLeft(this);
         heightChild = new HeightChild(this);
         intakeChild = new IntakeChild(this);
+        dronePosition = new DronePosition(this);
+        droneLauncher = new DroneLauncher(this);
     }
 
     @Override
@@ -47,6 +55,8 @@ public class TeleOpLord extends OpMode
         linerSlideChild.linerSlideDrive();
         heightChild.heightDrive();
         intakeChild.IntakeDrive();
+        droneLauncher.launcherControl();
+        dronePosition.PositionControl();
     }
 
 }
