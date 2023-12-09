@@ -101,6 +101,8 @@ public class PlanBeta extends AutonomousBase{
             //Go to the middle
             driver.forward(25.5, 1, 0.8);
 
+            intakeChild.encoderControl(-1000,.6);
+
             goThroughTrussAndFinish(false, false, true, isBlue);
 
         }

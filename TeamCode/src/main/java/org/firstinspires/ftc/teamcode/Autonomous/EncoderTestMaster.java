@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 import org.firstinspires.ftc.teamcode.IMU.IMUControl;
 
 @Autonomous(name = "EncoderTest", group = "EncoderTest")
+@Disabled
 public class EncoderTestMaster extends LinearOpMode
 {
     IMUControl imuControl;
