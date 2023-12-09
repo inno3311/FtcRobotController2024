@@ -20,18 +20,18 @@ public class AprilTagMaster
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
     //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-    final double SPEED_GAIN  =  0.04  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-    final double STRAFE_GAIN =  0.02 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-    final double TURN_GAIN   =  0.035  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+    final double SPEED_GAIN = 0.075;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+    final double STRAFE_GAIN = 0.06;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
+    final double TURN_GAIN = 0.05;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
 
-    final double MAX_AUTO_SPEED = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_STRAFE = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_TURN = 0.5;   //  Clip the turn speed to this max value (adjust for your robot)
+    final double MAX_AUTO_SPEED = 0.7;   //  Clip the approach speed to this max value (adjust for your robot)
+    final double MAX_AUTO_STRAFE = 0.8;   //  Clip the approach speed to this max value (adjust for your robot)
+    final double MAX_AUTO_TURN = 0.6;   //  Clip the turn speed to this max value (adjust for your robot)
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private static  int desiredTagID = -1;// Choose the tag you want to approach or set to -1 for ANY tag.
 
-//    private VisionPortal visionPortal;               // Used to manage the video source.
+    private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     private MechanicalDriveBase mechanicalDriveBase;
@@ -41,10 +41,10 @@ public class AprilTagMaster
     private double yawError = 0;
 
 
-    public AprilTagMaster(MechanicalDriveBase mechanicalDriveBase, AprilTagProcessor aprilTag)
+    public AprilTagMaster(MechanicalDriveBase mechanicalDriveBase, HardwareMap hardwareMap)
     {
         this.mechanicalDriveBase = mechanicalDriveBase;
-        this.aprilTag = aprilTag;
+        initAprilTag(hardwareMap);
     }
 
     public void tagsTelemetry(Telemetry telemetry)
@@ -110,7 +110,7 @@ public class AprilTagMaster
             telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
         }
 
-        telemetry.update();
+//        telemetry.update();
 
         // Apply desired axes motions to the drivetrain.
         mechanicalDriveBase.driveMotors(drive, -turn, strafe, 1);
@@ -230,30 +230,30 @@ public class AprilTagMaster
         return false;
     }
 
-//    public void closeAprilTags()
-//    {
-////        visionPortal.close();
-//    }
-//
-//    /**
-//     * Initialize the AprilTag processor.
-//     */
-//    private void initAprilTag(HardwareMap hardwareMap)
-//    {
-//        // Create the AprilTag processor by using a builder.
-//        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
-//
-//        // Create the vision portal the easy way.
-//        if (USE_WEBCAM)
-//        {
-//            visionPortal = VisionPortal.easyCreateWithDefaults(
-//                    hardwareMap.get(WebcamName.class, "Bottom"), aprilTag);
-//        }
-//        else
-//        {
-//            visionPortal = VisionPortal.easyCreateWithDefaults(
-//                    BuiltinCameraDirection.BACK, aprilTag);
-//        }
-//    }
+    public void closeAprilTags()
+    {
+//        visionPortal.close();
+    }
+
+    /**
+     * Initialize the AprilTag processor.
+     */
+    private void initAprilTag(HardwareMap hardwareMap)
+    {
+        // Create the AprilTag processor by using a builder.
+        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
+
+        // Create the vision portal the easy way.
+        if (USE_WEBCAM)
+        {
+            visionPortal = VisionPortal.easyCreateWithDefaults(
+                    hardwareMap.get(WebcamName.class, "Bottom"), aprilTag);
+        }
+        else
+        {
+            visionPortal = VisionPortal.easyCreateWithDefaults(
+                    BuiltinCameraDirection.BACK, aprilTag);
+        }
+    }
 
 }

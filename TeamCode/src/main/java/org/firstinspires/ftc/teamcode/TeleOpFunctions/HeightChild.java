@@ -18,6 +18,7 @@ public class HeightChild extends MotorControl
     //Calls all methods and then is called itself in the OpMode loop
     public void heightDrive()
     {
+        this.resetDrive();
         this.analogControl();
         this.encoderDrive();
         this.telemetry();
@@ -25,12 +26,15 @@ public class HeightChild extends MotorControl
 
     private void analogControl()
     {
-        super.analogControl(1, gamepad2.left_stick_y, false, lowerBound, upperBound);
+        if (gamepad2.back)
+        {
+            super.analogControl(1, gamepad2.left_stick_y, false, lowerBound, upperBound);
+        }
     }
 
     private void resetDrive()
     {
-        super.simpleDrive(1, gamepad1.back, false);
+        super.simpleDrive(-1, gamepad2.back, false);
     }
 
     private void encoderDrive()
