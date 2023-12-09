@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.AprilTags.AprilTagMaster;
 import org.firstinspires.ftc.teamcode.AprilTags.DriveToTag;
 import org.firstinspires.ftc.teamcode.AprilTags.InitAprilTags;
+import org.firstinspires.ftc.teamcode.ColorSwitch.ColorSwitch;
 import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 import org.firstinspires.ftc.teamcode.TeleOpFunctions.HeightChild;
@@ -16,15 +17,15 @@ import org.firstinspires.ftc.teamcode.TeleOpFunctions.LinerSlideChild;
 import org.firstinspires.ftc.teamcode.TeleOpFunctions.TransferLeft;
 import org.firstinspires.ftc.teamcode.TeleOpFunctions.TransferRight;
 import org.firstinspires.ftc.teamcode.util.ImuHardware;
+import org.firstinspires.ftc.teamcode.util.Logging;
 import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 
 import java.io.IOException;
 
 public class AutonomousBase extends LinearOpMode
 {
-    final int blue = 1;
-    final int red = -1;
-    public int isBlue = blue; //Red is negative!
+    protected int color;
+    public int isBlue = color; //Red is negative!
     public final int DELAY = 500;
 
     public boolean robotIsMoving = true;
@@ -47,6 +48,8 @@ public class AutonomousBase extends LinearOpMode
     HeightChild heightChild;
     IntakeChild intakeChild;
 
+    ColorSwitch colorSwitch;
+
     SpikeLineEnum zone = SpikeLineEnum.UNKNOWN;
 
     public enum SpikeLineEnum
@@ -67,6 +70,7 @@ public class AutonomousBase extends LinearOpMode
             initAprilTags = new InitAprilTags();
 
 
+            colorSwitch = new ColorSwitch(hardwareMap);
 
             linerSlideChild = new LinerSlideChild(this);
             sleep(DELAY);
@@ -89,7 +93,14 @@ public class AutonomousBase extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
+
         initMembers();
+
+        isBlue = colorSwitch.getTeam();
+
+        telemetry.addData("isBlue: ", "%d ", isBlue);
+        telemetry.update();
+        Logging.log("isBlue: " + isBlue);
 
         webcam.initTfod();
 
@@ -108,11 +119,8 @@ public class AutonomousBase extends LinearOpMode
         aprilTagMaster = initAprilTags.getAprilTagMaster();
         driveToTag = initAprilTags.getDriveToTag();
 
-
         start();
 
-        //TODO We need to make this work for red side to because red uses targets (AprilTag Ids) 4-6
-        //ordinal returns an int +1 because it starts counting at 0
     }
 
     protected void findTeamProp()
@@ -243,14 +251,14 @@ public class AutonomousBase extends LinearOpMode
         if(zone == SpikeLineEnum.CENTER_SPIKE)
         {
             //Center
-            if(isBlue == blue)
+            if(isBlue == 1)
             {
                 //driver.strafe(20, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
                 driver.strafe(20, -1, defaultSpeed,imuControl);
 
                 //driver.forward(5, 1, defaultSpeed);
             }
-            else if(isBlue == red)
+            else if(isBlue == -1)
             {
                 driver.strafe(20, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
 
@@ -261,13 +269,13 @@ public class AutonomousBase extends LinearOpMode
         else if(zone == SpikeLineEnum.LEFT_SPIKE)
         {
             //Left
-            if(isBlue == blue)
+            if(isBlue == 1)
             {
                 driver.strafe(7, -1, defaultSpeed, imuControl, defaultWaitTime);
 
                 //driver.forward(5, 1, defaultSpeed);
             }
-            else if(isBlue == red)
+            else if(isBlue == -1)
             {
                 driver.strafe(20, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
             }
@@ -275,13 +283,13 @@ public class AutonomousBase extends LinearOpMode
         else if(zone == SpikeLineEnum.RIGHT_SPIKE)
         {
             //Right
-            if(isBlue == blue)
+            if(isBlue == 1)
             {
                 driver.strafe(20, -1, defaultSpeed, imuControl, defaultWaitTime);
 
 
             }
-            else if (isBlue == red)
+            else if (isBlue == -1)
             {
                 driver.strafe(7, 1, defaultSpeed, imuControl, defaultWaitTime);
             }

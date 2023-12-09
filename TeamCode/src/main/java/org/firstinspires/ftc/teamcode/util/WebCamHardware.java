@@ -209,8 +209,6 @@ public class WebCamHardware
             }
          }
 
-
-
          if (!(currentRecognitions.isEmpty()))
          {
             mOpMode.telemetry.addData("", " ");
