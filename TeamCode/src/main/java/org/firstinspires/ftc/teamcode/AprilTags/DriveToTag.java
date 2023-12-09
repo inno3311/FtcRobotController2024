@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 //Further tuning in AprilTagMaster.java to come, I sure of it
 public class DriveToTag
 {
-    AutonomousBase autonomousBase;
     HardwareMap hardwareMap;
     Telemetry telemetry;
     ElapsedTime elapsedTime;
