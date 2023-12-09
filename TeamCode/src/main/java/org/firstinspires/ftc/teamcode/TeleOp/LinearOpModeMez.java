@@ -55,7 +55,7 @@ public class LinearOpModeMez extends AutonomousBase
 //        driver.forward(3 * 1, -1, 0.4);
 //        sleep(3000);
 //        try
- //       {
+//        {
         //driver.strafe();
 
 
@@ -74,11 +74,10 @@ public class LinearOpModeMez extends AutonomousBase
 //            driver.rotate2(-45, imuControl);
 //            sleep(1000);
 //
+
+
 //            driver.rotate2(-90, imuControl);
-//            sleep(1000);
-//
-//            driver.rotate2(-90, imuControl);
-//            sleep(1000);
+//            sleep(5000);
 
 
 
@@ -99,10 +98,10 @@ public class LinearOpModeMez extends AutonomousBase
 
         while (opModeIsActive())
         {
-            heightChild.encoderControl(10,.3);
-            sleep(3000);
-            heightChild.encoderControl(-10,.3);
-            sleep(3000);
+//            heightChild.encoderControl(10,.3);
+//            sleep(3000);
+//            heightChild.encoderControl(-10,.3);
+//            sleep(3000);
 
             //testDeadWheels();
 
@@ -110,14 +109,18 @@ public class LinearOpModeMez extends AutonomousBase
 
             //driveStraightTest();
 
-//            try
-//            {
-//                rotateTest();
-//            }
-//            catch (IOException e)
-//            {
-//                e.printStackTrace();
-//            }
+            try
+            {
+                //rotateTest();
+
+                driver.rotate2(-90, imuControl);
+                sleep(1000);
+
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
 
 
 //            driver.rotate(1, 1, imuControl);

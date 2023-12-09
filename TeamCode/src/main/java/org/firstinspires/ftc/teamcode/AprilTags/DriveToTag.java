@@ -36,7 +36,10 @@ public class DriveToTag
     {
         elapsedTime.reset();
         elapsedTime.startTime();
-        while (!aprilTagMaster.aprilTagDetected() && elapsedTime.seconds() < time) {}
+        while (!aprilTagMaster.aprilTagDetected() && elapsedTime.seconds() < time) {
+            telemetry.addData("AprilTag", aprilTagMaster.aprilTagDetected());
+            telemetry.update();
+        }
 
         if (aprilTagMaster.aprilTagDetected())
         {

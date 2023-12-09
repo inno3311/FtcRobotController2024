@@ -35,15 +35,24 @@ public class PlanBeta extends AutonomousBase{
      */
     public void planBeta(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException {
 
-        if (zone == SpikeLineEnum.CENTER_SPIKE) {
+        int DELAY = 500;
+
+        if (zone == SpikeLineEnum.CENTER_SPIKE)
+        {
             //Go forward and place pixel
             driver.forward(26, 1, 0.6);
+
+            sleep(DELAY);
 
             //Go back so that robot lets go of pixel
             driver.forward(4, -1, 0.5);
 
+            sleep(DELAY);
+
             //Strafe to left
             driver.strafe(10, isBlue, 0.6, imuControl);
+
+            sleep(DELAY);
 
             //Continue to go into position
             driver.forward(29, 1, 0.6);
@@ -78,7 +87,8 @@ public class PlanBeta extends AutonomousBase{
 
         }
 
-        if (zone == SpikeLineEnum.RIGHT_SPIKE) {
+        if (zone == SpikeLineEnum.RIGHT_SPIKE)
+        {
 
             //Go forward
             driver.forward(17, 1, 0.6);
@@ -111,25 +121,34 @@ public class PlanBeta extends AutonomousBase{
     public void goThroughTrussAndFinish(boolean center, boolean left, boolean right, int isBlue) throws IOException, InterruptedException {
         int goThroughTrussDistance;
 
-        driver.rotate2(-90*isBlue, imuControl);
-       
+        sleep(3000);
+
+        driver.rotate2(-90 * isBlue, imuControl);
+
 
         //This goes to the other side
-        if(left){
+        if (left) {
             goThroughTrussDistance = 60;
-        } else if(center){
+        } else if (center) {
             goThroughTrussDistance = 80;
-        } else{
+        } else {
             goThroughTrussDistance = 75;
         }
 
         driver.forward(goThroughTrussDistance, 1, 0.7);
-         
+
+        int strafeValue;
 
         //Strafe to position
-        driver.strafe(23, -isBlue, 0.5, imuControl);
+        if (center) {
+            strafeValue = 35;
+        } else if (left) {
+            strafeValue = 48;
+        } else {
+            strafeValue = 30;
+        }
 
+        driver.strafe(strafeValue, -isBlue, 0.5, imuControl);
     }
-
 
 }
