@@ -43,6 +43,12 @@ public class HeightChild extends MotorControl
         encoderControl(-2000, 1, gamepad2.dpad_up);
     }
 
+    @Override
+    public void encoderControl(int target, double speed)
+    {
+        super.encoderControl(target, speed);
+    }
+
     public void heightDriveSimple()
     {
         this.analogControlSimple();
