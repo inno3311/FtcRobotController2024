@@ -49,6 +49,7 @@ public class LinearOpModeMez extends AutonomousBase
         waitForStart();
         start();
 
+
 //        driver.forward(3 * 1, 1, 0.4);
 //        sleep(3000);
 //        driver.forward(3 * 1, -1, 0.4);
@@ -98,10 +99,14 @@ public class LinearOpModeMez extends AutonomousBase
 
         while (opModeIsActive())
         {
+            heightChild.encoderControl(10,.3);
+            sleep(3000);
+            heightChild.encoderControl(-10,.3);
+            sleep(3000);
 
             //testDeadWheels();
 
-            strafeTest();
+      //      strafeTest();
 
             //driveStraightTest();
 

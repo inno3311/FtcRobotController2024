@@ -45,8 +45,8 @@ public class AutonomousBase extends LinearOpMode
     LinerSlideChild linerSlideChild;
     TransferRight transferRight;
     TransferLeft transferleft;
-    HeightChild heightChild;
-    IntakeChild intakeChild;
+    protected HeightChild heightChild;
+    protected IntakeChild intakeChild;
 
     ColorSwitch colorSwitch;
 
@@ -240,11 +240,14 @@ public class AutonomousBase extends LinearOpMode
     public void parkRobot(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException
     {
 
+
+
         double defaultSpeed = 0.6;
         int defaultWaitTime = 5;
 
         sleep(DELAY);
         //TODO maybe: Add variables for adding/subtracting for more reusable code
+        //TODO if necessary: Set each driver.forward command for each instance (instead of shared)
         driver.forward(10, -1, defaultSpeed);
 
 
@@ -254,7 +257,7 @@ public class AutonomousBase extends LinearOpMode
             if(isBlue == 1)
             {
                 //driver.strafe(20, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
-                driver.strafe(20, -1, defaultSpeed,imuControl);
+                driver.strafe(23, -1, defaultSpeed,imuControl);
 
                 //driver.forward(5, 1, defaultSpeed);
             }
@@ -271,7 +274,7 @@ public class AutonomousBase extends LinearOpMode
             //Left
             if(isBlue == 1)
             {
-                driver.strafe(7, -1, defaultSpeed, imuControl, defaultWaitTime);
+                driver.strafe(23, -1, defaultSpeed, imuControl, defaultWaitTime);
 
                 //driver.forward(5, 1, defaultSpeed);
             }
@@ -291,12 +294,12 @@ public class AutonomousBase extends LinearOpMode
             }
             else if (isBlue == -1)
             {
-                driver.strafe(7, 1, defaultSpeed, imuControl, defaultWaitTime);
+                driver.strafe(15, 1, defaultSpeed, imuControl, defaultWaitTime);
             }
 
         }
 
-        driver.forward(5, 1, defaultSpeed);
+        driver.forward(14, 1, defaultSpeed);
     }
 
 

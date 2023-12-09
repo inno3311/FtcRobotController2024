@@ -117,11 +117,11 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
     */
     public void forward(double target, int forward, double speed, int seconds)
     {
-        time.reset();
-        time.startTime();
-
         this.resetEncoders();
         resetRunMode();
+
+        time.reset();
+        time.startTime();
 
         pidDrive.setSetpoint(0);
         pidDrive.setOutputRange(0, speed);
@@ -138,76 +138,82 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
 
         speed *= forward;
         int leftFrontPos = this.lf.getCurrentPosition();
-//        if (forward == 1)
+
+        if (forward == 1)
+            leftFrontPos += target * ticksPerInch;
+        else
+            leftFrontPos -= target * ticksPerInch;
+
+        while (mOpMode.opModeIsActive() && time.seconds() < seconds)
         {
-            if (forward == 1)
-               leftFrontPos += target * ticksPerInch;
-            else
-               leftFrontPos -= target * ticksPerInch;
+            int frontLeftPos, frontRightPos;
 
-            while (mOpMode.opModeIsActive() && time.seconds() < seconds)
+            frontLeftPos = this.lf.getCurrentPosition();
+            frontRightPos = this.rf.getCurrentPosition();
+
+            double currPosTicks = (frontLeftPos + frontRightPos) / 2;
+
+
+            //if the number is positive the bot is slipping right
+            //if the number is negative the bot is slipping left
+            //lf and rf are added because rf is reverse of lf direction.
+            int wheelDifference = frontLeftPos - frontRightPos;
+
+            // if the number is positive the bot strafed left
+            // if the number is negative the bot strafed right
+            int strafeDifference = this.rb.getCurrentPosition();
+
+            // Use PID with imu input to drive in a straight line.
+            // pos is right turn, neg is left turn
+            double correction = pidDrive.performPID(wheelDifference);
+            mOpMode.telemetry.addData("correction ", "correction: " + correction + " wheelDif: " + wheelDifference);
+
+            double strafeCorrection = pidStrafe.performPID(strafeDifference);
+            //mOpMode.telemetry.addData("strafeCorrection ", "correction: " + strafeCorrection + " strafeDifference: " + strafeDifference);
+
+            //Logging.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f currPosTicks = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction,currPosTicks);
+            Logging.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d" , frontLeftPos, frontRightPos, wheelDifference);
+
+            //this.driveMotors(speed, 0, 0, 1); //run with no PID
+
+            if (pidDrive.onTarget())
             {
-               int frontLeftPos, frontRightPos;
-
-               frontLeftPos = this.lf.getCurrentPosition();
-               frontRightPos = this.rf.getCurrentPosition();
-
-               int currPosTicks = (frontLeftPos - frontRightPos) / 2 ;
-
-
-               //if the number is positive the bot is slipping right
-               //if the number is negative the bot is slipping left
-               //lf and rf are added because rf is reverse of lf direction.
-               int wheelDifference = frontLeftPos + frontRightPos;
-
-               // if the number is positive the bot strafed left
-               // if the number is negative the bot strafed right
-               int strafeDifference = this.rb.getCurrentPosition();
-
-               // Use PID with imu input to drive in a straight line.
-               // pos is right turn, neg is left turn
-               double correction = pidDrive.performPID(wheelDifference);
-//log                mOpMode.telemetry.addData("correction ", "correction: " + correction + " wheelDif: " + wheelDifference);
-
-               double strafeCorrection = pidStrafe.performPID(strafeDifference);
-//log                mOpMode.telemetry.addData("strafeCorrection ", "correction: " + strafeCorrection + " strafeDifference: " + strafeDifference);
-
-               logger.log("left Encoder = %d, Right Encoder = %d wheelDifference = %d correction = %f", this.lf.getCurrentPosition(), this.rf.getCurrentPosition(), wheelDifference, correction);
-
-               //this.driveMotors(speed, 0, 0, 1); //run with no PID
-//               correction = correction * (speed * 0.33);
-               if (pidDrive.onTarget())
-               {
-                  correction = 0;
-               }
-               else
-               {
-                  correction = correction * (speed * 0.2);
-               }
-               this.driveMotors(speed, (correction * forward) + 0.01, -strafeCorrection, 1); // run with PID
+                correction = 0;
+            }
+            else
+            {
+                correction = correction * (speed * 0.2);
+            }
+            this.driveMotors(speed, (correction * forward) + 0.01, -strafeCorrection, 1); // run with PID
 
 //               this.driveMotors(speed, 0, 0, 1);
 
-//log                mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
-//log               mOpMode.telemetry.update();
+            mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
+            mOpMode.telemetry.update();
 
-               if (forward == 1)
-               {
-                  if (currPosTicks < leftFrontPos)
-                     break;
-               }
-               else
-               {
-                  if (currPosTicks > leftFrontPos)
-                     break;
-               }
+            Logging.log("currPosTicks = %f, leftFrontPos = %d" , currPosTicks, leftFrontPos);
+
+            if (Math.abs(currPosTicks) > Math.abs(leftFrontPos))
+            {
+                break;
             }
+//               if (forward == 1)
+//                {
+//                    if (currPosTicks > leftFrontPos)
+//                        break;
+//                }
+//                else
+//                {
+//                    if (currPosTicks < leftFrontPos)
+//                        break;
+//                }
         }
+
 
         this.driveMotors(0, 0, 0, 0);
 
-       this.resetEncoders();
-       this.resetRunMode();
+        this.resetEncoders();
+        this.resetRunMode();
 
     }
 
