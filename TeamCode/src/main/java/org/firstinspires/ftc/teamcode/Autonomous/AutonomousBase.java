@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.TeleOpFunctions.TransferLeft;
 import org.firstinspires.ftc.teamcode.TeleOpFunctions.TransferRight;
 import org.firstinspires.ftc.teamcode.util.ImuHardware;
 import org.firstinspires.ftc.teamcode.util.Logging;
+import org.firstinspires.ftc.teamcode.util.WebCamDoubleVision;
 import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 
 import java.io.IOException;
@@ -30,25 +31,27 @@ public class AutonomousBase extends LinearOpMode
 
     public boolean robotIsMoving = true;
 
-    WebCamHardware webcam;
+    protected WebCamHardware webcam;
+
+    protected WebCamDoubleVision webcamDouble;
 
 
     protected ImuHardware imuControl;
 
     /** Drive control */
     protected MecanumSynchronousDriver driver;
-    AprilTagMaster aprilTagMaster;
-    InitAprilTags initAprilTags;
-    DriveToTag driveToTag;
+    protected AprilTagMaster aprilTagMaster;
+    protected InitAprilTags initAprilTags;
+    protected DriveToTag driveToTag;
 
 
-    LinerSlideChild linerSlideChild;
-    TransferRight transferRight;
-    TransferLeft transferleft;
+    protected LinerSlideChild linerSlideChild;
+    protected TransferRight transferRight;
+    protected TransferLeft transferleft;
     protected HeightChild heightChild;
     protected IntakeChild intakeChild;
 
-    ColorSwitch colorSwitch;
+    protected ColorSwitch colorSwitch;
 
     SpikeLineEnum zone = SpikeLineEnum.UNKNOWN;
 
@@ -69,9 +72,11 @@ public class AutonomousBase extends LinearOpMode
             imuControl = new ImuHardware(this);
             initAprilTags = new InitAprilTags();
 
+            webcamDouble = new WebCamDoubleVision(this);
 
-            colorSwitch = new ColorSwitch(hardwareMap);
+//            colorSwitch = new ColorSwitch(hardwareMap);
 
+            //Following are all intake or outtake items, mostly on the expansion hub.
             linerSlideChild = new LinerSlideChild(this);
             sleep(DELAY);
             transferRight = new TransferRight(this);
@@ -82,7 +87,6 @@ public class AutonomousBase extends LinearOpMode
             sleep(DELAY);
             intakeChild = new IntakeChild(this);
             sleep(DELAY);
-
         }
         catch (IOException e)
         {
@@ -96,32 +100,45 @@ public class AutonomousBase extends LinearOpMode
 
         initMembers();
 
-        isBlue = colorSwitch.getTeam();
+        isBlue = 1 ;//colorSwitch.getTeam();
 
         telemetry.addData("isBlue: ", "%d ", isBlue);
         telemetry.update();
+        sleep(2000);
         Logging.log("isBlue: " + isBlue);
 
-        webcam.initTfod();
+        //webcam.initTfod();
 
+        //TODO: move this to the waitForStart
         this.findTeamProp();
 
 
         waitForStart();
 
-//        telemetry.addData(""," ");
-//        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
-//        telemetry.addData("- Position", "%.0f / %.0f", x, y);
-//        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
-//        telemetry.update();
+        //once we start, we should no longer need Tfod.  Should have IDed target by now.
+        webcamDouble.disableTfod();
 
+        //TODO: this will go away...
         initAprilTags.initAprilTags(webcam, driver, hardwareMap, telemetry);
         aprilTagMaster = initAprilTags.getAprilTagMaster();
         driveToTag = initAprilTags.getDriveToTag();
 
-        start();
+        //TODO: Why was this here????
+//        start();
 
     }
+
+    @Override
+    public void waitForStart()
+    {
+        super.waitForStart();
+
+        //TODO:  perhaps scan for team prop here?
+
+        webcamDouble.telemetryTfod();
+    }
+
+
 
     protected void findTeamProp()
     {
