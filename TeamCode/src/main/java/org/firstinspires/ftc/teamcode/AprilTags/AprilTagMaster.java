@@ -247,7 +247,7 @@ public class AprilTagMaster
         if (USE_WEBCAM)
         {
             visionPortal = VisionPortal.easyCreateWithDefaults(
-                    hardwareMap.get(WebcamName.class, "Bottom"), aprilTag);
+                    hardwareMap.get(WebcamName.class, "Top"), aprilTag);
         }
         else
         {
