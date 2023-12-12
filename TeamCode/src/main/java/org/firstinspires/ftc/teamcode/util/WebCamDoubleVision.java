@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.Autonomous.AutonomousBase;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -160,8 +161,7 @@ public class WebCamDoubleVision
         // AprilTag Configuration
         // -----------------------------------------------------------------------------------------
 
-        aprilTag = new AprilTagProcessor.Builder()
-            .build();
+        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
 
         // -----------------------------------------------------------------------------------------
         // TFOD Configuration
@@ -248,4 +248,100 @@ public class WebCamDoubleVision
 
     }   // end method telemetryTfod()
 
+    public AprilTagProcessor getAprilTag()
+    {
+        return aprilTag;
+    }
+
+
+    /**
+     * Function to find the best Recognition of the team prop.
+     * @return Recognition
+     */
+    public Recognition findObject()
+    {
+        Recognition bestRecognition = null;
+        Recognition currentRecognition = null;
+
+        List<Recognition> currentRecognitions = tfod.getRecognitions();
+        mOpMode.telemetry.addData("# Objects Detected", currentRecognitions.size());
+
+        // Step through the list of recognitions and display info for each one.
+        for (Recognition recognition : currentRecognitions)
+        {
+            double x = (recognition.getLeft() + recognition.getRight()) / 2;
+            double y = (recognition.getTop() + recognition.getBottom()) / 2;
+
+            if (bestRecognition == null)
+            {
+                bestRecognition = recognition;
+            }
+            else
+            {
+                if (bestRecognition.getConfidence() < recognition.getConfidence())
+                {
+                    bestRecognition = recognition;
+                }
+                else
+                {
+
+                }
+            }
+        }
+
+        if (!(currentRecognitions.isEmpty()))
+        {
+            mOpMode.telemetry.addData("", " ");
+            mOpMode.telemetry.addData("Image", "%s (%.0f %% Conf.)", bestRecognition.getLabel(), bestRecognition.getConfidence() * 100);
+//            x = ;
+//            y = (bestRecognition.getTop() + bestRecognition.getBottom()) / 2;
+            mOpMode.telemetry.addData("- Position", "%.0f / %.0f", (bestRecognition.getLeft() + bestRecognition.getRight()) / 2);
+            //mOpMode.telemetry.addData("- Size", "%.0f x %.0f", bestRecognition.getWidth(), bestRecognition.getHeight());
+
+
+            return bestRecognition;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
+
+    /**
+     * @param x The X coordinate of the detected object.
+     * @return AutonomousBase.SpikeLineEnum The zone in which the team prop was found.
+     */
+    public AutonomousBase.SpikeLineEnum findTarget(double x)
+    {
+        //This is supposed to find the target's position. (Made more sense than writing plain code.)
+        AutonomousBase.SpikeLineEnum targetPosition = AutonomousBase.SpikeLineEnum.UNKNOWN; //("targetPosition" means "position of the target", not "goal" position)
+
+        int leftMaximum = 220;
+        int centerMinimum = 221;
+        int centerMaximum = 459;
+        int rightMinimum = 460;
+
+        if(x < leftMaximum)
+        {   //Range for left 50-220
+            targetPosition = AutonomousBase.SpikeLineEnum.LEFT_SPIKE;
+        }
+        else if(x > centerMinimum && x <= centerMaximum)
+        {
+            //Range for the center 221 - 459
+            targetPosition = AutonomousBase.SpikeLineEnum.CENTER_SPIKE;
+        }
+        else if(x >= rightMinimum)
+        {
+            //Range for the right
+            targetPosition = AutonomousBase.SpikeLineEnum.RIGHT_SPIKE;
+        }
+        else
+        {
+            //telemetry.addData("Adjust values", "");
+        }
+
+        return targetPosition;
+    }
 }   // end class

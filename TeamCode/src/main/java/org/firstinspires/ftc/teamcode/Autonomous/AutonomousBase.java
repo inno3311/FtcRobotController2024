@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.AprilTags.AprilTagMaster;
@@ -31,17 +32,19 @@ public class AutonomousBase extends LinearOpMode
 
     public boolean robotIsMoving = true;
 
-    protected WebCamHardware webcam;
+    //protected WebCamHardware webcam;
 
     protected WebCamDoubleVision webcamDouble;
+
+    Recognition rec = null;
 
 
     protected ImuHardware imuControl;
 
     /** Drive control */
     protected MecanumSynchronousDriver driver;
-    protected AprilTagMaster aprilTagMaster;
-    protected InitAprilTags initAprilTags;
+//    protected AprilTagMaster aprilTagMaster;
+//    protected InitAprilTags initAprilTags;
     protected DriveToTag driveToTag;
 
 
@@ -68,13 +71,14 @@ public class AutonomousBase extends LinearOpMode
         try
         {
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
-            webcam = new WebCamHardware(this);
+            //webcam = new WebCamHardware(this);
             imuControl = new ImuHardware(this);
-            initAprilTags = new InitAprilTags();
+//            initAprilTags = new InitAprilTags();
 
             webcamDouble = new WebCamDoubleVision(this);
+            driveToTag = new DriveToTag(hardwareMap, telemetry, new ElapsedTime(), new ElapsedTime(), new AprilTagMaster(new MechanicalDriveBase(hardwareMap), hardwareMap, webcamDouble.getAprilTag()));
 
-//            colorSwitch = new ColorSwitch(hardwareMap);
+            colorSwitch = new ColorSwitch(hardwareMap);
 
             //Following are all intake or outtake items, mostly on the expansion hub.
             linerSlideChild = new LinerSlideChild(this);
@@ -100,31 +104,22 @@ public class AutonomousBase extends LinearOpMode
 
         initMembers();
 
-        isBlue = 1 ;//colorSwitch.getTeam();
+        isBlue = colorSwitch.getTeam();
 
         telemetry.addData("isBlue: ", "%d ", isBlue);
         telemetry.update();
         sleep(2000);
         Logging.log("isBlue: " + isBlue);
 
-        //webcam.initTfod();
 
         //TODO: move this to the waitForStart
-        this.findTeamProp();
+        //this.findTeamProp();
 
 
         waitForStart();
 
         //once we start, we should no longer need Tfod.  Should have IDed target by now.
         webcamDouble.disableTfod();
-
-        //TODO: this will go away...
-        initAprilTags.initAprilTags(webcam, driver, hardwareMap, telemetry);
-        aprilTagMaster = initAprilTags.getAprilTagMaster();
-        driveToTag = initAprilTags.getDriveToTag();
-
-        //TODO: Why was this here????
-//        start();
 
     }
 
@@ -133,41 +128,40 @@ public class AutonomousBase extends LinearOpMode
     {
         super.waitForStart();
 
-        //TODO:  perhaps scan for team prop here?
-
-        webcamDouble.telemetryTfod();
+        //scan for team prop
+        rec = webcamDouble.findObject();
+        if (rec != null)
+        {
+            double x = (rec.getLeft() + rec.getRight()) / 2;
+            zone = webcamDouble.findTarget(x);
+        }
+//        webcamDouble.telemetryTfod();
     }
 
 
 
     protected void findTeamProp()
     {
-        Recognition rec = null;
-        while ((rec = webcam.findObject()) == null)
-        {
-            telemetry.addData("- Camera", "Looking for object");
-            telemetry.update();
-        }
-
-        double x = (rec.getLeft() + rec.getRight()) / 2 ;
-        double y = (rec.getTop()  + rec.getBottom()) / 2 ;
-
-        zone = webcam.findTarget(x);
-
-        telemetry.addData(""," ");
-        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
-        telemetry.addData("- Position", "%.0f / %.0f", x, y);
-        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
-        telemetry.update();
+//        Recognition rec = null;
+//        while ((rec = webcam.findObject()) == null)
+//        {
+//            telemetry.addData("- Camera", "Looking for object");
+//            telemetry.update();
+//        }
+//
+//        double x = (rec.getLeft() + rec.getRight()) / 2 ;
+//        double y = (rec.getTop()  + rec.getBottom()) / 2 ;
+//
+//        zone = webcam.findTarget(x);
+//
+//        telemetry.addData(""," ");
+//        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
+//        telemetry.addData("- Position", "%.0f / %.0f", x, y);
+//        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
+//        telemetry.update();
 
     }
 
-    public void goToPixel() {
-        PlanAlpha blueStage = new PlanAlpha();
-        switch (zone) {
-            case CENTER_SPIKE:
-                telemetry.addData("Center detected", "");        }
-    }
 
     //This is code for controlling what happens if obj
     public void planPurple(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException
@@ -318,8 +312,6 @@ public class AutonomousBase extends LinearOpMode
 
         driver.forward(14, 1, defaultSpeed);
     }
-
-
 
 }
 

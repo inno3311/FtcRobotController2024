@@ -40,6 +40,11 @@ public class AprilTagMaster
     private double headingError = 0;
     private double yawError = 0;
 
+    public AprilTagMaster(MechanicalDriveBase mechanicalDriveBase, HardwareMap hardwareMap, AprilTagProcessor aprilTag)
+    {
+        this.mechanicalDriveBase = mechanicalDriveBase;
+        this.aprilTag = aprilTag;
+    }
 
     public AprilTagMaster(MechanicalDriveBase mechanicalDriveBase, HardwareMap hardwareMap)
     {

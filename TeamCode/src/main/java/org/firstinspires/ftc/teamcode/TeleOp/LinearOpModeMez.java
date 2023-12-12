@@ -49,9 +49,9 @@ public class LinearOpModeMez extends AutonomousBase
 
         super.runOpMode();
 
-        initAprilTags.initAprilTags(webcam, driver, hardwareMap, telemetry);
-        aprilTagMaster = initAprilTags.getAprilTagMaster();
-        driveToTag = initAprilTags.getDriveToTag();
+//        initAprilTags.initAprilTags(webcam, driver, hardwareMap, telemetry, false);
+//        aprilTagMaster = initAprilTags.getAprilTagMaster();
+//        driveToTag = initAprilTags.getDriveToTag();
 
         waitForStart();
 
