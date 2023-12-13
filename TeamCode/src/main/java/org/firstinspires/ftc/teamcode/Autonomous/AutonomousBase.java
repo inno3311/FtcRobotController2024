@@ -73,11 +73,12 @@ public class AutonomousBase extends LinearOpMode
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
             //webcam = new WebCamHardware(this);
             imuControl = new ImuHardware(this);
-//            initAprilTags = new InitAprilTags();
 
-            webcamDouble = new WebCamDoubleVision(this);
+            colorSwitch = new ColorSwitch(hardwareMap);
+
+            webcamDouble = new WebCamDoubleVision(this, colorSwitch.getTeam());
+
             driveToTag = new DriveToTag(hardwareMap, telemetry, new ElapsedTime(), new ElapsedTime(), new AprilTagMaster(new MechanicalDriveBase(hardwareMap), hardwareMap, webcamDouble.getAprilTag()));
-
 
 
             //Following are all intake or outtake items, mostly on the expansion hub.

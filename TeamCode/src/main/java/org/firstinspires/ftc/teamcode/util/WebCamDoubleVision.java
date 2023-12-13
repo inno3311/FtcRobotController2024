@@ -62,14 +62,15 @@ public class WebCamDoubleVision
     //TFOF data values
 
     //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/red_rev1.tflite";
-    //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/Red_10-27.tflite";
-    private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/RedBlue11_25.tflite";
+    private static final String TFOD_MODEL_FILE_RED = "/sdcard/FIRST/tflitemodels/Red_10-27.tflite";
+    private static final String TFOD_MODEL_FILE_BLUE = "/sdcard/FIRST/tflitemodels/RedBlue11_25.tflite";
 
     private static final String[] LABELS =
     {
        "Trash Panda"
     };
 
+    String mTfodFile = null;
 
     /**
      * The variable to store our instance of the AprilTag processor.
@@ -91,8 +92,17 @@ public class WebCamDoubleVision
      **/
     private LinearOpMode mOpMode = null;   // gain access to methods in the calling OpMode.
 
-    public WebCamDoubleVision (LinearOpMode opmode)
+    public WebCamDoubleVision (LinearOpMode opmode, int color)
     {
+        if (color == 1)
+        {
+            mTfodFile = TFOD_MODEL_FILE_BLUE;
+        }
+        else
+        {
+            mTfodFile = TFOD_MODEL_FILE_RED;
+        }
+
         mOpMode = opmode;
 
         initDoubleVision();
@@ -171,7 +181,7 @@ public class WebCamDoubleVision
               // Use setModelAssetName() if the TF Model is built in as an asset.
               // Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
               //.setModelAssetName(TFOD_MODEL_ASSET)
-              .setModelFileName(TFOD_MODEL_FILE)
+              .setModelFileName(mTfodFile)
               .setModelLabels(LABELS)
               .setModelAspectRatio(16.0 / 9.0)
             .build();
