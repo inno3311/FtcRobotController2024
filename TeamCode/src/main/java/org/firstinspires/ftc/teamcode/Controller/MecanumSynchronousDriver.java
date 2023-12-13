@@ -297,7 +297,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
                 mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
                mOpMode.telemetry.update();
 
-               Logging.log("currPosTicks = %f, leftFrontPos = %d" , currPosTicks, leftFrontPos);
+               Logging.log("currPosTicks = %d, leftFrontPos = %d" , currPosTicks, leftFrontPos);
 
                if (Math.abs(currPosTicks) > Math.abs(leftFrontPos))
                {

@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 //Further tuning in AprilTagMaster.java to come, I sure of it
 public class DriveToTag
 {
-    AutonomousBase autonomousBase;
     HardwareMap hardwareMap;
     Telemetry telemetry;
     ElapsedTime elapsedTime;
@@ -69,7 +68,7 @@ public class DriveToTag
         else if (gamepad.left_trigger > 0.5 || gamepad.left_bumper)
         {
             telemetry.addData("Homing", "");
-            aprilTagMaster.findTag(4, 0, target, telemetry);
+            aprilTagMaster.findTag(6, 0, target, telemetry);
         }
         telemetry.addData("Current Target", target);
     }

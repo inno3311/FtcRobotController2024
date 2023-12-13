@@ -12,15 +12,11 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 public class BasicDrive extends OpMode
 {
     MechanicalDriveBase mechanicalDriveBase;
-    AprilTagMaster aprilTagMaster;
-    DriveToTag driveToTag;
 
     @Override
     public void init()
     {
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
-        aprilTagMaster = new AprilTagMaster(mechanicalDriveBase, hardwareMap);
-        driveToTag = new DriveToTag(hardwareMap, telemetry, new ElapsedTime(), new ElapsedTime(), aprilTagMaster);
         telemetry.addData("Initialized", " Press start");
         telemetry.update();
     }
@@ -28,7 +24,6 @@ public class BasicDrive extends OpMode
     @Override
     public void loop()
     {
-        driveToTag.targetLocator(gamepad1);
         mechanicalDriveBase.gamepadController(gamepad1);
         mechanicalDriveBase.driveBaseTelemetry(telemetry);
     }

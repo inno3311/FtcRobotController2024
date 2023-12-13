@@ -14,11 +14,14 @@ public class InitAprilTags
     DriveToTag driveToTag;
     ElapsedTime elapsedTime;
 
-    public void initAprilTags(WebCamHardware webcam, MecanumSynchronousDriver driver, HardwareMap hardwareMap, Telemetry telemetry)
+    public void initAprilTags(WebCamHardware webcam, MecanumSynchronousDriver driver, HardwareMap hardwareMap, Telemetry telemetry, boolean doubleVision)
     {
-        webcam.initAprilTag();
         elapsedTime = new ElapsedTime();
-        aprilTagProcessor = webcam.getAprilTagProcessor();//initAprilTags.initAprilTags(hardwareMap);
+        if (!doubleVision)
+        {
+            webcam.initAprilTag();
+            aprilTagProcessor = webcam.getAprilTagProcessor();//initAprilTags.initAprilTags(hardwareMap);
+        }
 
         aprilTagMaster = new AprilTagMaster(driver, hardwareMap);
 
