@@ -7,7 +7,7 @@ public class HeightChild extends MotorControl
 {
 
     private final int lowerBound = -1500;
-    private final int upperBound = -2555;
+    private final int upperBound = -2500;
 
     //Constructor calls parent constructor using hardcoded input
     public HeightChild(OpMode opmode)
