@@ -26,7 +26,7 @@ public class PlanBeta extends AutonomousBase{
             wallTarget = 3; //originally 3
         }
           
-        driveToTag.drive(7, zone.ordinal() + 1 + wallTarget, 11, 0);
+        driveToTag.drive(7, zone.ordinal() + 1 + wallTarget, 2, 0);
 
     }
 
