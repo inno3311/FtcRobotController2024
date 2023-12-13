@@ -50,6 +50,7 @@ public class HeightChild extends MotorControl
     public void encoderControl(int target, double speed)
     {
         super.encoderControl(target, speed);
+        telemetry();
     }
 
     public void heightDriveSimple()
@@ -64,7 +65,7 @@ public class HeightChild extends MotorControl
     }
 
     @Override
-    protected void telemetry()
+    public void telemetry()
     {
         super.telemetry();
     }

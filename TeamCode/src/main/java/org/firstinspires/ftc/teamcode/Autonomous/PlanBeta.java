@@ -5,7 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import java.io.IOException;
 
 @Autonomous(name = "Plan Beta", group = "Group3311")
-public class PlanBeta extends AutonomousBase{
+public class PlanBeta extends AutonomousBase
+{
 
 
     @Override
@@ -48,10 +49,13 @@ public class PlanBeta extends AutonomousBase{
             //Continue to go into position
             driver.forward(29, 1, 0.6);
 
+
+
             goThroughTrussAndFinish(true, false, false, isBlue);
 
         }
-        if (zone == SpikeLineEnum.LEFT_SPIKE) {
+        if (zone == SpikeLineEnum.LEFT_SPIKE)
+        {
             //Go forward just enough to turn
             driver.forward(17, 1, 0.6);
             
@@ -65,20 +69,23 @@ public class PlanBeta extends AutonomousBase{
             driver.forward(5, -1, 0.6);
 
             //Adjust (right)
-            driver.rotate(-45 * isBlue, imuControl);
+            driver.rotate2(-45 * isBlue, imuControl);
 
             //Strafe barely so that robot doesn't run over pixel
             driver.strafe(0.3, -isBlue, 0.4, imuControl);
 
             //Drive forward (meant to go through the middle of the truss)
             driver.forward(27.5, 1, 0.7);
+
+
             
             //Go through the middle of the truss
             goThroughTrussAndFinish(false, true, false, isBlue);
 
         }
 
-        if (zone == SpikeLineEnum.RIGHT_SPIKE) {
+        if (zone == SpikeLineEnum.RIGHT_SPIKE)
+        {
 
             //Go forward
             driver.forward(17, 1, 0.6);
@@ -101,7 +108,7 @@ public class PlanBeta extends AutonomousBase{
             //Go to the middle
             driver.forward(25.5, 1, 0.8);
 
-            intakeChild.encoderControl(-1000,.6);
+
 
             goThroughTrussAndFinish(false, false, true, isBlue);
 
@@ -112,7 +119,8 @@ public class PlanBeta extends AutonomousBase{
         int goThroughTrussDistance;
 
         driver.rotate2(-90*isBlue, imuControl);
-       
+
+        this.heightChild.encoderControl(-1000,.6);
 
         //This goes to the other side
         if(left){

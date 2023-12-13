@@ -33,20 +33,31 @@ public class LinearOpModeMez extends LinearOpMode
 //    private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
 
     HeightChild heightChild;
-    LinerSlideChild linerSlideChild;
+//    LinerSlideChild linerSlideChild;
 
     @Override
     public void runOpMode() throws InterruptedException
     {
 
         heightChild = new HeightChild(this);
-        linerSlideChild = new LinerSlideChild(this);
+//        linerSlideChild = new LinerSlideChild(this);
 
         waitForStart();
 
-        linerSlideChild.encoderControl(-100, 1);
+//        linerSlideChild.encoderControl(-1000, 0.5);
 
-        Thread.sleep(1000);
+
+        while (opModeIsActive())
+        {
+            heightChild.encoderControl(100, 0.5);
+            telemetry.update();
+
+            Thread.sleep(3000);
+
+            heightChild.encoderControl(-100, 0.5);
+            telemetry.update();
+            Thread.sleep(3000);
+        }
 
 
 //        try

@@ -78,7 +78,7 @@ public class AutonomousBase extends LinearOpMode
             webcamDouble = new WebCamDoubleVision(this);
             driveToTag = new DriveToTag(hardwareMap, telemetry, new ElapsedTime(), new ElapsedTime(), new AprilTagMaster(new MechanicalDriveBase(hardwareMap), hardwareMap, webcamDouble.getAprilTag()));
 
-            colorSwitch = new ColorSwitch(hardwareMap);
+
 
             //Following are all intake or outtake items, mostly on the expansion hub.
             linerSlideChild = new LinerSlideChild(this);

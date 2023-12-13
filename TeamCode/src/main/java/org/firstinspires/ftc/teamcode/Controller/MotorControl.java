@@ -62,10 +62,7 @@ public class MotorControl
 
         }
 
-
-
     }
-
 
     /**
      * Analog control method without bounds
