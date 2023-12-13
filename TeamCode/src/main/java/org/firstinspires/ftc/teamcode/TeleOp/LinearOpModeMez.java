@@ -44,7 +44,7 @@ public class LinearOpModeMez extends LinearOpMode
 
         waitForStart();
 
-        linerSlideChild.encoderControl(-100, 1);
+        heightChild.encoderControl(-100, 1);
 
         Thread.sleep(1000);
 
