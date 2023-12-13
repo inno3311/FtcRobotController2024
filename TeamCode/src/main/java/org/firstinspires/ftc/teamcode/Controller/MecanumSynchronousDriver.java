@@ -188,8 +188,8 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
 
 //               this.driveMotors(speed, 0, 0, 1);
 
-            mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
-            mOpMode.telemetry.update();
+//            mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
+//            mOpMode.telemetry.update();
 
             Logging.log("currPosTicks = %f, leftFrontPos = %d" , currPosTicks, leftFrontPos);
 
@@ -272,7 +272,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
                 // Use PID with imu input to drive in a straight line.
                 // pos is right turn, neg is left turn
                 double correction = pidDrive.performPID(wheelDifference);
-                mOpMode.telemetry.addData("correction ", "correction: " + correction + " wheelDif: " + wheelDifference);
+//                mOpMode.telemetry.addData("correction ", "correction: " + correction + " wheelDif: " + wheelDifference);
 
                 double strafeCorrection = pidStrafe.performPID(strafeDifference);
                 //mOpMode.telemetry.addData("strafeCorrection ", "correction: " + strafeCorrection + " strafeDifference: " + strafeDifference);
@@ -294,10 +294,10 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
 
 //               this.driveMotors(speed, 0, 0, 1);
 
-                mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
-               mOpMode.telemetry.update();
+//                mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
+//                mOpMode.telemetry.update();
 
-               Logging.log("currPosTicks = %d, leftFrontPos = %d" , currPosTicks, leftFrontPos);
+//               Logging.log("currPosTicks = %f, leftFrontPos = %d" , currPosTicks, leftFrontPos);
 
                if (Math.abs(currPosTicks) > Math.abs(leftFrontPos))
                {
@@ -403,8 +403,8 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
             this.driveMotors(-forwardCorrection, (-headingError), speed, 1); // run with PID
 //            Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, headingError);
             Logging.log("forwardCorrection = %f, speed = %f ", -forwardCorrection, speed);
-            mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
-            mOpMode.telemetry.update();
+//            mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
+//            mOpMode.telemetry.update();
         }
         this.driveMotors(0, 0, 0, 0);
     }
@@ -489,8 +489,8 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
             this.driveMotors(-forwardCorrection, (-headingError), speed, 1); // run with PID
 //            Logging.log("heading: %f angle: %f headingError: %f", targetAngle,angle, headingError);
             Logging.log("forwardCorrection = %f, speed = %f ", -forwardCorrection, speed);
-            mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
-            mOpMode.telemetry.update();
+//            mOpMode.telemetry.addData("Encoder", "left: " + lf.getCurrentPosition() + " right: " + rf.getCurrentPosition() + " strafe: " + rb.getCurrentPosition());
+//            mOpMode.telemetry.update();
         }
         this.driveMotors(0, 0, 0, 0);
     }
@@ -801,8 +801,8 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
         this.driveMotors(0, 0, 0, 1);
         Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f counter: %d", imuControl.getHeading(), power, imuControl.getAngle(),counter);
         Logging.log("completed rotate of angle %f", degrees);
-        mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
-        mOpMode.telemetry.update();
+//        mOpMode.telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imuControl.getHeading());
+//        mOpMode.telemetry.update();
     }
 
 
