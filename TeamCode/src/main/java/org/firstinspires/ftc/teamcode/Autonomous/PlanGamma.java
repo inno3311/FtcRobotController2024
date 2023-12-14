@@ -148,7 +148,7 @@ public class PlanGamma extends AutonomousBase
         driver.forward(19,1,0.6);
 
         //Strafe so that camera detects AprilTag 5 (or 2)
-        driver.strafe(3, isBlue,1, imuControl);
+        driver.strafe(5, isBlue,1, imuControl);
 
         //Go forward so that camera detects AprilTag
         driver.forward(5, 1, 0.3);
@@ -175,7 +175,7 @@ public class PlanGamma extends AutonomousBase
         driver.forward(23, 1, 0.5);
 
         //Strafe in front of AprilTag 4 (or 1) so that camera detects it
-        driver.strafe(8, isBlue, 0.5, imuControl);
+        driver.strafe(10, isBlue, 0.5, imuControl);
 
     }
 
