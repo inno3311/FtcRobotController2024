@@ -49,13 +49,8 @@ public class LinearOpModeMez extends LinearOpMode
 
         while (opModeIsActive())
         {
-            heightChild.encoderControl(100, 0.5);
-            telemetry.update();
+            heightChild.encoderControl(500, 0.7);
 
-            Thread.sleep(3000);
-
-            heightChild.encoderControl(-100, 0.5);
-            telemetry.update();
             Thread.sleep(3000);
         }
 
