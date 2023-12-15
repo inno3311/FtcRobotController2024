@@ -44,21 +44,21 @@ public class PlanGamma extends AutonomousBase
             wallTarget = 3;
         }
 
-        //linerSlideChild.encoderControl(-100, 0.5);
+
 
 
         transferRight.autonomousControl(false);
         transferleft.autonomousControl(false);
         transferRight.autonomousControl(true);
         transferleft.autonomousControl(true);
+        linerSlideChild.encoderControl(-50, 0.5);
 
-
-        sleep(500);
+        sleep(2000);
         //driveToTag.drive(7, zone.ordinal() + 1 + wallTarget, 11, 0);
-        driveToTag.drive(3, zone.ordinal() + 1 + wallTarget, 0, 0);
+        driveToTag.drive(3, zone.ordinal() + 1 + wallTarget, 5, 0);
 //        sleep(500);
 //        driver.forward(3,1,.5,3);
-        sleep(500);
+//        sleep(500);
         transferRight.autonomousControl(false);
         transferleft.autonomousControl(false);
 
@@ -70,7 +70,7 @@ public class PlanGamma extends AutonomousBase
         } catch (IOException e) {
             e.printStackTrace();
         }
-        sleep(1000);
+//        sleep(1000);
     }
 
     /**
@@ -112,7 +112,8 @@ public class PlanGamma extends AutonomousBase
     }
 
     //Left
-    public void stageRoute(int isBlue) throws IOException, InterruptedException {
+    public void stageRoute(int isBlue) throws IOException, InterruptedException
+    {
         //Go forward just enough to turn
         driver.forward(17, 1, 0.6);
            
@@ -136,7 +137,7 @@ public class PlanGamma extends AutonomousBase
     public void centerRoute(int isBlue) throws IOException, InterruptedException {
 
         //Go forward to place pixel
-        driver.forward(25, 1, 0.6);
+        driver.forward(26, 1, 0.6);
 
         //Go backward into position
         driver.forward(3, -1, 0.6);
@@ -175,7 +176,8 @@ public class PlanGamma extends AutonomousBase
         driver.forward(23, 1, 0.5);
 
         //Strafe in front of AprilTag 4 (or 1) so that camera detects it
-        driver.strafe(10, isBlue, 0.5, imuControl);
+//dday        driver.strafe(10, isBlue, 0.5, imuControl);
+        driver.strafe(13, isBlue, 0.5, imuControl);
 
     }
 

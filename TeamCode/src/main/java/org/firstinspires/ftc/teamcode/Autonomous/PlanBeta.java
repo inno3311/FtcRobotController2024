@@ -36,13 +36,14 @@ public class PlanBeta extends AutonomousBase
 
         sleep(1000);
 
-        linerSlideChild.encoderControl(-100, 0.5);
+        linerSlideChild.encoderControl(-500, 0.5);
 
         driveToTag.drive(4, zone.ordinal() + 1 + wallTarget, 6, 0);
 
 
 
         heightChild.encoderControl(0,0.7);
+        linerSlideChild.encoderControl(0, 0.5);
 
         sleep(2000);
         transferRight.autonomousControl(false);
@@ -193,7 +194,7 @@ public class PlanBeta extends AutonomousBase
         //driver.strafe(0.3, -isBlue, 0.4, imuControl);
 
         //Drive forward (meant to go through the middle of the truss)
-        driver.forward(27.5, 1, 0.7);
+        driver.forward(26, 1, 0.7);
     }
 
     public void stageRoute(int isBlue) throws IOException, InterruptedException
@@ -214,7 +215,7 @@ public class PlanBeta extends AutonomousBase
         driver.rotate2(45 * isBlue, imuControl);
 
         //Strafe out of the way
-        driver.strafe(5, isBlue, 0.5, imuControl);
+//        driver.strafe(5, isBlue, 0.5, imuControl);
 
         //Go to the middle
         driver.forward(25.5, 1, 0.8);
@@ -240,7 +241,11 @@ public class PlanBeta extends AutonomousBase
     {
         int goThroughTrussDistance;
 
-        driver.rotate2(-90*isBlue, imuControl);
+        Thread.sleep(100);
+
+        driver.rotate2(-90 * isBlue, imuControl);
+
+        Thread.sleep(100);
 
         this.heightChild.encoderControl(1000,.7);
 
@@ -253,14 +258,50 @@ public class PlanBeta extends AutonomousBase
             goThroughTrussDistance = 80;
         } else
         {
-            goThroughTrussDistance = 75;
+            if (isBlue == 1)
+            {
+                goThroughTrussDistance = 75;
+            }
+            else
+            {
+                goThroughTrussDistance = 75;
+            }
         }
 
         driver.forward(goThroughTrussDistance, 1, 0.7);
          
 
         //Strafe to position
-        driver.strafe(23, -isBlue, 0.5, imuControl);
+        if (isBlue == 1)
+        {
+            if (zone == SpikeLineEnum.LEFT_SPIKE)
+            {
+                driver.strafe(24, -isBlue, 0.5, imuControl);
+            }
+            else if (zone == SpikeLineEnum.CENTER_SPIKE)
+            {
+                driver.strafe(30, -isBlue, 0.5, imuControl);
+            }
+            else if (zone == SpikeLineEnum.RIGHT_SPIKE)
+            {
+                driver.strafe(20, -isBlue, 0.5, imuControl);
+            }
+        }
+        else
+        {
+            if (zone == SpikeLineEnum.LEFT_SPIKE)
+            {
+                driver.strafe(16, -isBlue, 0.5, imuControl);
+            }
+            else if (zone == SpikeLineEnum.CENTER_SPIKE)
+            {
+                driver.strafe(18, -isBlue, 0.5, imuControl);
+            }
+            else if (zone == SpikeLineEnum.RIGHT_SPIKE)
+            {
+                driver.strafe(24, -isBlue, 0.5, imuControl);
+            }
+        }
 
     }
 

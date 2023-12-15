@@ -371,7 +371,10 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
         int strafeTargetPos = this.rb.getCurrentPosition();
         strafeTargetPos += target * ticksPerInch;
 
-        while ((Math.abs(this.rb.getCurrentPosition()) <= strafeTargetPos) && mOpMode.opModeIsActive())
+        time.reset();
+        time.startTime();
+
+        while ((Math.abs(this.rb.getCurrentPosition()) <= strafeTargetPos) && mOpMode.opModeIsActive() && seconds > time.seconds())
         {
             //if the number is positive the bot is slipping forward
             //if the number is negative the bot is slipping backwards
@@ -435,6 +438,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
         // Set up parameters for turn correction.
         pidDrive.reset();
         pidDrive.setSetpoint(0);
+        //pidDrive.setOutputRange(0, 0.2);
         pidDrive.setOutputRange(0, 0.2);
         pidDrive.setInputRange(0, 5000);
         pidDrive.enable();
