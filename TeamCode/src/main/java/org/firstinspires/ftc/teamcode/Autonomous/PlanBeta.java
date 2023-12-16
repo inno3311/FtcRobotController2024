@@ -38,18 +38,19 @@ public class PlanBeta extends AutonomousBase
 
         linerSlideChild.encoderControl(-500, 0.5);
 
-        driveToTag.drive(4, zone.ordinal() + 1 + wallTarget, 6, 0);
+        driveToTag.drive(3, zone.ordinal() + 1 + wallTarget, 6, 0);
 
 
 
         heightChild.encoderControl(0,0.7);
         linerSlideChild.encoderControl(0, 0.5);
 
-        sleep(2000);
+        sleep(1000);
+
         transferRight.autonomousControl(false);
         transferleft.autonomousControl(false);
 
-        sleep(2000);
+        sleep(1000);
     }
 
     /**
@@ -185,7 +186,7 @@ public class PlanBeta extends AutonomousBase
         driver.forward(4, 1, 0.6);
 
         //Go backward after placing pixel
-        driver.forward(5, -1, 0.6);
+        driver.forward(3, -1, 0.6);
 
         //Adjust (right)
         driver.rotate2(-45 * isBlue, imuControl);
@@ -200,7 +201,7 @@ public class PlanBeta extends AutonomousBase
     public void stageRoute(int isBlue) throws IOException, InterruptedException
     {
         //Go forward
-        driver.forward(17, 1, 0.6);
+        driver.forward(18, 1, 0.6);
 
         //Turn (right) to place pixel
         driver.rotate2(-45 * isBlue, imuControl);
@@ -209,7 +210,7 @@ public class PlanBeta extends AutonomousBase
         driver.forward(5, 1, 0.6);
 
         //Go back
-        driver.forward(5, -1, 0.6);
+        driver.forward(3, -1, 0.6);
 
         //Adjust (left)
         driver.rotate2(45 * isBlue, imuControl);
@@ -218,7 +219,7 @@ public class PlanBeta extends AutonomousBase
 //        driver.strafe(5, isBlue, 0.5, imuControl);
 
         //Go to the middle
-        driver.forward(25.5, 1, 0.8);
+        driver.forward(26.5, 1, 0.8);
     }
 
     public void centerRoute(int isBlue) throws IOException, InterruptedException
@@ -284,7 +285,7 @@ public class PlanBeta extends AutonomousBase
             }
             else if (zone == SpikeLineEnum.RIGHT_SPIKE)
             {
-                driver.strafe(20, -isBlue, 0.5, imuControl);
+                driver.strafe(18, -isBlue, 0.5, imuControl);
             }
         }
         else
