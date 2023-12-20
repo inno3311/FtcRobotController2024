@@ -38,7 +38,7 @@ public class PlanBeta extends AutonomousBase
 
         linerSlideChild.encoderControl(-500, 0.5);
 
-        driveToTag.drive(4, zone.ordinal() + 1 + wallTarget, 6, 0);
+        driveToTag.drive(4, zone.ordinal() + 1 + wallTarget, 6, 1);
 
 
 
