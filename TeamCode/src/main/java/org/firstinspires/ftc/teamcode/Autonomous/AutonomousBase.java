@@ -20,7 +20,6 @@ import org.firstinspires.ftc.teamcode.TeleOpFunctions.TransferRight;
 import org.firstinspires.ftc.teamcode.util.ImuHardware;
 import org.firstinspires.ftc.teamcode.util.Logging;
 import org.firstinspires.ftc.teamcode.util.WebCamDoubleVision;
-import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 
 import java.io.IOException;
 
