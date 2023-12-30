@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.ColorSwitch;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.util.Logging;
+
 public class ColorSwitch
 {
     DigitalChannel colorSwitch;

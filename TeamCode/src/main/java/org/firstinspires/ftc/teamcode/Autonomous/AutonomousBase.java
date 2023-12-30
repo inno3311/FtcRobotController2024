@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.AprilTags.AprilTagMaster;
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.teamcode.TeleOpFunctions.TransferLeft;
 import org.firstinspires.ftc.teamcode.TeleOpFunctions.TransferRight;
 import org.firstinspires.ftc.teamcode.util.ImuHardware;
 import org.firstinspires.ftc.teamcode.util.Logging;
-import org.firstinspires.ftc.teamcode.util.WebCamHardware;
+import org.firstinspires.ftc.teamcode.util.WebCamDoubleVision;
 
 import java.io.IOException;
 
@@ -30,25 +31,29 @@ public class AutonomousBase extends LinearOpMode
 
     public boolean robotIsMoving = true;
 
-    WebCamHardware webcam;
+    //protected WebCamHardware webcam;
+
+    protected WebCamDoubleVision webcamDouble;
+
+    Recognition rec = null;
 
 
     protected ImuHardware imuControl;
 
     /** Drive control */
     protected MecanumSynchronousDriver driver;
-    AprilTagMaster aprilTagMaster;
-    InitAprilTags initAprilTags;
-    DriveToTag driveToTag;
+//    protected AprilTagMaster aprilTagMaster;
+//    protected InitAprilTags initAprilTags;
+    protected DriveToTag driveToTag;
 
 
-    LinerSlideChild linerSlideChild;
-    TransferRight transferRight;
-    TransferLeft transferleft;
+    protected LinerSlideChild linerSlideChild;
+    protected TransferRight transferRight;
+    protected TransferLeft transferleft;
     protected HeightChild heightChild;
     protected IntakeChild intakeChild;
 
-    ColorSwitch colorSwitch;
+    protected ColorSwitch colorSwitch;
 
     SpikeLineEnum zone = SpikeLineEnum.UNKNOWN;
 
@@ -65,13 +70,17 @@ public class AutonomousBase extends LinearOpMode
         try
         {
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
-            webcam = new WebCamHardware(this);
+            //webcam = new WebCamHardware(this);
             imuControl = new ImuHardware(this);
-            initAprilTags = new InitAprilTags();
-
 
             colorSwitch = new ColorSwitch(hardwareMap);
 
+            webcamDouble = new WebCamDoubleVision(this, colorSwitch.getTeam());
+
+            driveToTag = new DriveToTag(hardwareMap, telemetry, new ElapsedTime(), new ElapsedTime(), new AprilTagMaster(new MechanicalDriveBase(hardwareMap), hardwareMap, webcamDouble.getAprilTag()));
+
+
+            //Following are all intake or outtake items, mostly on the expansion hub.
             linerSlideChild = new LinerSlideChild(this);
             sleep(DELAY);
             transferRight = new TransferRight(this);
@@ -82,7 +91,6 @@ public class AutonomousBase extends LinearOpMode
             sleep(DELAY);
             intakeChild = new IntakeChild(this);
             sleep(DELAY);
-
         }
         catch (IOException e)
         {
@@ -100,57 +108,66 @@ public class AutonomousBase extends LinearOpMode
 
         telemetry.addData("isBlue: ", "%d ", isBlue);
         telemetry.update();
+        sleep(2000);
         Logging.log("isBlue: " + isBlue);
 
-        webcam.initTfod();
 
-        this.findTeamProp();
+        //TODO: move this to the waitForStart
+        //this.findTeamProp();
 
 
         waitForStart();
 
+        if (zone == SpikeLineEnum.UNKNOWN )
+        {
+            Logging.log("No team prop was detected.  Your code sucks.");
+            zone = SpikeLineEnum.CENTER_SPIKE;
+        }
+
+        //once we start, we should no longer need Tfod.  Should have IDed target by now.
+        webcamDouble.disableTfod();
+
+    }
+
+    @Override
+    public void waitForStart()
+    {
+        super.waitForStart();
+
+        //scan for team prop
+        rec = webcamDouble.findObject();
+        if (rec != null)
+        {
+            double x = (rec.getLeft() + rec.getRight()) / 2;
+            zone = webcamDouble.findTarget(x);
+        }
+//        webcamDouble.telemetryTfod();
+    }
+
+
+
+    protected void findTeamProp()
+    {
+//        Recognition rec = null;
+//        while ((rec = webcam.findObject()) == null)
+//        {
+//            telemetry.addData("- Camera", "Looking for object");
+//            telemetry.update();
+//        }
+//
+//        double x = (rec.getLeft() + rec.getRight()) / 2 ;
+//        double y = (rec.getTop()  + rec.getBottom()) / 2 ;
+//
+//        zone = webcam.findTarget(x);
+//
 //        telemetry.addData(""," ");
 //        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
 //        telemetry.addData("- Position", "%.0f / %.0f", x, y);
 //        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
 //        telemetry.update();
 
-        initAprilTags.initAprilTags(webcam, driver, hardwareMap, telemetry);
-        aprilTagMaster = initAprilTags.getAprilTagMaster();
-        driveToTag = initAprilTags.getDriveToTag();
-
-        start();
-
     }
 
-    protected void findTeamProp()
-    {
-        Recognition rec = null;
-        while ((rec = webcam.findObject()) == null)
-        {
-            telemetry.addData("- Camera", "Looking for object");
-            telemetry.update();
-        }
-
-        double x = (rec.getLeft() + rec.getRight()) / 2 ;
-        double y = (rec.getTop()  + rec.getBottom()) / 2 ;
-
-        zone = webcam.findTarget(x);
-
-        telemetry.addData(""," ");
-        telemetry.addData("Image", "%s (%.0f %% Conf.)", rec.getLabel(), rec.getConfidence() * 100);
-        telemetry.addData("- Position", "%.0f / %.0f", x, y);
-        telemetry.addData("- Size", "%.0f x %.0f", rec.getWidth(), rec.getHeight());
-        telemetry.update();
-
-    }
-
-    public void goToPixel() {
-        PlanAlpha blueStage = new PlanAlpha();
-        switch (zone) {
-            case CENTER_SPIKE:
-                telemetry.addData("Center detected", "");        }
-    }
 
     //This is code for controlling what happens if obj
     public void planPurple(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException
@@ -240,15 +257,13 @@ public class AutonomousBase extends LinearOpMode
     public void parkRobot(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException
     {
 
-
-
         double defaultSpeed = 0.6;
         int defaultWaitTime = 5;
 
-        sleep(DELAY);
+        //sleep(DELAY);
         //TODO maybe: Add variables for adding/subtracting for more reusable code
         //TODO if necessary: Set each driver.forward command for each instance (instead of shared)
-        driver.forward(10, -1, defaultSpeed);
+        driver.forward(5, -1, defaultSpeed);
 
 
         if(zone == SpikeLineEnum.CENTER_SPIKE)
@@ -257,13 +272,13 @@ public class AutonomousBase extends LinearOpMode
             if(isBlue == 1)
             {
                 //driver.strafe(20, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
-                driver.strafe(23, -1, defaultSpeed,imuControl);
+                driver.strafe(30, -1, defaultSpeed,imuControl, defaultWaitTime);
 
                 //driver.forward(5, 1, defaultSpeed);
             }
             else if(isBlue == -1)
             {
-                driver.strafe(20, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
+                driver.strafe(30, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
 
                 //driver.forward(5, 1, defaultSpeed);
             }
@@ -280,7 +295,7 @@ public class AutonomousBase extends LinearOpMode
             }
             else if(isBlue == -1)
             {
-                driver.strafe(20, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
+                driver.strafe(35, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
             }
         }
         else if(zone == SpikeLineEnum.RIGHT_SPIKE)
@@ -288,7 +303,7 @@ public class AutonomousBase extends LinearOpMode
             //Right
             if(isBlue == 1)
             {
-                driver.strafe(20, -1, defaultSpeed, imuControl, defaultWaitTime);
+                driver.strafe(30, -1, defaultSpeed, imuControl, defaultWaitTime);
 
 
             }
@@ -301,8 +316,6 @@ public class AutonomousBase extends LinearOpMode
 
         driver.forward(14, 1, defaultSpeed);
     }
-
-
 
 }
 

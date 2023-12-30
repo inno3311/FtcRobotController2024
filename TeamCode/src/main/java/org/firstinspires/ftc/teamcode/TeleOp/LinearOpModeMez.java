@@ -14,6 +14,8 @@ import org.firstinspires.ftc.teamcode.Autonomous.AutonomousBase;
 import org.firstinspires.ftc.teamcode.Controller.MecanumSynchronousDriver;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 import org.firstinspires.ftc.teamcode.IMU.IMUControl;
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.HeightChild;
+import org.firstinspires.ftc.teamcode.TeleOpFunctions.LinerSlideChild;
 import org.firstinspires.ftc.teamcode.util.ImuHardware;
 import org.firstinspires.ftc.teamcode.util.Logging;
 import org.firstinspires.ftc.teamcode.util.WebCamHardware;
@@ -26,123 +28,83 @@ import java.lang.annotation.ElementType;
 public class LinearOpModeMez extends AutonomousBase
 {
 
-
 //    IMUControl imuControl;
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
     private final double ticksPerDegree = (ticksPerInch * 50.24) / 360;
 
-
+    HeightChild heightChild;
+    LinerSlideChild linerSlideChild;
 
     @Override
     public void runOpMode() throws InterruptedException
     {
 
-        try {
+//        heightChild = new HeightChild(this);
+//        linerSlideChild = new LinerSlideChild(this);
+
+//        waitForStart();
+
+//        linerSlideChild.encoderControl(-1000, 0.5);
+
+
+//        while (opModeIsActive())
+//        {
+////            heightChild.encoderControl(500, 0.7);
+//
+//            Thread.sleep(3000);
+//        }
+
+
+        try
+        {
             Logging.setup();
-            Logging.log("Starting Logging for PlanGamma2");
-        } catch (IOException e) {
+            Logging.log("Starting Logging for Mez test");
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
 
         super.runOpMode();
 
+//        initAprilTags.initAprilTags(webcam, driver, hardwareMap, telemetry, false);
+//        aprilTagMaster = initAprilTags.getAprilTagMaster();
+//        driveToTag = initAprilTags.getDriveToTag();
+
         waitForStart();
-        start();
-
-
-//        driver.forward(3 * 1, 1, 0.4);
-//        sleep(3000);
-//        driver.forward(3 * 1, -1, 0.4);
-//        sleep(3000);
-//        try
- //       {
-        //driver.strafe();
-
-
-//            driver.rotate2(-30, imuControl);
-//            sleep(1000);
-//
-//            driver.rotate2(-30, imuControl);
-//            sleep(1000);
-//
-//            driver.rotate2(-30, imuControl);
-//            sleep(1000);
-//
-//            driver.rotate2(-45, imuControl);
-//            sleep(1000);
-
-//            driver.rotate2(-45, imuControl);
-//            sleep(1000);
-//
-//            driver.rotate2(-90, imuControl);
-//            sleep(1000);
-//
-//            driver.rotate2(-90, imuControl);
-//            sleep(1000);
 
 
 
-//        }
-//        catch (IOException e)
-//        {
-//            e.printStackTrace();
-//        }
+
+//        start();
 
 
-
-        //Drive forward 72 inches
-//        driver.strafe(24 * 3,1,0.3, new IMUControl(hardwareMap, telemetry));
-//        driver.forward(24 * 4, 1, 0.4);
 
 
 
 
         while (opModeIsActive())
         {
-            heightChild.encoderControl(10,.3);
-            sleep(3000);
-            heightChild.encoderControl(-10,.3);
-            sleep(3000);
+//            heightChild.encoderControl(10,.3);
+//            sleep(3000);
+//            heightChild.encoderControl(-10,.3);
+//            sleep(3000);
 
-            //testDeadWheels();
+            strafeTest();
 
-      //      strafeTest();
-
-            //driveStraightTest();
-
-//            try
-//            {
-//                rotateTest();
-//            }
-//            catch (IOException e)
-//            {
-//                e.printStackTrace();
-//            }
-
-
-//            driver.rotate(1, 1, imuControl);
-//            driver.rotate(90,1, imuControl);
-//            driver.rotate(90,1, imuControl);
-
-//            sleep(2000);
-//            webcam.telemetryTfod();
-//            telemetry.addData("encoder", "left: " + driver.lf.getCurrentPosition() + " right: " + driver.rf.getCurrentPosition());
-//            telemetry.update();
-//            telemetry.addData("90 = ", (ticksPerDegree * 90) + "\n current position = " +  driver.rb.getCurrentPosition());
-//            telemetry.update();
         }
     }
 
-    public void testDeadWheels()
-    {
-        int lfTicks, rfTicks, rbTicks = 0;
-        lfTicks = driver.lf.getCurrentPosition();
-        rfTicks = driver.rf.getCurrentPosition();
-        rbTicks = driver.rb.getCurrentPosition();
-
-        telemetry.addData("testDeadWheels", "lf = " + lfTicks + "\nrf = " +  rfTicks + "rb = " + rbTicks);
-        telemetry.update();
-    }
+//    public void testDeadWheels()
+//    {
+//        int lfTicks, rfTicks, rbTicks = 0;
+//        lfTicks = driver.lf.getCurrentPosition();
+//        rfTicks = driver.rf.getCurrentPosition();
+//        rbTicks = driver.rb.getCurrentPosition();
+//
+//        telemetry.addData("testDeadWheels", "lf = " + lfTicks + "\nrf = " +  rfTicks + "\nrb = " + rbTicks);
+//        telemetry.update();
+//    }
 
     public void strafeTest()
     {
@@ -266,4 +228,89 @@ public class LinearOpModeMez extends AutonomousBase
 
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+//        driver.forward(3 * 1, 1, 0.4);
+//        sleep(3000);
+//        driver.forward(3 * 1, -1, 0.4);
+//        sleep(3000);
+//        try
+//       {
+//driver.strafe();
+
+
+//            driver.rotate2(-30, imuControl);
+//            sleep(1000);
+//
+//            driver.rotate2(-30, imuControl);
+//            sleep(1000);
+//
+//            driver.rotate2(-30, imuControl);
+//            sleep(1000);
+//
+//            driver.rotate2(-45, imuControl);
+//            sleep(1000);
+
+//            driver.rotate2(-45, imuControl);
+//            sleep(1000);
+//
+//            driver.rotate2(-90, imuControl);
+//            sleep(1000);
+//
+//            driver.rotate2(-90, imuControl);
+//            sleep(1000);
+
+
+
+//        }
+//        catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
+
+
+
+//Drive forward 72 inches
+//        driver.strafe(24 * 3,1,0.3, new IMUControl(hardwareMap, telemetry));
+//        driver.forward(24 * 4, 1, 0.4);
+
+
+
+//testDeadWheels();
+
+//      strafeTest();
+
+//driveStraightTest();
+
+//            try
+//            {
+//                rotateTest();
+//            }
+//            catch (IOException e)
+//            {
+//                e.printStackTrace();
+//            }
+
+
+//            driver.rotate(1, 1, imuControl);
+//            driver.rotate(90,1, imuControl);
+//            driver.rotate(90,1, imuControl);
+
+//            sleep(2000);
+//            webcam.telemetryTfod();
+//            telemetry.addData("encoder", "left: " + driver.lf.getCurrentPosition() + " right: " + driver.rf.getCurrentPosition());
+//            telemetry.update();
+//            telemetry.addData("90 = ", (ticksPerDegree * 90) + "\n current position = " +  driver.rb.getCurrentPosition());
+//            telemetry.update();
 

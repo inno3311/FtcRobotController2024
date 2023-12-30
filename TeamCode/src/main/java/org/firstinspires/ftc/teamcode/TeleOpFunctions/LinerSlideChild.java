@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.Controller.MotorControl;
 public class LinerSlideChild extends MotorControl
 {
     private final int resetPosition = -30;
-    private final int upperPosition = -1000;
+    private final int upperPosition = -750;
 
     //Constructor calls parent constructor using hardcoded input
     public LinerSlideChild(OpMode opMode)
@@ -32,6 +32,11 @@ public class LinerSlideChild extends MotorControl
         encoderControl(resetPosition, 0.75, gamepad2.left_trigger);
     }
 
+    @Override
+    public void encoderControl(int target, double speed)
+    {
+        super.encoderControl(target, speed);
+    }
 
     public void linerSlideDriveSimple()
     {

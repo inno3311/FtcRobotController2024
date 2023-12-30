@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.TeleOpFunctions.TransferLeft;
 import org.firstinspires.ftc.teamcode.TeleOpFunctions.TransferRight;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-@TeleOp(name = "TeleOp", group = "TeleOp")
+@TeleOp(name = "TeleOpLord", group = "TeleOp")
 public class TeleOpLord extends OpMode
 {
     MechanicalDriveBase mechanicalDriveBase;

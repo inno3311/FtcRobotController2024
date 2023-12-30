@@ -7,7 +7,7 @@ public class HeightChild extends MotorControl
 {
 
     private final int lowerBound = -1500;
-    private final int upperBound = -2555;
+    private final int upperBound = -2550;
 
     //Constructor calls parent constructor using hardcoded input
     public HeightChild(OpMode opmode)
@@ -26,7 +26,7 @@ public class HeightChild extends MotorControl
 
     private void analogControl()
     {
-        if (gamepad2.back)
+        if (!gamepad2.back)
         {
             super.analogControl(1, gamepad2.left_stick_y, false, lowerBound, upperBound);
         }
@@ -34,13 +34,23 @@ public class HeightChild extends MotorControl
 
     private void resetDrive()
     {
-        super.simpleDrive(-1, gamepad2.back, false);
+        if (Math.abs(gamepad2.left_stick_y) == 0)
+        {
+            super.simpleDrive(-1, gamepad2.back, false);
+        }
     }
 
     private void encoderDrive()
     {
         encoderControl(lowerBound, 1, gamepad2.dpad_down);
         encoderControl(-2000, 1, gamepad2.dpad_up);
+    }
+
+    @Override
+    public void encoderControl(int target, double speed)
+    {
+        super.encoderControl(target, speed);
+        telemetry();
     }
 
     public void heightDriveSimple()
@@ -55,7 +65,7 @@ public class HeightChild extends MotorControl
     }
 
     @Override
-    protected void telemetry()
+    public void telemetry()
     {
         super.telemetry();
     }

@@ -15,6 +15,6 @@ public class DronePosition extends ServoControl
     public void PositionControl()
     {
         super.driveServo(1, gamepad1.dpad_up);
-        super.driveServo(0.6, gamepad1.dpad_down);
+        super.driveServo(0.7, gamepad1.dpad_down);
     }
 }
