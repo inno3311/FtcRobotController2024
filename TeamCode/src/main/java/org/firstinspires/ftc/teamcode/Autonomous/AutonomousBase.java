@@ -20,7 +20,6 @@ import org.firstinspires.ftc.teamcode.TeleOpFunctions.TransferRight;
 import org.firstinspires.ftc.teamcode.util.ImuHardware;
 import org.firstinspires.ftc.teamcode.util.Logging;
 import org.firstinspires.ftc.teamcode.util.WebCamDoubleVision;
-import org.firstinspires.ftc.teamcode.util.WebCamHardware;
 
 import java.io.IOException;
 
@@ -73,12 +72,13 @@ public class AutonomousBase extends LinearOpMode
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
             //webcam = new WebCamHardware(this);
             imuControl = new ImuHardware(this);
-//            initAprilTags = new InitAprilTags();
-
-            webcamDouble = new WebCamDoubleVision(this);
-            driveToTag = new DriveToTag(hardwareMap, telemetry, new ElapsedTime(), new ElapsedTime(), new AprilTagMaster(new MechanicalDriveBase(hardwareMap), hardwareMap, webcamDouble.getAprilTag()));
 
             colorSwitch = new ColorSwitch(hardwareMap);
+
+            webcamDouble = new WebCamDoubleVision(this, colorSwitch.getTeam());
+
+            driveToTag = new DriveToTag(hardwareMap, telemetry, new ElapsedTime(), new ElapsedTime(), new AprilTagMaster(new MechanicalDriveBase(hardwareMap), hardwareMap, webcamDouble.getAprilTag()));
+
 
             //Following are all intake or outtake items, mostly on the expansion hub.
             linerSlideChild = new LinerSlideChild(this);
@@ -117,6 +117,12 @@ public class AutonomousBase extends LinearOpMode
 
 
         waitForStart();
+
+        if (zone == SpikeLineEnum.UNKNOWN )
+        {
+            Logging.log("No team prop was detected.  Your code sucks.");
+            zone = SpikeLineEnum.CENTER_SPIKE;
+        }
 
         //once we start, we should no longer need Tfod.  Should have IDed target by now.
         webcamDouble.disableTfod();
@@ -251,15 +257,13 @@ public class AutonomousBase extends LinearOpMode
     public void parkRobot(SpikeLineEnum zone, int isBlue) throws IOException, InterruptedException
     {
 
-
-
         double defaultSpeed = 0.6;
         int defaultWaitTime = 5;
 
-        sleep(DELAY);
+        //sleep(DELAY);
         //TODO maybe: Add variables for adding/subtracting for more reusable code
         //TODO if necessary: Set each driver.forward command for each instance (instead of shared)
-        driver.forward(10, -1, defaultSpeed);
+        driver.forward(5, -1, defaultSpeed);
 
 
         if(zone == SpikeLineEnum.CENTER_SPIKE)
@@ -268,13 +272,13 @@ public class AutonomousBase extends LinearOpMode
             if(isBlue == 1)
             {
                 //driver.strafe(20, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
-                driver.strafe(23, -1, defaultSpeed,imuControl);
+                driver.strafe(30, -1, defaultSpeed,imuControl, defaultWaitTime);
 
                 //driver.forward(5, 1, defaultSpeed);
             }
             else if(isBlue == -1)
             {
-                driver.strafe(20, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
+                driver.strafe(30, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
 
                 //driver.forward(5, 1, defaultSpeed);
             }
@@ -291,7 +295,7 @@ public class AutonomousBase extends LinearOpMode
             }
             else if(isBlue == -1)
             {
-                driver.strafe(20, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
+                driver.strafe(35, -isBlue, defaultSpeed, imuControl, defaultWaitTime);
             }
         }
         else if(zone == SpikeLineEnum.RIGHT_SPIKE)
@@ -299,7 +303,7 @@ public class AutonomousBase extends LinearOpMode
             //Right
             if(isBlue == 1)
             {
-                driver.strafe(20, -1, defaultSpeed, imuControl, defaultWaitTime);
+                driver.strafe(30, -1, defaultSpeed, imuControl, defaultWaitTime);
 
 
             }

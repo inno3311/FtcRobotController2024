@@ -44,24 +44,24 @@ public class PlanGamma extends AutonomousBase
             wallTarget = 3;
         }
 
-        //linerSlideChild.encoderControl(-100, 0.5);
+
 
 
         transferRight.autonomousControl(false);
         transferleft.autonomousControl(false);
         transferRight.autonomousControl(true);
         transferleft.autonomousControl(true);
+        linerSlideChild.encoderControl(-500, 0.5);
 
-
-        sleep(3000);
+        sleep(1500);
         //driveToTag.drive(7, zone.ordinal() + 1 + wallTarget, 11, 0);
-        driveToTag.drive(5, zone.ordinal() + 1 + wallTarget, 0, 0);
-        sleep(500);
-        driver.forward(3,1,.5,3);
-        sleep(500);
+        driveToTag.drive(3, zone.ordinal() + 1 + wallTarget, 6, 0);
+//        sleep(500);
+//        driver.forward(3,1,.5,3);
+//        sleep(500);
         transferRight.autonomousControl(false);
         transferleft.autonomousControl(false);
-
+        linerSlideChild.encoderControl(0, 0.5);
 
         sleep(1000);
         //Park robot
@@ -70,7 +70,7 @@ public class PlanGamma extends AutonomousBase
         } catch (IOException e) {
             e.printStackTrace();
         }
-        sleep(1000);
+//        sleep(1000);
     }
 
     /**
@@ -112,9 +112,10 @@ public class PlanGamma extends AutonomousBase
     }
 
     //Left
-    public void stageRoute(int isBlue) throws IOException, InterruptedException {
+    public void stageRoute(int isBlue) throws IOException, InterruptedException
+    {
         //Go forward just enough to turn
-        driver.forward(17, 1, 0.6);
+        driver.forward(16, 1, 0.6);
            
         //Turn to place pixel
         driver.rotate2(-45*isBlue, imuControl);
@@ -136,7 +137,7 @@ public class PlanGamma extends AutonomousBase
     public void centerRoute(int isBlue) throws IOException, InterruptedException {
 
         //Go forward to place pixel
-        driver.forward(25, 1, 0.6);
+        driver.forward(26, 1, 0.6);
 
         //Go backward into position
         driver.forward(3, -1, 0.6);
@@ -148,7 +149,7 @@ public class PlanGamma extends AutonomousBase
         driver.forward(19,1,0.6);
 
         //Strafe so that camera detects AprilTag 5 (or 2)
-        driver.strafe(3, isBlue,1, imuControl);
+        driver.strafe(5, isBlue,1, imuControl);
 
         //Go forward so that camera detects AprilTag
         driver.forward(5, 1, 0.3);
@@ -172,10 +173,11 @@ public class PlanGamma extends AutonomousBase
         driver.rotate2(-135*isBlue, imuControl);
 
         //Drive forward to detect pixel
-        driver.forward(23, 1, 0.5);
+        driver.forward(20, 1, 0.5);
 
         //Strafe in front of AprilTag 4 (or 1) so that camera detects it
-        driver.strafe(8, isBlue, 0.5, imuControl);
+//dday        driver.strafe(10, isBlue, 0.5, imuControl);
+        driver.strafe(14, isBlue, 0.5, imuControl);
 
     }
 
