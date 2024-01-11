@@ -122,13 +122,16 @@ public class WebCamHardware
 
 
 
-
    }   // end method initTfod()
 
    public void initAprilTag()
    {
       if (visionPortal != null)
       {
+//         if (tfod != null)
+//         {
+//            tfod.shutdown();
+//         }
          visionPortal.close();
       }
       aprilTag = new AprilTagProcessor.Builder().build();
