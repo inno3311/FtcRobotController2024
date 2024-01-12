@@ -45,8 +45,6 @@ public class PlanGamma extends AutonomousBase
         }
 
 
-
-
         transferRight.autonomousControl(false);
         transferleft.autonomousControl(false);
         transferRight.autonomousControl(true);
@@ -70,7 +68,7 @@ public class PlanGamma extends AutonomousBase
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        sleep(1000);
+
     }
 
     /**

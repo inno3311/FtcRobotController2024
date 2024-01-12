@@ -31,7 +31,6 @@ public class AutonomousBase extends LinearOpMode
 
     public boolean robotIsMoving = true;
 
-    //protected WebCamHardware webcam;
 
     protected WebCamDoubleVision webcamDouble;
 
@@ -42,8 +41,6 @@ public class AutonomousBase extends LinearOpMode
 
     /** Drive control */
     protected MecanumSynchronousDriver driver;
-//    protected AprilTagMaster aprilTagMaster;
-//    protected InitAprilTags initAprilTags;
     protected DriveToTag driveToTag;
 
 
@@ -70,7 +67,7 @@ public class AutonomousBase extends LinearOpMode
         try
         {
             driver = new MecanumSynchronousDriver(this.hardwareMap, this);
-            //webcam = new WebCamHardware(this);
+
             imuControl = new ImuHardware(this);
 
             colorSwitch = new ColorSwitch(hardwareMap);

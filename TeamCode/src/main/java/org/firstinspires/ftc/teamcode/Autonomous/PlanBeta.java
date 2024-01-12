@@ -10,7 +10,6 @@ import java.io.IOException;
 public class PlanBeta extends AutonomousBase
 {
 
-
     @Override
     public void runOpMode() throws InterruptedException
     {
@@ -95,7 +94,8 @@ public class PlanBeta extends AutonomousBase
 
 
 //  TODO Do not delete.  FAll back to this for red only
-//
+//  TODO delete
+
 //        if (zone == SpikeLineEnum.CENTER_SPIKE)
 //        {
 //            //Go forward and place pixel
