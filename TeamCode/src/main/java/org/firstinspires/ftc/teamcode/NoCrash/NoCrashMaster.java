@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous.NoCrash;
+package org.firstinspires.ftc.teamcode.NoCrash;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
