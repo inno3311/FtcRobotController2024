@@ -31,7 +31,7 @@ public class PlanAlpha extends AutonomousBase
         }
 
         sleep(1000);
-        driveToTag.drive(7, zone.ordinal() + 1 + wallTarget, 11, 0);
+        driveToTag.drive(7, zone.ordinal() + 1 + wallTarget, 5, 1);
 
     }
 
