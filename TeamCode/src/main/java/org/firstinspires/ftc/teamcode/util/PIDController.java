@@ -204,7 +204,7 @@ public class PIDController
      */
     public void setSetpoint(double setpoint)
     {
-        int     sign = 1;
+        int sign = 1;
 
         if (m_maximumInput > m_minimumInput)
         {
@@ -293,7 +293,7 @@ public class PIDController
      */
     public void setInput(double input)
     {
-        int     sign = 1;
+        int sign = 1;
 
         if (m_maximumInput > m_minimumInput)
         {
