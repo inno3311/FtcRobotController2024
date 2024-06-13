@@ -53,17 +53,15 @@ public class TurnToHeading
         if (target != 0)
         {
             this.target = target;
+            pid.reset();
+            pid.setSetpoint(target);
+            pid.setInputRange(0, target);
+            pid.setOutputRange(0, speed + 0.5);
+            pid.setTolerance(1);
+            pid.enable();
         }
 
-        pid.reset();
-        pid.setSetpoint(target);
-        pid.setInputRange(0, target);
-        pid.setOutputRange(0, speed + 0.5);
-        pid.setTolerance(1);
-        pid.enable();
-
         speed = pid.performPID(Math.abs(imu_heading));
-
 
         if (imu_heading > this.target)
         {
