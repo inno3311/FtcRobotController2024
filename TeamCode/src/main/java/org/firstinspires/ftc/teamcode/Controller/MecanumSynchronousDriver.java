@@ -624,7 +624,7 @@ public class MecanumSynchronousDriver<imuControl> extends MechanicalDriveBase
           remainingAngle = degrees - currAngle;     // 90-60 = 30
 
 
-          power = pidRotateImu.performPID(Math.abs(currAngle)); // power will be + on left turn.
+          power = pidRotateImu.performPID(currAngle); // power will be + on left turn.
           this.driveMotors(0, power * directionInt, 0, 1);
           Logging.log("%.2f Deg. (Heading)  power: %f  getAngle() %f", imuControl.getHeading(), power, imuControl.getAngle());
 
