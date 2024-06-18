@@ -49,16 +49,20 @@ public class TurnToHeading
 
     }
 
-    protected void turnTH(double target, double speed)
+    protected void turnTH(double target)
     {
+        double speed;
 
         double imu_heading = Math.abs(imu.getAngle());
 
-        if (imu_heading > 180)
+        if (imu_heading > 360)
         {
-            imu_heading -= 360 * Math.floor(Math.abs(imu.getAngle()) / 360);
+            imu_heading -= 360 * Math.floor(imu_heading / 360);
         }
-
+        else if (imu.getAngle() < 0)
+        {
+            imu_heading = 360 - imu_heading;
+        }
 
 //        else if (imu_heading < -180)
 //        {
@@ -77,7 +81,7 @@ public class TurnToHeading
         if (target != 0)
         {
             this.target = target;
-            imu.resetAngle();
+//            imu.resetAngle();
             pid.reset();
             pid.setSetpoint(target);
             pid.setInputRange(0, target);
@@ -88,13 +92,13 @@ public class TurnToHeading
 
         speed = pid.performPID(imu_heading);
 
-        if (this.target > 180 && !pid.onTarget() && imu_heading != this.target)
+        if (this.target >= 180 && !pid.onTarget() && imu_heading != this.target)
         {
-            mechanicalDriveBase.driveMotors(0, -speed, 0, 0.5);
+            mechanicalDriveBase.driveMotors(0, speed, 0, 0.5);
         }
         else if (this.target < 180 && !pid.onTarget() && imu_heading != this.target)
         {
-            mechanicalDriveBase.driveMotors(0, speed,0, 0.5);
+            mechanicalDriveBase.driveMotors(0, -speed,0, 0.5);
         }
         else
         {
@@ -102,6 +106,25 @@ public class TurnToHeading
         }
 
         telemetry.addData("DATA", "taget: " + this.target + "  imu_actual: " + imu.getAngle() + " Imu_heading: " + imu_heading + " speed: " + speed);
+        telemetry.update();
+
+    }
+
+    protected void turnTH2(double target)
+    {
+        double speed;
+
+        if (target != 0)
+        {
+            this.target = target;
+//            imu.resetAngle();
+        }
+
+        imu.rotate((int) (target - imu.getAngle()), 1);
+
+
+
+        telemetry.addData("DATA", "taget: " + this.target + "  imu_actual: " + imu.getAngle());
         telemetry.update();
 
     }
