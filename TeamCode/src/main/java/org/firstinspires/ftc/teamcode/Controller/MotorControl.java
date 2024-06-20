@@ -147,6 +147,19 @@ public class MotorControl
         else {motorBreak();}
     }
 
+    /**
+     * @param speed The speed at which the motor will spin
+     * @param argument The Gamepad bool input that will make it spin forward
+     */
+    protected void simpleDrive(double speed, boolean argument)
+    {
+        if (argument)
+        {
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            run(speed);
+        }
+        else {motorBreak();}
+    }
 
     /**
      * @param target Target location that the motor will move to

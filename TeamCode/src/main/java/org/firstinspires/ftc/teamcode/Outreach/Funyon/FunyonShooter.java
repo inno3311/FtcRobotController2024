@@ -1,14 +1,13 @@
-package org.firstinspires.ftc.teamcode.Outreach;
+package org.firstinspires.ftc.teamcode.Outreach.Funyon;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import java.awt.font.NumericShaper;
+import org.firstinspires.ftc.teamcode.Outreach.MechanicalDriveOutreach;
 
-public class Shooter
+public class FunyonShooter
 {
     MechanicalDriveOutreach mechanicalDriveOutreach;
     private DcMotor intakeWheels;
@@ -17,7 +16,7 @@ public class Shooter
     private Servo trigger;
 
     //inti for shooter class
-    public Shooter(HardwareMap hardwareMap)
+    public FunyonShooter(HardwareMap hardwareMap)
     {
         intakeWheels = hardwareMap.get(DcMotor.class, "intakeWheels");
         intakeMill = hardwareMap.get(DcMotor.class, "intakeMill");

@@ -78,6 +78,10 @@ public class MechanicalDriveOutreach
         double drive = -gamepad.left_stick_y;
         double turn = gamepad.right_stick_x;
         double strafe = gamepad.left_stick_x;
+        if (gamepad.left_bumper)
+        {
+            speedFactor = 1;
+        }
         speedFactor = 0.3;
         driveMotors(drive, turn, strafe, speedFactor);
     }
