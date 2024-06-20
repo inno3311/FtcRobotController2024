@@ -7,16 +7,15 @@ import org.firstinspires.ftc.teamcode.Controller.MotorControl;
 
 public class HippoShooter extends MotorControl
 {
-
+    // + speed is shooting
     public HippoShooter(OpMode opMode)
     {
         super("shooter", true, false, opMode);
-
     }
 
     @Override
-    protected void simpleDrive(double speed, boolean argument)
+    protected void run(double speed)
     {
-        super.simpleDrive(speed, argument);
+        super.run(speed);
     }
 }

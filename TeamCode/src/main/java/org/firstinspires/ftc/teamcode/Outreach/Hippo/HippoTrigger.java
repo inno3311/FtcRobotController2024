@@ -8,31 +8,10 @@ import org.firstinspires.ftc.teamcode.Controller.ServoControl;
 
 public class HippoTrigger extends ServoControl
 {
-    ElapsedTime time;
-    double flag = 0;
-
+    // the smalled the value the more the trigger will be extended, the larger the more it will be contracted
     public HippoTrigger(OpMode opMode)
     {
         super("trigger", 0, 1, opMode);
-        time = new ElapsedTime();
-        time.startTime();
-    }
-
-    protected void driveTrigger(boolean argument)
-    {
-        if (argument && flag + 3 > time.seconds())
-        {
-            flag = time.seconds();
-        }
-
-        if (flag + 2 < time.seconds())
-        {
-            driveServo(0);
-        }
-        else if (flag + 3 < time.seconds())
-        {
-            driveServo(0.8);
-        }
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Outreach.MechanicalDriveOutreach;
 
-@TeleOp(name = "Funyon Outreach", group = "Outreach")
+@TeleOp(name = "Funyon Outreach", group = "outreach")
 public class FunyonCommand extends OpMode
 {
     MechanicalDriveOutreach mechanicalDriveOutreach;
