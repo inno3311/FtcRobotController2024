@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
 @TeleOp(name = "Hippo Outreach", group = "outreach")
 public class HippoCommand extends OpMode
 {
-    MechanicalDriveBase drive;
+    DriveHippo drive;
     HippoTrigger hippoTrigger;
     HippoShooter hippoShooter;
     HippoIntake hippoIntake;
@@ -19,7 +19,7 @@ public class HippoCommand extends OpMode
     public void init()
     {
         //initiate classes
-        drive = new MechanicalDriveBase(hardwareMap);
+        drive = new DriveHippo(hardwareMap);
         hippoIntake = new HippoIntake(this);
         hippoShooter = new HippoShooter(this);
         hippoTrigger = new HippoTrigger(this);
@@ -33,22 +33,22 @@ public class HippoCommand extends OpMode
         drive.gamepadController(gamepad1);
 
         // intake method
-        hippoIntake.simpleDrive(1, gamepad1.a, gamepad1.right_bumper);
+        hippoIntake.simpleDrive(1, gamepad1.right_bumper, gamepad1.back);
 
         if (gamepad1.y)
         {
             //store the time that we entered the loop in
             flag = time.seconds();
             // check the current time based of when we entered the loop to determine how long we have been in the loop. the constant can be change to increase (+) or decrease (-) the loop length
-            while (time.seconds() < flag + 1.5)
+            while (time.seconds() < flag + 2)
             {
                 //make sure the drivebase and intake do not move while in the loop
-                drive.brake();
+                drive.stop();
                 hippoIntake.motorBreak();
                 //start the wheel
                 hippoShooter.run(1);
                 //execute 1 second into the loop
-                if (time.seconds() > flag + 1);
+                if (time.seconds() > flag + 1.5);
                 {
                     // moves the projectile toward the wheel
                     hippoTrigger.driveServo(0);

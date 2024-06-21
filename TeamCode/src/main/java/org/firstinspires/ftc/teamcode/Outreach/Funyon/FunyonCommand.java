@@ -3,18 +3,16 @@ package org.firstinspires.ftc.teamcode.Outreach.Funyon;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Outreach.MechanicalDriveOutreach;
-
 @TeleOp(name = "Funyon Outreach", group = "outreach")
 public class FunyonCommand extends OpMode
 {
-    MechanicalDriveOutreach mechanicalDriveOutreach;
+    DriveFunyon mechanicalDriveOutreach;
     FunyonShooter shooter;
 
     @Override
     public void init()
     {
-        mechanicalDriveOutreach = new MechanicalDriveOutreach(hardwareMap);
+        mechanicalDriveOutreach = new DriveFunyon(hardwareMap);
         shooter = new FunyonShooter(hardwareMap);
         telemetry.addData("Initialized", " Press start");
         telemetry.update();
