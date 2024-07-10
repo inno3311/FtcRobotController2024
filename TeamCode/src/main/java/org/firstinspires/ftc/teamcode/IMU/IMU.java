@@ -19,7 +19,7 @@ import java.util.Locale;
 
 
 /** removed distance sensor part of code now for rotate mainly - Sam**/
-public class IMUControl
+public class IMU
 {
     private final double ticksPerInch = (8192 * 1) / (2 * 3.1415); // == 1303
 
@@ -38,7 +38,7 @@ public class IMUControl
 
     BNO055IMU.Parameters myIMUparameters;
 
-    public IMUControl(HardwareMap hardwareMap, Telemetry telemetry)
+    public IMU(HardwareMap hardwareMap, Telemetry telemetry)
     {
 //        teamDetection = new TeamDetection(hardwareMap);
 //        mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);

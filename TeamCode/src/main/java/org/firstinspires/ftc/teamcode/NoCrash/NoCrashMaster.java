@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
-import org.firstinspires.ftc.teamcode.IMU.IMUControl;
+import org.firstinspires.ftc.teamcode.IMU.IMU;
 
 @Autonomous(name = "No Crash", group = "No Crash")
 @Disabled
@@ -15,7 +15,7 @@ public class NoCrashMaster extends OpMode
     MechanicalDriveBase mechanicalDriveBase;
     DistanceSensor distanceSensorRight;
     DistanceSensor distanceSensorLeft;
-    IMUControl imuControl;
+    IMU imu;
 
     @Override
     public void init()
@@ -23,7 +23,7 @@ public class NoCrashMaster extends OpMode
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
         distanceSensorRight = hardwareMap.get(DistanceSensor.class, "LeftDis");
         distanceSensorLeft = hardwareMap.get(DistanceSensor.class, "RightDis");
-        imuControl = new IMUControl(hardwareMap, telemetry);
+        imu = new IMU(hardwareMap, telemetry);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class NoCrashMaster extends OpMode
         if (distanceSensorLeft.getDistance(DistanceUnit.INCH) <= 24 && distanceSensorRight.getDistance(DistanceUnit.INCH) <= 24)
         {
             //Call IMU rotate to turn 90 degrees
-            imuControl.rotate(90,1);
+            imu.rotate(90,1);
         }
         else
         {

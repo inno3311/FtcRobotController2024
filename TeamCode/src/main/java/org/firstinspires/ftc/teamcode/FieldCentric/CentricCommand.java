@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
-import org.firstinspires.ftc.teamcode.IMU.IMUControl;
+import org.firstinspires.ftc.teamcode.IMU.IMU;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 
 @TeleOp(name = "Centric Command", group = "FieldCentric")
@@ -13,7 +13,7 @@ public class CentricCommand extends OpMode
     MechanicalDriveBase mechanicalDriveBase;
     TurnToHeading turnToHeading;
     CentricDrive centricDrive;
-    IMUControl imu;
+    IMU imu;
 
     PIDController pid;
 
@@ -21,7 +21,7 @@ public class CentricCommand extends OpMode
     public void init()
     {
         mechanicalDriveBase = new MechanicalDriveBase(hardwareMap);
-        imu = new IMUControl(hardwareMap, telemetry);
+        imu = new IMU(hardwareMap, telemetry);
         pid = new PIDController(.02, .003, .001);
         turnToHeading = new TurnToHeading(telemetry, mechanicalDriveBase, imu, pid);
         centricDrive = new CentricDrive(mechanicalDriveBase);

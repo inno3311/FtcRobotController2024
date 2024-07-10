@@ -1,23 +1,20 @@
 package org.firstinspires.ftc.teamcode.FieldCentric;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Controller.MechanicalDriveBase;
-import org.firstinspires.ftc.teamcode.IMU.IMUControl;
+import org.firstinspires.ftc.teamcode.IMU.IMU;
 import org.firstinspires.ftc.teamcode.util.PIDController;
-import org.opencv.core.Mat;
 
 public class TurnToHeading
 {
     Telemetry telemetry;
     MechanicalDriveBase mechanicalDriveBase;
-    IMUControl imu;
+    IMU imu;
 
     PIDController pid;
     private double target;
 
-    public TurnToHeading(Telemetry telemetry, MechanicalDriveBase mechanicalDriveBase, IMUControl imu, PIDController pid)
+    public TurnToHeading(Telemetry telemetry, MechanicalDriveBase mechanicalDriveBase, IMU imu, PIDController pid)
     {
         this.telemetry = telemetry;
         this.mechanicalDriveBase = mechanicalDriveBase;

@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.IMU.IMUControl;
+import org.firstinspires.ftc.teamcode.IMU.IMU;
 
 public class MechanicalDriveBase
 {
@@ -21,7 +21,7 @@ public class MechanicalDriveBase
 
     final double  COUNTS_PER_INCH = (8192 * 1) / (2 * 3.1415); // 1,303.835747254496
     private double heading = 0;
-    IMUControl imuControl;
+    IMU imu;
 
     /**
      * Constructor for MechanicalDriveBase from the hardware map
