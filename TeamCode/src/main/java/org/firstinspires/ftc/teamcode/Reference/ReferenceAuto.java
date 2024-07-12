@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.learn;
+package org.firstinspires.ftc.teamcode.Reference;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.IMU.IMU;
+import org.firstinspires.ftc.teamcode.IMU;
 
 //s7
 @Autonomous(name = "Auto", group = "learn")

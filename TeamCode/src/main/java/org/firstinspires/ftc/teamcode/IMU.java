@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.IMU;
+package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.hardware.bosch.BNO055IMU.SensorMode.IMU;
 import static java.lang.Thread.sleep;
