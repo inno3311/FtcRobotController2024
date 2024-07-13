@@ -1,13 +1,12 @@
-package org.firstinspires.ftc.teamcode.Outreach;
+package org.firstinspires.ftc.teamcode.Outreach.Funyon;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class MechanicalDriveOutreach
+public class DriveFunyon
 {
     private static final DcMotor.RunMode runMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 
@@ -27,7 +26,7 @@ public class MechanicalDriveOutreach
      * @param hardwareMap the hardware map
      */
 
-    public MechanicalDriveOutreach(HardwareMap hardwareMap)
+    public DriveFunyon(HardwareMap hardwareMap)
     {
         rb = hardwareMap.get(DcMotor.class, "rb");
         rf = hardwareMap.get(DcMotor.class, "rf");
@@ -79,6 +78,10 @@ public class MechanicalDriveOutreach
         double turn = gamepad.right_stick_x;
         double strafe = gamepad.left_stick_x;
         speedFactor = 0.3;
+        if (gamepad.left_bumper)
+        {
+            speedFactor = 1;
+        }
         driveMotors(drive, turn, strafe, speedFactor);
     }
 
